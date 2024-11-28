@@ -1,0 +1,139 @@
+{
+  "services": [
+    {
+      "id": 1,
+      "name": "Roof Replacement",
+      "type": "outdoor",
+      "photo": "/images/sample.png",
+      "description": "Comprehensive roof replacement services to ensure durability and weather resistance.",
+      "specifiedService": ["Leak prevention", "Weather resistance", "Durability"]
+    },
+    {
+      "id": 2,
+      "name": "Window Replacement",
+      "type": "outdoor",
+      "photo": "/images/sample.png",
+      "description": "Energy-efficient window replacement to improve insulation and reduce energy costs.",
+      "specifiedService": ["Energy efficiency", "Improved insulation", "Cost reduction"]
+    },
+    {
+      "id": 3,
+      "name": "Foundation Repair",
+      "type": "outdoor",
+      "photo": "/images/sample.png",
+      "description": "Professional foundation repair services to stabilize and secure your home.",
+      "specifiedService": ["Stabilization", "Home security", "Crack repair"]
+    },
+    {
+      "id": 4,
+      "name": "Crawl Space Repair",
+      "type": "outdoor",
+      "photo": "/images/sample.png",
+      "description": "Crawl space repair solutions to enhance structural integrity and prevent moisture issues.",
+      "specifiedService": ["Moisture control", "Structural integrity", "Pest prevention"]
+    },
+    {
+      "id": 5,
+      "name": "Fence",
+      "type": "outdoor",
+      "photo": "/images/sample.png",
+      "description": "High-quality fencing services for privacy and protection around your property.",
+      "specifiedService": ["Privacy", "Property protection", "Durability"]
+    },
+    {
+      "id": 6,
+      "name": "Deck",
+      "type": "outdoor",
+      "photo": "/images/sample.png",
+      "description": "Custom deck construction to extend your living space into the outdoors.",
+      "specifiedService": ["Outdoor living", "Custom design", "Durability"]
+    },
+    {
+      "id": 7,
+      "name": "Shower Conversion",
+      "type": "indoor",
+      "photo": "/images/sample.png",
+      "description": "Transform your bathroom with modern shower conversion solutions.",
+      "specifiedService": ["Modern design", "Increased usability", "Space optimization"]
+    },
+    {
+      "id": 8,
+      "name": "Tub Conversion",
+      "type": "indoor",
+      "photo": "/images/sample.png",
+      "description": "Convert existing tubs to enhance usability and update your bathroom's style.",
+      "specifiedService": ["Enhanced usability", "Modern style", "Safety features"]
+    },
+    {
+      "id": 9,
+      "name": "Walk-in Tub",
+      "type": "indoor",
+      "photo": "/images/sample.png",
+      "description": "Walk-in tubs for safety, accessibility, and relaxation in your bathroom.",
+      "specifiedService": ["Safety", "Accessibility", "Relaxation"]
+    },
+    {
+      "id": 10,
+      "name": "Kitchen Refacing",
+      "type": "indoor",
+      "photo": "/images/sample.png",
+      "description": "Give your kitchen a new look with our professional refacing services.",
+      "specifiedService": ["New look", "Cost-effective", "Quick installation"]
+    },
+    {
+      "id": 11,
+      "name": "Basement Waterproofing",
+      "type": "indoor",
+      "photo": "/images/sample.png",
+      "description": "Prevent leaks and water damage with expert basement waterproofing solutions.",
+      "specifiedService": ["Leak prevention", "Water damage", "Mold control"]
+    }
+  ],
+  "contractors": [
+    {
+      "id": 1,
+      "photo": "/images/sample.png",
+      "name": "John's Roofing Co.",
+      "address": "123 Main St, Springfield",
+      "zip": "12345",
+      "state": "IL",
+      "services": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    },
+    {
+      "id": 2,
+      "photo": "/images/2.jpg",
+      "name": "Window Wizards",
+      "address": "456 Elm St, Riverdale",
+      "zip": "12345",
+      "state": "IL",
+      "services": [2, 5]
+    },
+    {
+      "id": 3,
+      "photo": "/images/3.jpg",
+      "name": "Basement Pros",
+      "address": "789 Oak St, Metropolis",
+      "zip": "12345",
+      "state": "IL",
+      "services": [3, 11]
+    },
+    {
+      "id": 4,
+      "photo": "/images/4.jpg",
+      "name": "Deck Masters",
+      "address": "321 Pine St, Smallville",
+      "zip": "20234",
+      "state": "TX",
+      "services": [6]
+    },
+    {
+      "id": 5,
+      "photo": "/images/5.jpg",
+      "name": "Bathroom Innovations",
+      "address": "654 Maple St, Gotham",
+      "zip": "12345",
+      "state": "IL",
+      "services": [7, 8, 9]
+    }
+  ]
+}
