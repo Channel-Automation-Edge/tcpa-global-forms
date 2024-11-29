@@ -97,7 +97,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted }) => {
       };
 
       try {
-        const response = await fetch('', { // Webhook disabled
+        const response = await fetch('https://hkdk.events/09d0txnpbpzmvq', { 
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
