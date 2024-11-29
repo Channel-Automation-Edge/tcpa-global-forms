@@ -56,6 +56,7 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
         </div>
 
         <form onSubmit={handleSubmit} className="mt-12 flex flex-col h-full">
+          
           <div
             className="flex flex-wrap justify-center"
             style={{ gap: '20px 30px', marginTop: '15px', width: '100%' }}
@@ -64,20 +65,9 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
               <button
                 key={index}
                 type="button"
-                className={`eIzKEG transition-transform transform hover:scale-105`}
+                className={`className="flex flex-col items-center justify-center w-[200px] sm:w-[180px] md:w-[200px] lg:w-[200px] h-[156px] border border-indigo-100 rounded-[20px] shadow-md p-4 transition-transform transform hover:scale-105 bg-lpurple`}
                 onClick={() => handleSpecSelect(spec)}
                 style={{
-                  margin: '0px 0px 10px',
-                  width: '170px',
-                  height: '200px',
-                  overflow: 'hidden',
-                  display: 'inline-block',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  position: 'relative',
-                  userSelect: 'none',
-                  justifyContent: 'space-between',
-                  border: '1px solid rgba(236, 236, 236, 0.43)',
                   boxShadow: selectedSpecs.includes(spec)
                     ? 'rgba(254,139,16,0.5) 0px 22px 30px -8px'
                     : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
@@ -94,26 +84,15 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
                   }
                 }}
               >
-                <img src="/images/sample.png" alt={spec} className="w-16 h-16 mb-2 mx-auto" />
-                <span className="text-[#2E5B5E] text-center block">{spec}</span>
+                {/* <img src="/images/sample.png" alt={spec} className="w-16 h-16 mb-2 mx-auto" /> */}
+                <span className="text-xpurple text-center block">{spec}</span>
               </button>
             ))}
             <button
               type="button"
-              className={`eIzKEG transition-transform transform hover:scale-105`}
+              className={`className="flex flex-col items-center justify-center w-[200px] sm:w-[180px] md:w-[200px] lg:w-[200px] h-[156px] border border-indigo-100 rounded-[20px] shadow-md p-4 transition-transform transform hover:scale-105 bg-lpurple`}
               onClick={() => handleSpecSelect("Other")}
               style={{
-                margin: '0px 0px 10px',
-                width: '170px',
-                height: '200px',
-                overflow: 'hidden',
-                display: 'inline-block',
-                borderRadius: '8px',
-                cursor: 'pointer',
-                position: 'relative',
-                userSelect: 'none',
-                justifyContent: 'space-between',
-                border: '1px solid rgba(236, 236, 236, 0.43)',
                 boxShadow: selectedSpecs.includes("Other")
                   ? 'rgba(254,139,16,0.5) 0px 22px 30px -8px'
                   : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
@@ -129,8 +108,8 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
                   e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px';
               }}}
             >
-            <img src="/images/sample.png" alt="Other" className="w-16 h-16 mb-2 mx-auto" />
-              <span className="text-[#2E5B5E] text-center block">Other</span>
+            {/* <img src="/images/sample.png" alt="Other" className="w-16 h-16 mb-2 mx-auto" /> */}
+              <span className="text-xpurple text-center block">Other</span>
             </button>
           </div>
 

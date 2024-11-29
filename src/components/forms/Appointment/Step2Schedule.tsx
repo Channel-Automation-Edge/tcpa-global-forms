@@ -84,7 +84,7 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext }) => {
 
   const renderAppointmentForm = () => (
     <form onSubmit={formik.handleSubmit}>
-      <div className="mt-[-3px] p-4 shadow-lg rounded-md border border-gray-200 border-t-white"> 
+      <div className="mt-[-4px] p-4 shadow-lg rounded-md border border-gray-200 border-t-transparent"> 
         {/* this is the appointment card */}
         <div className="flex-grow">
           <h2 className="text-center mt-2 mb-4 text-xl font-semibold text-gray-800 dark:text-neutral-200">
@@ -213,14 +213,14 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext }) => {
             </div>
 
             <div className="hidden sm:block">
-              <div className="border-b border-gray-200">
+              <div className="border-b-xbg border-gray-200">
                 <nav className="-mb-px flex w-full">
                   {Array.from({ length: numberOfQuotes }, (_, index) => (
                     <a
                       key={index}
                       className={`flex-1 border p-3 text-sm font-medium text-center ${
                         currentAppointmentIndex === index
-                          ? 'rounded-t-lg border-gray-200 border-b-white text-xorange'
+                          ? 'rounded-t-lg border-gray-200 border-b-xbg text-xorange'
                           : 'border-transparent text-gray-500'
                       }`}
                     >

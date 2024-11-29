@@ -21,7 +21,7 @@ const ParentForm = () => {
   // };
 
   return (
-    <div>
+    <div className='bg-xbg min-h-screen'>
       <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex justify-center">
           <Stepper currentStep={currentStep} />

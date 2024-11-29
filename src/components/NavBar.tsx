@@ -16,56 +16,21 @@ const NavBar = () => {
         }}        
     className=''>
         <header className="">
-      <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <div className="md:flex md:items-center md:gap-12">
+          <div className="md:flex md:items-center md:gap-12 ">
             <a className="block text-accent" href="#">
               <span className="sr-only">Home</span>
               <img src="/images/logo.svg" alt="Logo" className="h-8" />
             </a>
           </div>
 
-          <div className="hidden md:block">
-            <nav aria-label="Global">
-              <ul className="flex items-center gap-6 text-sm">
-                <li>
-                  <a className="text-white/70 transition hover:text-accent" href="#">
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a className="text-white/70 transition hover:text-accent" href="#">
-                    Careers
-                  </a>
-                </li>
-                <li>
-                  <a className="text-white/70 transition hover:text-accent" href="#">
-                    History
-                  </a>
-                </li>
-                <li>
-                  <a className="text-white/70 transition hover:text-accent" href="#">
-                    Services
-                  </a>
-                </li>
-                <li>
-                  <a className="text-white/70 transition hover:text-accent" href="#">
-                    Projects
-                  </a>
-                </li>
-                <li>
-                  <a className="text-white/70 transition hover:text-accent" href="#">
-                    Blog
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
+          
 
           <div className="flex items-center gap-4">
             <div className="sm:flex sm:gap-4">
               <a
-                className="rounded-md bg-accent px-5 py-2.5 text-sm font-medium text-primary"
+                className="rounded-md bg-xorange px-5 py-2.5 text-sm font-medium text-primary"
                 href="#"
               >
                 Login

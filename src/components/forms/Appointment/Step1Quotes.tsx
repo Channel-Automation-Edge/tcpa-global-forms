@@ -54,21 +54,9 @@ const Step1Quotes: React.FC<Step1QuotesProps> = ({ onNext }) => {
               <button
                 key={quote}
                 type="button"
-                className="eIzKEG transition-transform transform hover:scale-105"
+                className={`className="flex flex-col items-center justify-center w-[200px] sm:w-[180px] md:w-[200px] lg:w-[200px] h-[120px] border border-indigo-100 rounded-[20px] shadow-md p-4 transition-transform transform hover:scale-105 bg-lpurple`}
                 onClick={() => handleQuoteSelect(quote)}
                 style={{
-                  margin: '0px 0px 10px',
-                  width: '170px',
-                  height: '100px',
-                  overflow: 'hidden',
-                  display: 'inline-block',
-                  borderRadius: '8px',
-                  cursor: 'pointer',
-                  position: 'relative',
-                  userSelect: 'none',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  border: '1px solid rgba(236, 236, 236, 0.43)',
                   boxShadow: selectedQuote === quote
                     ? 'rgba(254,139,16,0.5) 0px 22px 30px -8px'
                     : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
@@ -85,7 +73,7 @@ const Step1Quotes: React.FC<Step1QuotesProps> = ({ onNext }) => {
                   }
                 }}
               >
-                <span className="text-[#2E5B5E] text-center block">{quote}</span>
+                <span className="text-xpurple text-center block">{quote}</span>
               </button>
             ))}
           </div>

@@ -267,7 +267,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted }) => {
           <div className="sm:text-right">
             <button
               type="button"
-              className="mt-4 sm:mt-0 w-auto py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-[#2E5B5E] text-white "
+              className="mt-4 sm:mt-0 w-auto py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xpurple text-white "
               onClick={() => {
                 setCurrentAppointmentIndex(index);
                 setIsModalOpen(true);
