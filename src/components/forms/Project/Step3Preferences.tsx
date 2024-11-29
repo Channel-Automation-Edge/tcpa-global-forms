@@ -74,13 +74,13 @@ const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack }) =
                   justifyContent: 'space-between',
                   border: '1px solid rgba(236, 236, 236, 0.43)',
                   boxShadow: selectedPreferences.includes(preference)
-                    ? 'rgba(254,79,0,0.5) 0px 22px 30px -8px'
+                    ? 'rgba(254,139,16,0.5) 0px 22px 30px -8px'
                     : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
                   transition: 'box-shadow 0.3s ease',
                 }}
                 onMouseEnter={(e) => {
                   if (!selectedPreferences.includes(preference)) {
-                    e.currentTarget.style.boxShadow = 'rgba(254,79,0,0.5) 0px 22px 30px -8px';
+                    e.currentTarget.style.boxShadow = 'rgba(254,139,16,0.5) 0px 22px 30px -8px';
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -99,7 +99,7 @@ const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack }) =
               type="submit"
               className={`w-full max-w-xs px-24 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
                 selectedPreferences.length > 0
-                  ? 'bg-[#FE4F00] text-white shadow-lg shadow-[rgba(254,79,0,0.5)] transform transition-transform translate-y-[-8px]'
+                  ? 'bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-8px]'
                   : 'bg-gray-200 text-white cursor-not-allowed'
               }`}
               disabled={selectedPreferences.length === 0}

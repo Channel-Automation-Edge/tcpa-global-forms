@@ -5,17 +5,16 @@ import { AppContext } from '../../../context/AppContext';
 // Define props interface
 interface Step2OptInProps {
   onNext: () => void;
-  onBack: () => void;
 }
 
-const Step2OptIn: React.FC<Step2OptInProps> = ({ onNext, onBack }) => {
+const Step2OptIn: React.FC<Step2OptInProps> = ({ onNext }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
     return null;
   }
 
-  const { promo, setPromo, generalOptIn, setGeneralOptIn } = appContext;
+  const { promo, setPromo, newsletterOptIn, setNewsletterOptIn } = appContext;
   const [selectedPromo, setSelectedPromo] = useState<string>(promo);
   const [isOptInRequired, setIsOptInRequired] = useState<boolean>(false);
 
@@ -32,27 +31,26 @@ const Step2OptIn: React.FC<Step2OptInProps> = ({ onNext, onBack }) => {
   };
 
   const handleOptInChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setGeneralOptIn(event.target.checked);
+    setNewsletterOptIn(event.target.checked);
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    if (!isOptInRequired || (isOptInRequired && generalOptIn)) {
+    if (!isOptInRequired || (isOptInRequired && newsletterOptIn)) {
       console.log('Promo:', selectedPromo);
-      console.log('General Opt-In:', generalOptIn);
+      console.log('Newsletter Opt-In:', newsletterOptIn);
+      console.log('Is Opt-In Required:', isOptInRequired);
       onNext();
     }
   };
 
   useEffect(() => {
     setSelectedPromo(promo);
-  }, [promo]);
+    setIsOptInRequired(promo !== '' && !newsletterOptIn);
+  }, [promo, newsletterOptIn]);
 
   return (
     <div className="z-10 max-w-[100rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto relative">
-      <button onClick={onBack} className="absolute left-4 top-1/2 transform -translate-y-1/2">
-        <img src="/images/back.png" alt="Go Back" className="w-6 h-6" />
-      </button>
       <div className="space-y-8">
         <div className="text-center">
           <h1 className="block text-3xl font-bold text-primary dark:text-white">
@@ -88,13 +86,13 @@ const Step2OptIn: React.FC<Step2OptInProps> = ({ onNext, onBack }) => {
                   alignItems: 'center',
                   border: '1px solid rgba(236, 236, 236, 0.43)',
                   boxShadow: selectedPromo === promoOption
-                    ? 'rgba(254,79,0,0.5) 0px 22px 30px -8px'
+                    ? 'rgba(254,139,16,0.5) 0px 22px 30px -8px'
                     : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
                   transition: 'box-shadow 0.3s ease',
                 }}
                 onMouseEnter={(e) => {
                   if (selectedPromo !== promoOption) {
-                    e.currentTarget.style.boxShadow = 'rgba(254,79,0,0.5) 0px 22px 30px -8px';
+                    e.currentTarget.style.boxShadow = 'rgba(254,139,16,0.5) 0px 22px 30px -8px';
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -112,19 +110,19 @@ const Step2OptIn: React.FC<Step2OptInProps> = ({ onNext, onBack }) => {
             <div className="w-[700px]">
               <div className="flex items-start">
                 <input
-                  id="generalOptIn"
-                  name="generalOptIn"
+                  id="newsletterOptIn"
+                  name="newsletterOptIn"
                   type="checkbox"
-                  checked={generalOptIn}
+                  checked={newsletterOptIn}
                   onChange={handleOptInChange}
-                  className="h-4 w-4 text-[#FE4F00] border-gray-300 rounded focus:ring-[#FE4F00]"
+                  className="h-4 w-4 text-xorange border-gray-300 rounded focus:ring-xorange"
                 />
-                <label htmlFor="generalOptIn" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
+                <label htmlFor="newsletterOptIn" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
                   I agree to receive special offers and promotions.
                 </label>
               </div>
-              {isOptInRequired && !generalOptIn && (
-                <div className="text-sm text-red-500">
+              {isOptInRequired && !newsletterOptIn && (
+                <div className="text-sm text-red-400">
                   Please opt-in to receive the selected promo.
                 </div>
               )}
@@ -135,11 +133,11 @@ const Step2OptIn: React.FC<Step2OptInProps> = ({ onNext, onBack }) => {
             <button
               type="submit"
               className={`w-full max-w-xs px-24 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
-                (!isOptInRequired || (isOptInRequired && generalOptIn))
-                  ? 'bg-[#FE4F00] text-white shadow-lg shadow-[rgba(254,79,0,0.5)] transform transition-transform translate-y-[-4px]'
+                (!isOptInRequired || (isOptInRequired && newsletterOptIn))
+                  ? 'bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-4px]'
                   : 'bg-gray-200 text-white cursor-not-allowed'
               }`}
-              disabled={isOptInRequired && !generalOptIn}
+              disabled={isOptInRequired && !newsletterOptIn}
             >
               Continue
             </button>

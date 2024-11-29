@@ -58,7 +58,7 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
                 transition: 'box-shadow 0.3s ease',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = 'rgba(254,79,0,0.5) 0px 22px 30px -8px';
+                e.currentTarget.style.boxShadow = 'rgba(254,139,16,0.5) 0px 22px 30px -8px';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px';

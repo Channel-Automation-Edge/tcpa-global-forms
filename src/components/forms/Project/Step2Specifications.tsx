@@ -16,7 +16,7 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
     return null;
   }
 
-  const { selectedService, serviceSpecifications, setServiceSpecifications } = appContext;
+  const { selectedService, serviceSpecifications, setServiceSpecifications, contractorPreferences, setContractorPreferences } = appContext;
   const selectedServiceData = servicesData.services.find(service => service.id === selectedService);
   const [selectedSpecs, setSelectedSpecs] = useState<string[]>(serviceSpecifications);
 
@@ -29,7 +29,10 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     setServiceSpecifications(selectedSpecs);
+    const updatedPreferences = [...new Set([...contractorPreferences, 'Licensed', 'Insured', 'Bonded', 'Top Rated'])];
+    setContractorPreferences(updatedPreferences);
     console.log('Service Specifications:', selectedSpecs);
+    console.log('Contractor Preferences:', updatedPreferences);
     onNext();
   };
 
@@ -76,13 +79,13 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
                   justifyContent: 'space-between',
                   border: '1px solid rgba(236, 236, 236, 0.43)',
                   boxShadow: selectedSpecs.includes(spec)
-                    ? 'rgba(254,79,0,0.5) 0px 22px 30px -8px'
+                    ? 'rgba(254,139,16,0.5) 0px 22px 30px -8px'
                     : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
                   transition: 'box-shadow 0.3s ease',
                 }}
                 onMouseEnter={(e) => {
                   if (!selectedSpecs.includes(spec)) {
-                    e.currentTarget.style.boxShadow = 'rgba(254,79,0,0.5) 0px 22px 30px -8px';
+                    e.currentTarget.style.boxShadow = 'rgba(254,139,16,0.5) 0px 22px 30px -8px';
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -112,22 +115,21 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
                 justifyContent: 'space-between',
                 border: '1px solid rgba(236, 236, 236, 0.43)',
                 boxShadow: selectedSpecs.includes("Other")
-                  ? 'rgba(254,79,0,0.5) 0px 22px 30px -8px'
+                  ? 'rgba(254,139,16,0.5) 0px 22px 30px -8px'
                   : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
                 transition: 'box-shadow 0.3s ease',
               }}
               onMouseEnter={(e) => {
                 if (!selectedSpecs.includes("Other")) {
-                  e.currentTarget.style.boxShadow = 'rgba(254,79,0,0.5) 0px 22px 30px -8px';
+                  e.currentTarget.style.boxShadow = 'rgba(254,139,16,0.5) 0px 22px 30px -8px';
                 }
               }}
               onMouseLeave={(e) => {
                 if (!selectedSpecs.includes("Other")) {
                   e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px';
-                }
-              }}
+              }}}
             >
-              <img src="/images/sample.png" alt="Other" className="w-16 h-16 mb-2 mx-auto" />
+            <img src="/images/sample.png" alt="Other" className="w-16 h-16 mb-2 mx-auto" />
               <span className="text-[#2E5B5E] text-center block">Other</span>
             </button>
           </div>
@@ -137,7 +139,7 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
               type="submit"
               className={`w-full max-w-xs px-24 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
                 selectedSpecs.length > 0
-                  ? 'bg-[#FE4F00] text-white shadow-lg shadow-[rgba(254,79,0,0.5)] transform transition-transform translate-y-[-8px]'
+                  ? 'bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-8px]'
                   : 'bg-gray-200 text-white cursor-not-allowed'
               }`}
               disabled={selectedSpecs.length === 0}
@@ -152,7 +154,3 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
 };
 
 export default Step2Specifications;
-
-
-
-

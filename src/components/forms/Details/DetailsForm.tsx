@@ -19,11 +19,11 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext }) => {
     }
   };
 
-  const handleBackStep = () => {
-    if (currentStep > 1) {
-      setCurrentStep((prevStep) => prevStep - 1);
-    }
-  }
+  // const handleBackStep = () => {
+  //   if (currentStep > 1) {
+  //     setCurrentStep((prevStep) => prevStep - 1);
+  //   }
+  // }
 
   const progress = (currentStep - 1) * 33; 
 
@@ -38,8 +38,8 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext }) => {
       </div>
       <div>
         {currentStep === 1 && <Step1Info onNext={handleNextStep} />}
-        {currentStep === 2 && <Step2OptIn onNext={handleNextStep}  onBack={handleBackStep}/>}
-        {currentStep === 3 && <Step3Invoice onNext={handleNextStep}  onBack={handleBackStep}/>}
+        {currentStep === 2 && <Step2OptIn onNext={handleNextStep} />}
+        {currentStep === 3 && <Step3Invoice onNext={handleNextStep} />}
       </div>
     </div>
   );

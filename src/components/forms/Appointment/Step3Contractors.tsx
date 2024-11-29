@@ -7,8 +7,8 @@ import { useFormik } from 'formik';
 import { format } from 'date-fns';
 
 // Define props interface
-interface Step2ContractorsProps {
-  onNext: () => void;
+interface Step3ContractorsProps {
+  onCompleted: () => void;
 }
 
 interface FormValues {
@@ -17,17 +17,18 @@ interface FormValues {
   contactPreferences: string[];
 }
 
-const Step2Contractors: React.FC<Step2ContractorsProps> = ({ onNext }) => {
+const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
     return null;
   }
 
-  const { selectedService, numberOfQuotes, matchingContractors, setMatchingContractors, scheduledAppointments, setScheduledAppointments, zip, state, contractorPreferences } = appContext;
+  const { selectedService, numberOfQuotes, matchingContractors, setMatchingContractors, scheduledAppointments, setScheduledAppointments, zip, state, contractorPreferences, firstname, lastname, email, phone, generalOptIn, serviceSpecifications, promo } = appContext;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentAppointmentIndex, setCurrentAppointmentIndex] = useState(0);
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const filteredContractors = contractorsData.contractors.filter(contractor =>
@@ -65,7 +66,7 @@ const Step2Contractors: React.FC<Step2ContractorsProps> = ({ onNext }) => {
       optIn: false,
       contactPreferences: [],
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       const updatedAppointments = [...scheduledAppointments];
       updatedAppointments[currentAppointmentIndex] = {
         ...updatedAppointments[currentAppointmentIndex],
@@ -76,6 +77,45 @@ const Step2Contractors: React.FC<Step2ContractorsProps> = ({ onNext }) => {
       setScheduledAppointments(updatedAppointments);
       console.log('Scheduled Appointments:', updatedAppointments);
       setIsModalOpen(false);
+
+      const payload = {
+        lead: {
+          firstname,
+          lastname,
+          email,
+          phone,
+          generalOptIn,
+          zip,
+          state,
+          selectedService,
+          serviceSpecifications,
+          contractorPreferences,
+          promo,
+        },
+        error: null,
+        appointments: updatedAppointments,
+      };
+
+      try {
+        const response = await fetch('', { // Webhook disabled
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to send appointments');
+        }
+
+        console.log('Appointments sent successfully');
+        
+      } catch (err) {
+        console.error('Error sending appointments:', err);
+        setError((err as Error).message);
+      }
+      onCompleted();
     },
   });
 
@@ -101,29 +141,27 @@ const Step2Contractors: React.FC<Step2ContractorsProps> = ({ onNext }) => {
   };
 
   const renderAppointmentForm = () => (
-    <form onSubmit={formik.handleSubmit} className="mt-0 flex flex-col h-full">
+    <form className="mt-0 flex flex-col h-full">
       <div className="flex-grow">
           <h2 className="text-center mt-2 mb-4 text-xl font-semibold text-gray-800 dark:text-neutral-200">
             Select a date
           </h2>
           <div className="flex justify-center mb-4">
             <div className="border border-gray-300 p-2">
-              <Calendar
+            <Calendar
                 mode="single"
                 selected={date}
                 onSelect={handleDateChange}
                 modifiers={{
-                  today: new Date(),
+                  today: new Date(), // Ensures the current date is always highlighted
                   disabled: [
-                    { before: new Date() },
-                    { after: new Date(new Date().setDate(new Date().getDate() + 20)) },
-                    ...scheduledAppointments.map(appt => new Date(appt.date)).filter(apptDate => !date || apptDate.getTime() !== date.getTime()),
+                    { before: new Date() }, // Disable all previous dates
+                    { after: new Date(new Date().setDate(new Date().getDate() + 20)) }, // Disable dates after 20 days from today
+                    ...scheduledAppointments.map(appt => new Date(appt.date)).filter(apptDate => !date || apptDate.getTime() !== date.getTime()), // Exclude selected date from being disabled
                   ],
                 }}
                 modifiersStyles={{
-                  selected: { backgroundColor: '#ffd469', color: 'black' },
-                  today: { backgroundColor: 'gray', color: 'white' },
-                  disabled: { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
+                  
                 }}
                 className=""
               />
@@ -136,7 +174,7 @@ const Step2Contractors: React.FC<Step2ContractorsProps> = ({ onNext }) => {
               type="checkbox"
               checked={formik.values.optIn}
               onChange={handleOptInChange}
-              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              className="h-4 w-4 text-xorange border-gray-300 rounded focus:ring-xorange"
             />
             <label htmlFor="optIn" className="ml-2 text-sm text-gray-900 dark:text-gray-300">
               Opt-in for the designated contractor to contact me
@@ -158,7 +196,7 @@ const Step2Contractors: React.FC<Step2ContractorsProps> = ({ onNext }) => {
                       value={method}
                       checked={formik.values.contactPreferences.includes(method)}
                       onChange={handleContactPreferencesChange}
-                      className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      className="h-4 w-4 text-xorange border-gray-300 rounded focus:ring-xorange"
                     />
                     <label htmlFor={method} className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
                       {method.charAt(0).toUpperCase() + method.slice(1)}
@@ -180,10 +218,11 @@ const Step2Contractors: React.FC<Step2ContractorsProps> = ({ onNext }) => {
           </button>
         )}
         <button
-          type="submit"
+          type="button"
+          onClick={() => formik.handleSubmit()}
           className={`w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
             formik.values.date
-              ? 'bg-[#FE4F00] text-white shadow-lg shadow-[rgba(254,79,0,0.5)] transform transition-transform'
+              ? 'bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform'
               : 'bg-gray-400 text-gray-700 cursor-not-allowed'
           }`}
           disabled={!formik.values.date}
@@ -262,13 +301,19 @@ const Step2Contractors: React.FC<Step2ContractorsProps> = ({ onNext }) => {
 
         {matchingContractors.length > 0 && renderContractorCards()}
 
+        {error && (
+          <div className="mt-4 text-center text-red-600">
+            {error}
+          </div>
+        )}
+
         <div className="mt-20 flex justify-center">
           <button
             type="button"
-            onClick={onNext}
+            onClick={() => formik.handleSubmit()}
             className={`w-full max-w-xs px-0 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
               scheduledAppointments.some(appt => appt.date)
-                ? 'bg-[#FE4F00] text-white shadow-lg shadow-[rgba(254,79,0,0.5)] transform transition-transform translate-y-[-8px]'
+                ? 'bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-8px]'
                 : 'bg-gray-200 text-white cursor-not-allowed'
             }`}
             disabled={!scheduledAppointments.some(appt => appt.date)}
@@ -304,4 +349,4 @@ const Step2Contractors: React.FC<Step2ContractorsProps> = ({ onNext }) => {
   );
 };
 
-export default Step2Contractors;
+export default Step3Contractors;

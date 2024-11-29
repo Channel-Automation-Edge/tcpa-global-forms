@@ -6,10 +6,9 @@ import servicesData from '../../../assets/assets.json';
 // Define props interface
 interface Step3InvoiceProps {
   onNext: () => void;
-  onBack: () => void;
 }
 
-const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext, onBack }) => {
+const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
@@ -37,9 +36,6 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext, onBack }) => {
 
   return (
     <div className="z-10 max-w-[100rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto relative">
-      <button onClick={onBack} className="absolute left-4 top-1/2 transform -translate-y-1/2">
-        <img src="/images/back.png" alt="Go Back" className="w-6 h-6" />
-      </button>
       <div className="max-w-xl mx-auto">
         <div className="text-center">
           <h1 className="block text-3xl font-bold text-primary dark:text-white">
@@ -112,21 +108,14 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext, onBack }) => {
         <div className="mt-6 flex justify-between">
           <button
             type="button"
-            onClick={onBack}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2"
-          >
-            <img src="/images/back.png" alt="Go Back" className="w-6 h-6" />
-          </button>
-          <button
-            type="button"
-            className="w-full max-w-xs px-0 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-[#FE4F00] text-white shadow-lg shadow-[rgba(254,79,0,0.5)] transform transition-transform translate-y-[-4px]"
+            className="w-full max-w-xs px-0 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-4px]"
           >
             Call Us
           </button>
           <button
             type="button"
             onClick={onNext}
-            className="w-full max-w-xs ml-4 px-0 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-[#FE4F00] text-white shadow-lg shadow-[rgba(102,89,83,0.5)] transform transition-transform translate-y-[-4px]"
+            className="w-full max-w-xs ml-4 px-0 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-white shadow-lg shadow-[rgba(102,89,83,0.5)] transform transition-transform translate-y-[-4px]"
           >
             Request Appointment
           </button>

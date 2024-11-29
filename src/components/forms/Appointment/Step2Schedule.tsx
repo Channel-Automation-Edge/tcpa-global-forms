@@ -6,11 +6,11 @@ import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 
 // Define props interface
-interface Step1ScheduleProps {
+interface Step2ScheduleProps {
   onNext: () => void;
 }
 
-const Step1Schedule: React.FC<Step1ScheduleProps> = ({ onNext }) => {
+const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
@@ -105,9 +105,7 @@ const Step1Schedule: React.FC<Step1ScheduleProps> = ({ onNext }) => {
                   ],
                 }}
                 modifiersStyles={{
-                  selected: { backgroundColor: '#ffd469', color: 'black' },
-                  today: { backgroundColor: 'gray', color: 'white' }, // Current date indicator
-                  disabled: { backgroundColor: 'rgba(255, 255, 255, 0.2)' }, // Faded white color
+                  
                 }}
                 className=""
               />
@@ -120,14 +118,14 @@ const Step1Schedule: React.FC<Step1ScheduleProps> = ({ onNext }) => {
               type="checkbox"
               checked={formik.values.optIn}
               onChange={handleOptInChange}
-              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              className="h-4 w-4 text-xorange border-gray-300 rounded focus:ring-xorange"
             />
             <label htmlFor="optIn" className="ml-2 text-sm text-gray-900 dark:text-gray-300">
               Opt-in for the designated contractor to contact me
             </label>
           </div>
           <p className="text-sm mt-2 text-gray-500 dark:text-neutral-400 mx-6">
-            If this is not checked, we will contact/update you about your appointment.
+            If this is not checked, we will contact/update you about your consultation.
           </p>
           {formik.values.optIn && (
             <div className="mt-4">
@@ -142,7 +140,7 @@ const Step1Schedule: React.FC<Step1ScheduleProps> = ({ onNext }) => {
                       value={method}
                       checked={formik.values.contactPreferences.includes(method)}
                       onChange={handleContactPreferencesChange}
-                      className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      className="h-4 w-4 text-xorange border-gray-300 rounded focus:ring-xorange"
                     />
                     <label htmlFor={method} className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
                       {method.charAt(0).toUpperCase() + method.slice(1)}
@@ -169,7 +167,7 @@ const Step1Schedule: React.FC<Step1ScheduleProps> = ({ onNext }) => {
     type="submit"
     className={`w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
       formik.values.date
-        ? 'bg-[#FE4F00] text-white shadow-lg shadow-[rgba(254,79,0,0.5)] transform transition-transform'
+        ? 'bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform'
         : 'bg-gray-200 text-white cursor-not-allowed'
     }`}
     disabled={!formik.values.date}
@@ -222,11 +220,11 @@ const Step1Schedule: React.FC<Step1ScheduleProps> = ({ onNext }) => {
                       key={index}
                       className={`flex-1 border p-3 text-sm font-medium text-center ${
                         currentAppointmentIndex === index
-                          ? 'rounded-t-lg border-gray-200 border-b-white text-sky-600'
+                          ? 'rounded-t-lg border-gray-200 border-b-white text-xorange'
                           : 'border-transparent text-gray-500'
                       }`}
                     >
-                      Appointment {index + 1}
+                      Consultation {index + 1}
                     </a>
                   ))}
                 </nav>
@@ -241,4 +239,4 @@ const Step1Schedule: React.FC<Step1ScheduleProps> = ({ onNext }) => {
   );
 };
 
-export default Step1Schedule;
+export default Step2Schedule;

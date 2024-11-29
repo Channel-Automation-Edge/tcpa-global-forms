@@ -2,7 +2,7 @@
   "services": [
     {
       "id": 1,
-      "name": "Roof Replacement",
+      "name": "Roofing",
       "type": "outdoor",
       "photo": "/images/sample.png",
       "description": "Comprehensive roof replacement services to ensure durability and weather resistance.",
@@ -10,7 +10,7 @@
     },
     {
       "id": 2,
-      "name": "Window Replacement",
+      "name": "Windows & Doors",
       "type": "outdoor",
       "photo": "/images/sample.png",
       "description": "Energy-efficient window replacement to improve insulation and reduce energy costs.",
@@ -18,7 +18,7 @@
     },
     {
       "id": 3,
-      "name": "Foundation Repair",
+      "name": "Baths",
       "type": "outdoor",
       "photo": "/images/sample.png",
       "description": "Professional foundation repair services to stabilize and secure your home.",
@@ -26,7 +26,7 @@
     },
     {
       "id": 4,
-      "name": "Crawl Space Repair",
+      "name": "Kitchen",
       "type": "outdoor",
       "photo": "/images/sample.png",
       "description": "Crawl space repair solutions to enhance structural integrity and prevent moisture issues.",
@@ -34,7 +34,7 @@
     },
     {
       "id": 5,
-      "name": "Fence",
+      "name": "Foundation Repair",
       "type": "outdoor",
       "photo": "/images/sample.png",
       "description": "High-quality fencing services for privacy and protection around your property.",
@@ -42,47 +42,23 @@
     },
     {
       "id": 6,
-      "name": "Deck",
+      "name": "Crawl Space Repair",
       "type": "outdoor",
       "photo": "/images/sample.png",
       "description": "Custom deck construction to extend your living space into the outdoors.",
       "specifiedService": ["Outdoor living", "Custom design", "Durability"]
     },
     {
-      "id": 7,
-      "name": "Shower Conversion",
-      "type": "indoor",
-      "photo": "/images/sample.png",
-      "description": "Transform your bathroom with modern shower conversion solutions.",
-      "specifiedService": ["Modern design", "Increased usability", "Space optimization"]
-    },
-    {
-      "id": 8,
-      "name": "Tub Conversion",
-      "type": "indoor",
-      "photo": "/images/sample.png",
-      "description": "Convert existing tubs to enhance usability and update your bathroom's style.",
-      "specifiedService": ["Enhanced usability", "Modern style", "Safety features"]
-    },
-    {
-      "id": 9,
-      "name": "Walk-in Tub",
-      "type": "indoor",
-      "photo": "/images/sample.png",
-      "description": "Walk-in tubs for safety, accessibility, and relaxation in your bathroom.",
-      "specifiedService": ["Safety", "Accessibility", "Relaxation"]
-    },
-    {
-      "id": 10,
-      "name": "Kitchen Refacing",
-      "type": "indoor",
-      "photo": "/images/sample.png",
-      "description": "Give your kitchen a new look with our professional refacing services.",
-      "specifiedService": ["New look", "Cost-effective", "Quick installation"]
-    },
-    {
-      "id": 11,
+      "id":7,
       "name": "Basement Waterproofing",
+      "type": "indoor",
+      "photo": "/images/sample.png",
+      "description": "Prevent leaks and water damage with expert basement waterproofing solutions.",
+      "specifiedService": ["Leak prevention", "Water damage", "Mold control"]
+    },
+    {
+      "id":8,
+      "name": "Decks",
       "type": "indoor",
       "photo": "/images/sample.png",
       "description": "Prevent leaks and water damage with expert basement waterproofing solutions.",
@@ -97,7 +73,7 @@
       "address": "123 Main St, Springfield",
       "zip": "12345",
       "state": "IL",
-      "services": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+      "services": [1, 2, 3, 4, 5]
     },
     {
       "id": 2,
@@ -106,7 +82,7 @@
       "address": "456 Elm St, Riverdale",
       "zip": "12345",
       "state": "IL",
-      "services": [2, 5]
+      "services": [1, 2, 5]
     },
     {
       "id": 3,
@@ -122,9 +98,9 @@
       "photo": "/images/4.jpg",
       "name": "Deck Masters",
       "address": "321 Pine St, Smallville",
-      "zip": "20234",
-      "state": "TX",
-      "services": [6]
+      "zip": "12345",
+      "state": "IL",
+      "services": [1, 6]
     },
     {
       "id": 5,

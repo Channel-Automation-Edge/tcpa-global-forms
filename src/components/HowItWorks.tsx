@@ -4,7 +4,8 @@ import { motion } from 'framer-motion';
 
 const HowItWorks: React.FC = () => {
   return (
-    <div className="max-w-[85rem] grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 py-10 lg:py-20 px-4 sm:px-6 lg:px-8 mx-auto">
+    <div className='bg-xbg'>
+      <div className="max-w-[85rem] grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 py-10 lg:py-20 px-4 sm:px-6 lg:px-8 mx-auto">
       
       <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 1 }} transition={{ delay: 0.6 }}>
         <div className="relative flex sm:pe-6">
@@ -43,6 +44,8 @@ const HowItWorks: React.FC = () => {
       </motion.div>
 
     </div>
+    </div>
+    
   );
 };
 

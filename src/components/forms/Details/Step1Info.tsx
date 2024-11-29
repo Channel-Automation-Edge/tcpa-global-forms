@@ -14,7 +14,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext }) => {
     return null;
   }
 
-  const { zip, state, email, phone, firstname, lastname, setZip, setEmail, setPhone, setFirstname, setLastname, setState } = appContext;
+  const { zip, state, email, phone, firstname, lastname, generalOptIn, setZip, setEmail, setPhone, setFirstname, setLastname, setState, setGeneralOptIn } = appContext;
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -25,8 +25,10 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext }) => {
       state: params.get('state') || state || '',
       email: params.get('email') || email || '',
       phone: params.get('phone') || phone || '',
+      generalOptIn: generalOptIn || false,
     });
-  }, [firstname, lastname, zip, state, email, phone]);
+    formik.setFieldTouched('generalOptIn', true, true);
+  }, [firstname, lastname, zip, state, email, phone, generalOptIn]);
 
   // Define the validation schema using Yup
   const validationSchema = Yup.object({
@@ -38,6 +40,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext }) => {
     phone: Yup.string()
       .matches(/^\d{10}$/, 'Phone number must be 10 digits')
       .required('Phone number is required'),
+    generalOptIn: Yup.boolean().oneOf([true], 'You must opt-in to continue'),
   });
 
   const formik = useFormik({
@@ -48,6 +51,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext }) => {
       phone: '',
       firstname: '',
       lastname: '',
+      generalOptIn: false,
     },
     validationSchema, // Use Yup validation schema
     onSubmit: (values) => {
@@ -58,6 +62,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext }) => {
       setPhone(values.phone);
       setFirstname(values.firstname);
       setLastname(values.lastname);
+      setGeneralOptIn(values.generalOptIn);
       // Move to the next step
       onNext();
     },
@@ -86,7 +91,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext }) => {
                   onChange={formik.handleChange}
                   value={formik.values.firstname}
                   onBlur={formik.handleBlur}
-                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-[#FE4F00] focus:ring-[#FE4F00] dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-[#FE4F00]"
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
                 />
                 {formik.touched.firstname && formik.errors.firstname && (
                   <div className="error text-sm text-red-400">{formik.errors.firstname}</div>
@@ -102,7 +107,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext }) => {
                   onChange={formik.handleChange}
                   value={formik.values.lastname}
                   onBlur={formik.handleBlur}
-                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-[#FE4F00] focus:ring-[#FE4F00] dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-[#FE4F00]"
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
                 />
                 {formik.touched.lastname && formik.errors.lastname && (
                   <div className="error text-sm text-red-400">{formik.errors.lastname}</div>
@@ -119,7 +124,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext }) => {
                     onChange={formik.handleChange}
                     value={formik.values.zip}
                     onBlur={formik.handleBlur}
-                    className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-[#FE4F00] focus:ring-[#FE4F00] dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-[#FE4F00]"
+                    className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
                   />
                   {formik.touched.zip && formik.errors.zip && (
                     <div className="error text-sm text-red-400">{formik.errors.zip}</div>
@@ -135,7 +140,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext }) => {
                     onChange={formik.handleChange}
                     value={formik.values.state}
                     onBlur={formik.handleBlur}
-                    className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-[#FE4F00] focus:ring-[#FE4F00] dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-[#FE4F00]"
+                    className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
                   />
                   {formik.touched.state && formik.errors.state && (
                     <div className="error text-sm text-red-400">{formik.errors.state}</div>
@@ -152,7 +157,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext }) => {
                   onChange={formik.handleChange}
                   value={formik.values.email}
                   onBlur={formik.handleBlur}
-                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-[#FE4F00] focus:ring-[#FE4F00] dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-[#FE4F00]"
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
                 />
                 {formik.touched.email && formik.errors.email && (
                   <div className="error text-sm text-red-400">{formik.errors.email}</div>
@@ -168,22 +173,41 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext }) => {
                   onChange={formik.handleChange}
                   value={formik.values.phone}
                   onBlur={formik.handleBlur}
-                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-[#FE4F00] focus:ring-[#FE4F00] dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-[#FE4F00]"
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
                 />
                 {formik.touched.phone && formik.errors.phone && (
                   <div className="error text-sm text-red-400">{formik.errors.phone}</div>
                 )}
               </div>
 
+              <div className="flex items-start mt-4">
+                <input
+                  id="generalOptIn"
+                  name="generalOptIn"
+                  type="checkbox"
+                  onChange={formik.handleChange}
+                  checked={formik.values.generalOptIn}
+                  className="h-4 w-4 text-xorange border-gray-300 rounded focus:ring-xorange"
+                />
+                <label htmlFor="generalOptIn" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
+                  I agree to receive special offers and promotions.
+                </label>
+              </div>
+              {formik.errors.generalOptIn && (
+                <div className="text-sm text-red-500">
+                  {formik.errors.generalOptIn}
+                </div>
+              )}
+
               <div className="mt-6 grid">
                 <button
                   type="submit"
                   className={`w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
-                    formik.isValid
-                      ? 'bg-[#FE4F00] text-white shadow-lg shadow-[rgba(254,79,0,0.5)] transform transition-transform'
+                    formik.isValid && formik.values.generalOptIn
+                      ? 'bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform'
                       : 'bg-gray-200 text-white cursor-not-allowed'
                   }`}
-                  disabled={!formik.isValid}
+                  disabled={!formik.isValid || !formik.values.generalOptIn}
                 >
                   Confirm Information
                 </button>

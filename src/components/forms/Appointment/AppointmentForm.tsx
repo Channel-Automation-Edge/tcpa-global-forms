@@ -1,15 +1,20 @@
 import { useState } from 'react';
 import ProgressBar from '../../ui/ProgressBar';
-import Step1Schedule from './Step1Schedule';
-import Step2Contractors from './Step2Contractors';
-import Step3ThankYou from './Step3ThankYou';
+import { useNavigate } from 'react-router-dom';
+import Step2Schedule from './Step2Schedule';
+import Step3Contractors from './Step3Contractors';
+import Step1Quotes from './Step1Quotes';
 
 interface DetailsFormProps {
   onNext: () => void;
 }
 
+
+
 const DetailsForm: React.FC<DetailsFormProps> = ({ onNext }) => {
   const [currentStep, setCurrentStep] = useState(1);
+  const navigate = useNavigate();
+
 
   const handleNextStep = () => {
     if (currentStep < 3) {
@@ -19,12 +24,11 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext }) => {
     }
   };
 
+  const handleCompleted = () => {
+    navigate('/thank-you');
+  };
 
-  const handleHome = () => {
-    window.location.href = '/';
-  }
-
-  const progress = (currentStep - 1) * 33.3333339; 
+  const progress = (currentStep - 1) * 33.33339; 
 
   return (
     <div>
@@ -36,9 +40,10 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext }) => {
         </div>
       </div>
       <div>
-        {currentStep === 1 && <Step1Schedule onNext={handleNextStep}/>}
-        {currentStep === 2 && <Step2Contractors onNext={handleNextStep}/>}
-        {currentStep === 3 && <Step3ThankYou onHome={handleHome} />}
+        {currentStep === 1 && <Step1Quotes onNext={handleNextStep}/>}
+        {currentStep === 2 && <Step2Schedule onNext={handleNextStep}/>}
+        {currentStep === 3 && <Step3Contractors onCompleted={handleCompleted}/>}
+
       </div>
     </div>
   );

@@ -32,6 +32,24 @@ export default {
   				DEFAULT: '#00C9B7',
   				foreground: 'hsl(var(--secondary-foreground))'
   			},
+			xorange:{
+				DEFAULT: '#FDA619',
+			},
+			xyellow:{
+				DEFAULT: '#FAD000',
+			},
+			xblue:{
+				DEFAULT: '#2E5B5E',
+			},
+			xpurple:{
+				DEFAULT: '#414871',
+			},
+			lpurple:{
+				DEFAULT: '#E6E9FD',
+			},
+			xbg:{
+				DEFAULT: '#F0F1FB',
+			},
 			  off: {
 				DEFAULT: '#F0F0E6',
 			},
@@ -40,7 +58,7 @@ export default {
   				foreground: 'hsl(var(--muted-foreground))'
   			},
   			accent: {
-  				DEFAULT: '#ffd469',
+  				DEFAULT: 'hsl(var(--accent))',
   				foreground: 'hsl(var(--accent-foreground))'
   			},
   			destructive: {

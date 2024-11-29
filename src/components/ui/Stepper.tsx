@@ -21,7 +21,7 @@ const Stepper: React.FC<StepperProps> = ({ currentStep }) => {
             <li
               key={index}
               className={`flex items-center justify-center gap-2 p-2 sm:p-4 ${
-                currentStep === index + 1 ? 'bg-gray-50' : ''
+                currentStep === index + 1 ? 'bg-orange' : ''
               }`}
             >
               <svg

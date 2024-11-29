@@ -1,5 +1,4 @@
 import React from "react";
-import { cn } from "@/lib/utils";
 import Marquee from "./ui/marquee";
 
 interface Review {
@@ -34,44 +33,51 @@ const sortedReviews = [...reviews].sort((a, b) => a.id.localeCompare(b.id)); // 
 
 const ReviewCard: React.FC<Review> = ({ img, name, body }) => {
   return (
-    <figure
-      className={cn(
-        "relative w-96 cursor-pointer overflow-hidden rounded-xl border p-4",
-        // light styles
-        "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
-        // dark styles
-        "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]"
-      )}
-    >
-      <div className="flex flex-row items-center gap-2">
-        <img className="rounded-full" width="32" height="32" alt="" src={img} />
-        <div className="flex flex-col">
-          <figcaption className="text-sm font-medium dark:text-white">
-            {name}
-          </figcaption>
+    <figure className="relative w-96 cursor-pointer overflow-hidden rounded-xl border p-4">
+      <div className="absolute inset-0 bg-lpurple opacity-90"></div>
+      <div className="relative z-10">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <img className="rounded-full" width="32" height="32" alt="" src={img} />
+            <figcaption className="text-sm font-medium text-gray-900">{name}</figcaption>
+          </div>
+          
         </div>
+        <div className="flex items-center mt-2">
+          {Array.from({ length: 5 }).map((_, index) => (
+            <svg key={index} className="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 15l-5.878 3.09L5.5 10.18 1 6.18l5.932-.862L10 1l3.068 4.318L19 6.18l-4.5 4L15.878 18z" />
+            </svg>
+          ))}
+        </div>
+        <hr className="my-2 border-gray-300" />
+        <blockquote className="text-sm text-gray-700">{body}</blockquote>
       </div>
-      <blockquote className="mt-2 text-sm">{body}</blockquote>
     </figure>
   );
 };
 
 const Testimonials: React.FC = () => {
   return (
-    <div className="relative flex w-full flex-col items-center justify-center overflow-hidden bg-background">
-      {/* First Marquee: Ascending order */}
-      <Marquee pauseOnHover className="[--duration:20s]">
-        {sortedReviews.map((review) => (
-          <ReviewCard key={review.id} {...review} />
-        ))}
-      </Marquee>
+    <div>
+      <div className="relative flex w-full pt-16 pb-10 flex-col items-center justify-center overflow-hidden bg-xbg">
+        <div className="text-center">
+          <h2 className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200 mb-[25px]">
+            What our satisfied clients say about us
+          </h2>
+          <p className="mt-2 md:mt-4 text-gray-500 dark:text-neutral-500"></p>
+        </div>
+        {/* First Marquee: Ascending order */}
+        <Marquee pauseOnHover className="[--duration:20s]">
+          {sortedReviews.map((review) => (
+            <ReviewCard key={review.id} {...review} />
+          ))}
+        </Marquee>
 
-      {/* Second Marquee: Descending order */}
-      
-
-      {/* Gradient effect on edges */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-white dark:from-background"></div>
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-white dark:from-background"></div>
+        {/* Gradient effect on edges */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-white dark:from-background"></div>
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-white dark:from-background"></div>
+      </div>
     </div>
   );
 };
