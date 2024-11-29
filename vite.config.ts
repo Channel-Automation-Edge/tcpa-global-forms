@@ -10,6 +10,6 @@ export default defineConfig({
     },
   },
   build: {
-    chunkSizeWarningLimit: 1000, // Size in kB
+    chunkSizeWarningLimit: 1500, // Size in kB
   },
 })
