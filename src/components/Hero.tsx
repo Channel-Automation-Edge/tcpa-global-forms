@@ -107,33 +107,34 @@ const Hero = () => {
             </motion.p>
 
             <div className="flex flex-wrap max-w-[1206px] justify-center mt-5 pb-10" style={{ gap: '20px 30px' }}>
-              {servicesData.services.map((service) => (
-                <BlurFade
-                  key={service.id}
-                  delay={5 * 0.15}
-                  inView
-                  yOffset={8}
-                >
-                  <div
-                    className="flex flex-col items-center justify-center w-[256px] sm:w-[180px] md:w-[256px] lg:w-[256px] h-[156px] border border-gray-300 rounded-[20px] shadow-md p-4 transition-transform transform hover:scale-105"
-                    onClick={() => handleServiceSelect(service.id)}
-                    style={{boxShadow: 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
-                      transition: 'box-shadow 0.3s ease',}}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.boxShadow = 'rgba(254,139,16,0.5) 0px 22px 30px -8px';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px';
-                    }}
-                  >
-                    <div className="w-10 h-10 mb-4 bg-white rounded-full flex items-center justify-center">
-                      {/* Placeholder for service icon */}
-                    </div>
-                    <span className="text-white text-center">{service.name}</span>
-                  </div>
-                </BlurFade>
-              ))}
-            </div>
+  {servicesData.services.map((service, index) => (
+    <BlurFade
+      key={service.id}
+      delay={index * 0.15} // Incremental delay for staggered effect
+      inView
+      yOffset={8}
+    >
+      <div
+        className="flex flex-col items-center justify-center w-[256px] sm:w-[180px] md:w-[256px] lg:w-[256px] h-[156px] border border-gray-300 rounded-[20px] shadow-md p-4 transition-transform transform hover:scale-105"
+        onClick={() => handleServiceSelect(service.id)}
+        style={{boxShadow: 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
+          transition: 'box-shadow 0.3s ease',}}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.boxShadow = 'rgba(254,139,16,0.5) 0px 22px 30px -8px';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px';
+        }}
+      >
+        <div className="w-10 h-10 mb-4 bg-white rounded-full flex items-center justify-center">
+          {/* Placeholder for service icon */}
+        </div>
+        <span className="text-white text-center">{service.name}</span>
+      </div>
+    </BlurFade>
+  ))}
+</div>
+
 
           </div>
         </div>
