@@ -3,11 +3,14 @@ import React from 'react';
 const Footer: React.FC = () => {
   return (
     <footer className="bg-xpurple">
-      <div className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-
-
-
-
+      <div className="mx-auto max-w-5xl px-4 py-4 sm:px-6 lg:px-8 flex justify-between items-center text-white text-sm">
+        <div className="flex space-x-4">
+          <a href="#" className="hover:underline">Privacy Policy</a>
+          <a href="#" className="hover:underline">Terms</a>
+        </div>
+        <div>
+          &copy; 2024 Home Project Partners
+        </div>
       </div>
     </footer>
   );

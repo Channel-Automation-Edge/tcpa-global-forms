@@ -1,4 +1,5 @@
 import React from 'react';
+import BlurFade from './ui/blur-fade';
 
 const Benefits: React.FC = () => {
   return (
@@ -11,20 +12,20 @@ const Benefits: React.FC = () => {
         />
       </div>
 
-      <div className="text-center mt-10 mb-12">
+      <BlurFade delay={3 * 0.15} inView yOffset={15} className="text-center mb-12">
           <h2 className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200">
-          Why Homeowners Love Us
+          Why Homeowners <span className="text-xorange">Love Us</span>
           </h2>
           <p className="mt-2 md:mt-4 text-gray-500 dark:text-neutral-500">
 
           </p>
-      </div>
+      </BlurFade>
 
       {/* Grid */}
-      <div className="grid sm:grid-cols-3 gap-8 md:gap-12 ">
+      <div className="grid sm:grid-cols-3 gap-8 md:gap-12 grid-auto-[1fr]">
 
         {/* Icon Block */}
-        <div className="relative flex gap-x-5 rounded-xl border p-4">
+        <BlurFade delay={4 * 0.15} inView yOffset={15} className="relative flex gap-x-5 rounded-xl border p-4">
         <div className="absolute inset-0 bg-lpurple opacity-90"></div>
           <svg
             className="shrink-0 mt-1 size-6 text-xorange dark:text-xorange z-10"
@@ -49,11 +50,11 @@ const Benefits: React.FC = () => {
             Get a customized assessment of your home's specific needs and receive tailored recommendations from our experienced contractors
             </p>
           </div>
-        </div>
+        </BlurFade>
         {/* End Icon Block */}
 
         {/* Icon Block */}
-        <div className="relative flex gap-x-5 rounded-xl border p-4">
+        <BlurFade delay={4.5 * 0.15} inView yOffset={15} className="relative flex gap-x-5 rounded-xl border p-4">
         <div className="absolute inset-0 bg-lpurple opacity-90"></div>
           <svg
             className="shrink-0 mt-1 size-6 text-xorange dark:text-xorange z-10"
@@ -78,11 +79,11 @@ const Benefits: React.FC = () => {
             Take advantage of our contractors' expertise and get valuable insights on how to improve your home's functionality, safety, and value
             </p>
           </div>
-        </div>
+        </BlurFade>
         {/* End Icon Block */}
 
         {/* Icon Block */}
-        <div className="relative flex gap-x-5 rounded-xl border p-4">
+        <BlurFade delay={5 * 0.15} inView yOffset={15} className="relative flex gap-x-5 rounded-xl border p-4">
         <div className="absolute inset-0 bg-lpurple opacity-90"></div>
           <svg
             className="shrink-0 mt-1 size-6 text-xorange dark:text-xorange z-10"
@@ -107,11 +108,11 @@ const Benefits: React.FC = () => {
             Get priority access to our contractors' schedules. This means that you'll be able to get your project started sooner, and you'll have a better chance of getting the contractor you want
             </p>
           </div>
-        </div>
+        </BlurFade>
         {/* End Icon Block */}
 
         {/* Icon Block */}
-        <div className="relative flex gap-x-5 rounded-xl border p-4">
+        <BlurFade delay={5.5 * 0.15} inView yOffset={15} className="relative h- flex gap-x-5 rounded-xl border p-4">
         <div className="absolute inset-0 bg-lpurple opacity-90"></div>
           <svg
             className="shrink-0 mt-1 size-6 text-xorange dark:text-xorange z-10"
@@ -138,11 +139,11 @@ const Benefits: React.FC = () => {
             Schedule a free consultation with no strings attached. Use the consultation to explore different options
             </p>
           </div>
-        </div>
+        </BlurFade>
         {/* End Icon Block */}
 
         {/* Icon Block */}
-        <div className="relative flex gap-x-5 rounded-xl border p-4">
+        <BlurFade delay={6 * 0.15} inView yOffset={15}  className="relative flex gap-x-5 rounded-xl border p-4">
         <div className="absolute inset-0 bg-lpurple opacity-90"></div>
           <svg
             className="shrink-0 mt-1 size-6 text-xorange dark:text-xorange z-10"
@@ -169,11 +170,11 @@ const Benefits: React.FC = () => {
             Our contractors provide detailed, itemized estimates that outline the scope of work, materials, and labor costs
             </p>
           </div>
-        </div>
+        </BlurFade>
         {/* End Icon Block */}
 
         {/* Icon Block */}
-        <div className="relative flex gap-x-5 rounded-xl border p-4">
+        <BlurFade delay={6.5 * 0.15} inView yOffset={15} className="relative flex gap-x-5 rounded-xl border p-4">
         <div className="absolute inset-0 bg-lpurple opacity-90"></div>
           <svg
             className="shrink-0 mt-1 size-6 text-xorange dark:text-xorange z-10"
@@ -200,7 +201,7 @@ const Benefits: React.FC = () => {
             Get to know our contractors and experience the peace of mind that comes with working with trusted professionals
             </p>
           </div>
-        </div>
+        </BlurFade>
         {/* End Icon Block */}
       </div>
 

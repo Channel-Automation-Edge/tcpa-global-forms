@@ -39,7 +39,7 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext }) => {
       <div className="max-w-xl mx-auto">
         <div className="text-center">
           <h1 className="block text-3xl font-bold text-primary dark:text-white">
-            Review Your Invoice
+            Review Our Proposal
           </h1>
           <p className="mt-1 text-gray-600 dark:text-neutral-400">
             Please review the details below before submitting your request.
@@ -105,19 +105,19 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext }) => {
           </div>
         </div>
 
-        <div className="mt-6 flex justify-between">
+        <div className="mt-6 flex flex-col sm:flex-row justify-between sm:space-x-4 space-y-4 sm:space-y-0">
           <button
             type="button"
-            className="w-full max-w-xs px-0 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-4px]"
+            className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-600 text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
           >
             Call Us
           </button>
           <button
             type="button"
             onClick={onNext}
-            className="w-full max-w-xs ml-4 px-0 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-white shadow-lg shadow-[rgba(102,89,83,0.5)] transform transition-transform translate-y-[-4px]"
+            className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-white shadow-lg shadow-[rgba(102,89,83,0.5)]"
           >
-            Request Appointment
+            Claim Free Consultation
           </button>
           
         </div>

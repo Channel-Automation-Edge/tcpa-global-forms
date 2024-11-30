@@ -1,5 +1,6 @@
 import React from "react";
 import Marquee from "./ui/marquee";
+import BlurFade from "./ui/blur-fade";
 
 interface Review {
   name: string;
@@ -60,13 +61,15 @@ const ReviewCard: React.FC<Review> = ({ img, name, body }) => {
 const Testimonials: React.FC = () => {
   return (
     <div>
-      <div className="relative flex w-full pt-16 pb-10 flex-col items-center justify-center overflow-hidden bg-xbg">
+      <div className="relative flex w-full pt-16 pb-10 flex-col   items-center justify-center overflow-hidden bg-xbg">
         <div className="text-center">
-          <h2 className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200 mb-[25px]">
-            What our satisfied clients say about us
-          </h2>
+          <BlurFade delay={3 * 0.15} inView yOffset={15} className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200 mb-[25px]">
+            What our  <span className="text-xorange">satisfied</span> clients say about us
+          </BlurFade>
           <p className="mt-2 md:mt-4 text-gray-500 dark:text-neutral-500"></p>
         </div>
+
+        <BlurFade delay={6 * 0.15} inView yOffset={15}>
         {/* First Marquee: Ascending order */}
         <Marquee pauseOnHover className="[--duration:20s]">
           {sortedReviews.map((review) => (
@@ -74,7 +77,8 @@ const Testimonials: React.FC = () => {
           ))}
         </Marquee>
 
-        {/* Gradient effect on edges */}
+
+        </BlurFade>
         <div className="pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-white dark:from-background"></div>
         <div className="pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-white dark:from-background"></div>
       </div>

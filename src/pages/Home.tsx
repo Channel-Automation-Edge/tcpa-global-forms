@@ -12,18 +12,21 @@ const Home = () => {
     <div>
         
         <Hero/>
-        <Testimonials />
-        <TabSection/> 
-        
-        {/* <HowItWorks /> */}
+        <div className='bg-bxg'>
 
-        
-       
+            <Testimonials />
 
-        <Benefits />
+            <TabSection/> 
+          
+          {/* <HowItWorks /> */}
 
+            <Benefits />
+            <FAQ />
+
+          
+
+        </div>
         
-        <FAQ />
 
         <Footer />
     </div>

@@ -15,6 +15,7 @@ interface Contractor {
 interface Appointment {
   id: number;
   date: string;
+  time: string;
   optIn: boolean;
   contactPreferences: string[];
   contractor?: Contractor;
@@ -87,7 +88,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
   const [matchingContractors, setMatchingContractors] = useState<Contractor[]>([]);
   const [generalOptIn, setGeneralOptIn] = useState<boolean>(false);
   const [newsletterOptIn, setNewsletterOptIn] = useState<boolean>(false);
-  const [appointment, setAppointment] = useState<Appointment>({id:0, date: '', optIn: false, contactPreferences: [] });
+  const [appointment, setAppointment] = useState<Appointment>({id:0, date: '', time: '', optIn: false, contactPreferences: [] });
   const [scheduledAppointments, setScheduledAppointments] = useState<Appointment[]>([]);
 
   useEffect(() => {

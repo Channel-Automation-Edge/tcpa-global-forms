@@ -24,18 +24,19 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
   };
 
   return (
-    <div className="z-10 max-w-[100rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+    <div className="z-10 max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
       <div className="space-y-8">
         <div className="text-center">
           <h1 className="block text-3xl font-bold text-primary dark:text-white">
             Let us know what you need
           </h1>
-          <p className="mt-1 text-gray-600 dark:text-neutral-400">
+          <p className="mt-1 mb-12 text-gray-600 dark:text-neutral-400">
             Select a service you are interested in
           </p>
         </div>
 
-        <div className="mt-12 flex flex-wrap max-w-[1206px] justify-center pb-10" style={{ gap: '20px 30px' }}>
+        <div className=" flex flex-wrap justify-center"
+            style={{ gap: '20px 30px', marginTop: '15px', width: '100%' }}>
               {servicesData.services.map((service) => (
                 <div
                   key={service.id}

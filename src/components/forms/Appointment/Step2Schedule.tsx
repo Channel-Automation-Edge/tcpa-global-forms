@@ -4,6 +4,8 @@ import { useFormik } from 'formik';
 import { AppContext } from '../../../context/AppContext';
 import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
+import TimePickerModal from '@/components/ui/TimePickerModal';
+
 
 // Define props interface
 interface Step2ScheduleProps {
@@ -20,6 +22,7 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext }) => {
   const { numberOfQuotes, appointment, scheduledAppointments, setScheduledAppointments } = appContext;
   const [currentAppointmentIndex, setCurrentAppointmentIndex] = useState(0);
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const [isTimePickerOpen, setIsTimePickerOpen] = useState(false);
 
   useEffect(() => {
     const currentAppointment = scheduledAppointments[currentAppointmentIndex];
@@ -27,6 +30,7 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext }) => {
       setDate(new Date(currentAppointment.date));
       formik.setValues({
         date: currentAppointment.date,
+        time: currentAppointment.time || '',
         optIn: currentAppointment.optIn,
         contactPreferences: currentAppointment.contactPreferences,
       });
@@ -39,6 +43,7 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext }) => {
   const formik = useFormik({
     initialValues: {
       date: appointment.date,
+      time: appointment.time || '',
       optIn: appointment.optIn,
       contactPreferences: appointment.contactPreferences,
     },
@@ -82,6 +87,11 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext }) => {
     formik.setFieldValue('contactPreferences', newPreferences);
   };
 
+  const handleTimeSave = (time: string) => {
+    formik.setFieldValue('time', time);
+    console.log('Selected Time:', time);
+  };
+
   const renderAppointmentForm = () => (
     <form onSubmit={formik.handleSubmit}>
       <div className="mt-[-4px] p-4 shadow-lg rounded-md border border-gray-200 border-t-transparent"> 
@@ -111,6 +121,20 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext }) => {
               />
             </div>
           </div>
+          <div className="mt-4 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setIsTimePickerOpen(true)}
+              className="py-2 px-4 bg-xorange text-white rounded-lg"
+            >
+              Select Time
+            </button>
+          </div>
+          {formik.values.time && (
+            <div className="mt-2 text-center text-gray-700 dark:text-neutral-200">
+              Selected Time: {formik.values.time}
+            </div>
+          )}
           <div className="mt-6 mx-6 flex items-center">
             <input
               id="optIn"
@@ -234,6 +258,11 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext }) => {
         )}
 
         {renderAppointmentForm()}
+        <TimePickerModal
+          isOpen={isTimePickerOpen}
+          onClose={() => setIsTimePickerOpen(false)}
+          onSave={handleTimeSave}
+        />
       </div>
     </div>
   );
