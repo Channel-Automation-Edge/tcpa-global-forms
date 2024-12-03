@@ -30,7 +30,7 @@ const NavBar = () => {
           <div className="flex items-center gap-4">
             <div className="sm:flex sm:gap-4">
               <a
-                className="rounded-md bg-xorange px-5 py-2.5 text-sm font-medium text-primary"
+                className="rounded-md bg-xorange px-5 py-2.5 text-sm font-medium text-xbg"
                 href="#"
               >
                 Login

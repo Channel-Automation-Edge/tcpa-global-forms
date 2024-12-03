@@ -91,7 +91,7 @@
       "address": "789 Oak St, Metropolis",
       "zip": "12345",
       "state": "IL",
-      "services": [3, 11]
+      "services": [2, 3, 11]
     },
     {
       "id": 4,

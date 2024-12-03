@@ -2,19 +2,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../../context/AppContext';
 import contractorsData from '../../../assets/assets.json';
-import { Calendar } from '@/components/ui/calendar';
-import { useFormik } from 'formik';
-import { format } from 'date-fns';
 
-// Define props interface
 interface Step3ContractorsProps {
   onCompleted: () => void;
-}
-
-interface FormValues {
-  date: string;
-  optIn: boolean;
-  contactPreferences: string[];
 }
 
 const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted }) => {
@@ -24,234 +14,186 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted }) => {
     return null;
   }
 
-  const { selectedService, numberOfQuotes, matchingContractors, setMatchingContractors, scheduledAppointments, setScheduledAppointments, zip, state, contractorPreferences, firstname, lastname, email, phone, generalOptIn, serviceSpecifications, promo } = appContext;
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [currentAppointmentIndex, setCurrentAppointmentIndex] = useState(0);
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const {
+    selectedService,
+    matchingContractors,
+    setMatchingContractors,
+    zip,
+    state,
+    contractorPreferences,
+    firstname,
+    lastname,
+    email,
+    phone,
+    generalOptIn,
+    serviceSpecifications,
+    promo,
+    consentedContractors,
+    setConsentedContractors,
+    numberOfQuotes,
+  } = appContext;
+
   const [error, setError] = useState<string | null>(null);
+  const [contactDirectly, setContactDirectly] = useState<boolean>(false);
+  const [contactPreferences, setContactPreferences] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(true); // Loading state
 
   useEffect(() => {
-    const filteredContractors = contractorsData.contractors.filter(contractor =>
-      contractor.services.includes(selectedService) && contractor.zip === zip && contractor.state === state
-    ).slice(0, numberOfQuotes);
+    // Simulate loading process
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000); // 3-second delay
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const filteredContractors = contractorsData.contractors
+      .filter(
+        (contractor) =>
+          contractor.services.includes(selectedService) &&
+          contractor.zip === zip &&
+          contractor.state === state
+      )
+      .map((contractor) => ({ ...contractor, optIn: false }));
 
     setMatchingContractors(filteredContractors);
+  }, [selectedService, zip, state, setMatchingContractors]);
 
-    const updatedAppointments = scheduledAppointments.map((appointment, index) => ({
-      ...appointment,
-      contractor: filteredContractors[index] || appointment.contractor,
-    })).filter(appointment => appointment.contractor);
+  const handleContractorOptInChange = (contractorId: number, checked: boolean) => {
+    const updatedContractors = matchingContractors.map((contractor) =>
+      contractor.id === contractorId ? { ...contractor, optIn: checked } : contractor
+    );
+    setMatchingContractors(updatedContractors);
 
-    setScheduledAppointments(updatedAppointments);
-  }, [selectedService, numberOfQuotes, zip, state, setMatchingContractors, setScheduledAppointments]);
-
-  useEffect(() => {
-    const currentAppointment = scheduledAppointments[currentAppointmentIndex];
-    if (currentAppointment) {
-      setDate(new Date(currentAppointment.date));
-      formik.setValues({
-        date: currentAppointment.date,
-        optIn: currentAppointment.optIn,
-        contactPreferences: currentAppointment.contactPreferences,
-      });
-    } else {
-      setDate(new Date());
-      formik.resetForm();
-    }
-  }, [currentAppointmentIndex]);
-
-  const formik = useFormik<FormValues>({
-    initialValues: {
-      date: '',
-      optIn: false,
-      contactPreferences: [],
-    },
-    onSubmit: async (values) => {
-      const updatedAppointments = [...scheduledAppointments];
-      updatedAppointments[currentAppointmentIndex] = {
-        ...updatedAppointments[currentAppointmentIndex],
-        date: values.date,
-        optIn: values.optIn,
-        contactPreferences: values.contactPreferences,
-      };
-      setScheduledAppointments(updatedAppointments);
-      console.log('Scheduled Appointments:', updatedAppointments);
-      setIsModalOpen(false);
-
-      const payload = {
-        lead: {
-          firstname,
-          lastname,
-          email,
-          phone,
-          generalOptIn,
-          zip,
-          state,
-          selectedService,
-          serviceSpecifications,
-          contractorPreferences,
-          promo,
-        },
-        error: null,
-        appointments: updatedAppointments,
-      };
-
-      try {
-        const response = await fetch('https://hkdk.events/09d0txnpbpzmvq', { 
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
+    if (checked) {
+      const selectedContractor = updatedContractors.find((contractor) => contractor.id === contractorId);
+      if (selectedContractor) {
+        setConsentedContractors((prev) => {
+          const updatedConsentedContractors = [...prev, selectedContractor];
+          console.log('Consented Contractors:', updatedConsentedContractors);
+          return updatedConsentedContractors;
         });
-
-        if (!response.ok) {
-          throw new Error('Failed to send appointments');
-        }
-
-        console.log('Appointments sent successfully');
-        
-      } catch (err) {
-        console.error('Error sending appointments:', err);
-        setError((err as Error).message);
       }
-      onCompleted();
-    },
-  });
-
-  const handleDateChange = (date: Date | undefined) => {
-    if (date) {
-      setDate(date);
-      const formattedDate = format(date, 'yyyy-MM-dd');
-      formik.setFieldValue('date', formattedDate);
-      console.log('Selected Date:', formattedDate);
+    } else {
+      setConsentedContractors((prev) => {
+        const updatedConsentedContractors = prev.filter((contractor) => contractor.id !== contractorId);
+        console.log('Consented Contractors:', updatedConsentedContractors);
+        return updatedConsentedContractors;
+      });
     }
-  };
-
-  const handleOptInChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    formik.setFieldValue('optIn', event.target.checked);
   };
 
   const handleContactPreferencesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
     const newPreferences = checked
-      ? [...formik.values.contactPreferences, value]
-      : formik.values.contactPreferences.filter((pref) => pref !== value);
-    formik.setFieldValue('contactPreferences', newPreferences);
+      ? [...contactPreferences, value]
+      : contactPreferences.filter((pref) => pref !== value);
+    setContactPreferences(newPreferences);
+    console.log('Contact Preferences:', newPreferences);
   };
 
-  const renderAppointmentForm = () => (
-    <form className="mt-0 flex flex-col h-full">
-      <div className="flex-grow">
-          <h2 className="text-center mt-2 mb-4 text-xl font-semibold text-gray-800 dark:text-neutral-200">
-            Select a date
-          </h2>
-          <div className="flex justify-center mb-4">
-            <div className="border border-gray-300 p-2">
-            <Calendar
-                mode="single"
-                selected={date}
-                onSelect={handleDateChange}
-                modifiers={{
-                  today: new Date(), // Ensures the current date is always highlighted
-                  disabled: [
-                    { before: new Date() }, // Disable all previous dates
-                    { after: new Date(new Date().setDate(new Date().getDate() + 20)) }, // Disable dates after 20 days from today
-                    ...scheduledAppointments.map(appt => new Date(appt.date)).filter(apptDate => !date || apptDate.getTime() !== date.getTime()), // Exclude selected date from being disabled
-                  ],
-                }}
-                modifiersStyles={{
-                  
-                }}
-                className=""
-              />
-            </div>
-          </div>
-          <div className="mt-6 mx-6 flex items-center">
-            <input
-              id="optIn"
-              name="optIn"
-              type="checkbox"
-              checked={formik.values.optIn}
-              onChange={handleOptInChange}
-              className="h-4 w-4 text-xorange border-gray-300 rounded focus:ring-xorange"
-            />
-            <label htmlFor="optIn" className="ml-2 text-sm text-gray-900 dark:text-gray-300">
-              Opt-in for the designated contractor to contact me
-            </label>
-          </div>
-          <p className="text-sm mt-2 text-gray-500 dark:text-neutral-400 mx-6">
-            If this is not checked, we will contact/update you about your appointment.
-          </p>
-          {formik.values.optIn && (
-            <div className="mt-4">
-              <label className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">Preferred Contact Method</label>
-              <div className="flex flex-col">
-                {['phone', 'email', 'sms'].map((method) => (
-                  <div key={method} className="flex items-center mb-2">
-                    <input
-                      id={method}
-                      name="contactPreferences"
-                      type="checkbox"
-                      value={method}
-                      checked={formik.values.contactPreferences.includes(method)}
-                      onChange={handleContactPreferencesChange}
-                      className="h-4 w-4 text-xorange border-gray-300 rounded focus:ring-xorange"
-                    />
-                    <label htmlFor={method} className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
-                      {method.charAt(0).toUpperCase() + method.slice(1)}
-                    </label>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      <div className="mt-6 flex flex-col sm:flex-row justify-between sm:space-x-4 space-y-4 sm:space-y-0">
-        {currentAppointmentIndex > 0 && (
-          <button
-            type="button"
-            onClick={() => setCurrentAppointmentIndex(currentAppointmentIndex - 1)}
-            className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-600 text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
-          >
-            Previous
-          </button>
-        )}
-        <button
-          type="button"
-          onClick={() => formik.handleSubmit()}
-          className={`w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
-            formik.values.date
-              ? 'bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform'
-              : 'bg-gray-400 text-gray-700 cursor-not-allowed'
-          }`}
-          disabled={!formik.values.date}
-        >
-          Save changes
-        </button>
-      </div>
-    </form>
-  );
+  const handleContactDirectlyChange = (checked: boolean) => {
+    setContactDirectly(checked);
+    if (!checked) {
+      setContactPreferences([]);
+      setConsentedContractors([]);
+      setMatchingContractors((prev) =>
+        prev.map((contractor) => ({ ...contractor, optIn: false }))
+      );
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (consentedContractors.length === 0) {
+      setContactPreferences([]);
+    }
+
+    const payload = {
+      lead: {
+        firstname,
+        lastname,
+        email,
+        phone,
+        generalOptIn,
+        zip,
+        state,
+        selectedService,
+        serviceSpecifications,
+        contractorPreferences,
+        promo,
+      },
+      error: null,
+      type: 'appointment',
+      matchingContractors,
+      appointment: appContext.scheduledAppointments,
+      consent: {
+        SMS: {
+          description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Project Quotes to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
+          generalOptIn: generalOptIn,
+        },
+        Newsletter: {
+          description: 'By checking this box, you consent to receive marketing emails from us. You can unsubscribe at any time by clicking the "unsubscribe" link at the bottom of our emails or by contacting us at [your email address]. We will process your information in accordance with our Privacy Policy',
+          newsletterOptIn: appContext.newsletterOptIn,
+        },
+        OneToOne: {
+          description: 'By clicking Confirm Consulation(s), I am providing my ESIGN signature and express written consent agreement to permit the company, or companies selected above, and parties calling on their behalf, to contact me at the number provided below for marketing purposes including through the use of automated technology, such as SMS/MMS messages, AI generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and I can reach out to them directly at (888) 508-3081.',
+          consentedContractors,
+          contactPreferences,
+        },
+      },
+    };
+
+    try {
+      const response = await fetch('https://hkdk.events/09d0txnpbpzmvq', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send appointments');
+      }
+
+      console.log('Appointments sent successfully');
+    } catch (err) {
+      console.error('Error sending appointments:', err);
+      setError((err as Error).message);
+    }
+    onCompleted();
+  };
 
   const renderContractorCards = () => (
-    <div className="mt-6 space-y-4">
-      {scheduledAppointments.map((appointment, index) => (
-        <div key={index} className="p-4 border rounded-lg shadow-sm bg-white dark:bg-neutral-800 dark:border-neutral-700 flex flex-col sm:flex-row items-start sm:items-center max-w-[950px] mx-auto">
+    <div className="mt-4 space-y-4">
+      {matchingContractors.map((contractor) => (
+        <div
+          key={contractor.id}
+          className={`p-4 border rounded-lg shadow-sm bg-white dark:bg-neutral-800 dark:border-neutral-700 flex flex-col sm:flex-row items-start sm:items-center max-w-[950px] mx-auto ${
+            contractor.optIn ? 'border-xorange' : ''
+          }`}
+        >
+          {contactDirectly && (
+            <div className="flex items-center mr-4">
+              <input
+                id={`contractor-${contractor.id}`}
+                name={`contractor-${contractor.id}`}
+                type="checkbox"
+                checked={contractor.optIn}
+                onChange={(e) => handleContractorOptInChange(contractor.id, e.target.checked)}
+                className="h-4 w-4 text-xorange border-gray-300 rounded focus:ring-xorange"
+              />
+            </div>
+          )}
           <div className="flex items-center mb-4 sm:mb-0 sm:mr-4" style={{ minWidth: '150px' }}>
-            <img src={appointment.contractor?.photo} alt={appointment.contractor?.name} className="w-16 h-16 rounded-full" />
+            <img src={contractor.photo} alt={contractor.name} className="w-16 h-16 rounded-full" />
             <div className="ml-4">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white">{appointment.contractor?.name}</h3>
-              <p className="text-sm text-gray-600 dark:text-neutral-400">{appointment.contractor?.zip}, {appointment.contractor?.state}</p>
+              <h3 className="text-lg font-bold text-gray-900 dark:text-white">{contractor.name}</h3>
+              <p className="text-sm text-gray-600 dark:text-neutral-400">{contractor.zip}, {contractor.state}</p>
             </div>
           </div>
-          <div className="flex-grow sm:text-center mb-4 sm:mb-0">
-            <p className="text-sm text-gray-600 dark:text-neutral-400">Scheduled Date:</p>
-            <span className="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium border border-gray-800 text-gray-800 dark:border-neutral-200 dark:text-white">
-              {appointment.date}
-            </span>
-          </div>
           <div className="flex-grow sm:text-center mb-4 sm:mb-0 mx-3" style={{ width: '300px' }}>
-            
             <div className="flex flex-wrap gap-2 justify-start">
               {contractorPreferences.map((pref, idx) => (
                 <span key={idx} className="py-1 px-2 inline-flex items-center gap-x-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
@@ -264,18 +206,6 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted }) => {
               ))}
             </div>
           </div>
-          <div className="sm:text-right">
-            <button
-              type="button"
-              className="mt-4 sm:mt-0 w-auto py-2 px-4 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xpurple text-white "
-              onClick={() => {
-                setCurrentAppointmentIndex(index);
-                setIsModalOpen(true);
-              }}
-            >
-              Change Date
-            </button>
-          </div>
         </div>
       ))}
     </div>
@@ -283,65 +213,134 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted }) => {
 
   return (
     <div className="z-10 max-w-[100rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto relative">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center">
-          <h1 className="block text-3xl font-bold text-primary dark:text-white">
-            {matchingContractors.length === 0
-              ? 'No contractors are available in your area for the selected project.'
-              : matchingContractors.length < numberOfQuotes
-              ? `We only have ${matchingContractors.length} contractors available in your area`
-              : 'Your contractors are ready!'}
-          </h1>
-          <p className="mt-1 text-gray-600 dark:text-neutral-400">
-            {matchingContractors.length === 0
-              ? 'Please select another project.'
-              : 'We matched you with contractors in your area that meet your project specifications and contractor preferences.'}
-          </p>
-        </div>
-
-        {matchingContractors.length > 0 && renderContractorCards()}
-
-        {error && (
-          <div className="mt-4 text-center text-red-600">
-            {error}
+      {loading ? (
+        <div className="flex flex-col items-center justify-center h-full">
+          <div className="animate-spin inline-block size-8 border-[3px] border-current border-t-transparent text-xorange rounded-full dark:text-xorange" role="status" aria-label="loading">
+            <span className="sr-only">Loading...</span>
           </div>
-        )}
-
-        <div className="mt-20 flex justify-center">
-          <button
-            type="button"
-            onClick={() => formik.handleSubmit()}
-            className={`w-full max-w-xs px-0 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
-              scheduledAppointments.some(appt => appt.date)
-                ? 'bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-8px]'
-                : 'bg-gray-200 text-white cursor-not-allowed'
-            }`}
-            disabled={!scheduledAppointments.some(appt => appt.date)}
-          >
-            Request Free Consultation
-          </button>
+          <p className="mt-2 text-xorange dark:text-xorange">Matching you with contractors...</p>
         </div>
-      </div>
+      ) : (
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center">
+            <h1 className="block text-3xl font-bold text-primary dark:text-white">
+              {matchingContractors.length === 0
+                ? 'No contractors are available in your area for the selected project.'
+                : matchingContractors.length < numberOfQuotes
+                ? `We only have ${matchingContractors.length} contractors available in your area`
+                : 'Your Matching Contractors'}
+            </h1>
+            <p className="mt-1 text-gray-600 dark:text-neutral-400">
+              {matchingContractors.length === 0
+                ? 'Please select another project.'
+                : 'We will assign the best available experts to meet your specifications. Below is a list of potential companies that may assist with your consultation.'}
+            </p>
+          </div>
 
-      {isModalOpen && (
-        <div id="hs-scale-animation-modal" className="hs-overlay fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
-            <div className="flex justify-between items-center border-b pb-3">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white">Change Appointment Date</h3>
+          {error && (
+            <div className="mt-4 text-center text-red-600">
+              {error}
+            </div>
+          )}
+
+          <div className="mt-6 text-center">
+            {contactDirectly && (
+              <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">
+                Select companies below to allow them to contact you regarding your {numberOfQuotes > 1 ? 'consultations' : 'consultation'}<strong> if they are assigned</strong> to your project.
+              </p>
+            )}
+          </div>
+
+          {renderContractorCards()}
+
+          {contactDirectly && (
+            <div className="mt-4 text-left">
               <button
                 type="button"
-                className="text-gray-400 hover:text-gray-500 focus:outline-none"
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => {
+                  const allSelected = matchingContractors.every((contractor) => contractor.optIn);
+                  const updatedContractors = matchingContractors.map((contractor) => ({
+                    ...contractor,
+                    optIn: !allSelected,
+                  }));
+                  setMatchingContractors(updatedContractors);
+                  setConsentedContractors(!allSelected ? updatedContractors : []);
+                  console.log('Select All Contractors:', updatedContractors);
+                }}
+                className="py-2 px-4 bg-xorange text-white rounded-lg hover:bg-xorange-dark"
               >
-                <span className="sr-only">Close</span>
-                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                {matchingContractors.every((contractor) => contractor.optIn) ? 'Deselect All' : 'Select All'}
               </button>
             </div>
+          )}
+
+          <div className="mt-20 text-center">
+            <p className="text-sm text-gray-600 dark:text-neutral-400">
+              You will receive an update from us regarding your scheduled <strong>FREE {numberOfQuotes > 1 ? 'consultations' : 'consultation'}</strong>. If you prefer to be contacted directly by the assigned contractor(s), please check the box below:
+            </p>
             <div className="mt-4">
-              {renderAppointmentForm()}
+              <input
+                id="contactDirectly"
+                name="contactDirectly"
+                type="checkbox"
+                checked={contactDirectly}
+                onChange={(e) => handleContactDirectlyChange(e.target.checked)}
+                className="h-4 w-4 text-xorange border-gray-300 rounded focus:ring-xorange"
+              />
+              <label htmlFor="contactDirectly" className="ml-2 text-sm text-gray-900 dark:text-gray-300">
+                Optional: I authorize the assigned contractor(s) to contact me directly.
+              </label>
             </div>
+          </div>
+
+          {contactDirectly && consentedContractors.length > 0 && (
+            <>
+              <div className="mt-6 text-center">
+                <p className="text-sm text-gray-600 dark:text-neutral-400">I prefer to be contacted through:</p>
+                <div className="mt-4 flex flex-wrap justify-center gap-2">
+                  {['phone', 'sms', 'email'].map((method) => (
+                    <label
+                      key={method}
+                      htmlFor={`contact-${method}`}
+                      className={`cursor-pointer inline-flex items-center gap-x-2 py-2 px-4 border rounded-full text-sm font-medium transition ${
+                        contactPreferences.includes(method)
+                          ? 'bg-orange-100 text-xorange border-xorange'
+                          : 'bg-white text-gray-800 border-gray-300'
+                      }`}
+                    >
+                      <input
+                        id={`contact-${method}`}
+                        name={`contact-${method}`}
+                        type="checkbox"
+                        value={method}
+                        checked={contactPreferences.includes(method)}
+                        onChange={handleContactPreferencesChange}
+                        className="hidden"
+                      />
+                      {method.charAt(0).toUpperCase() + method.slice(1)}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              <div className="mt-6 text-center">
+                <p className="text-sm text-gray-600 dark:text-neutral-400">
+                  By clicking <span className="font-semibold">Confirm Consulation(s)</span>, I am providing my ESIGN signature and express written consent agreement to permit the company, or companies selected above, and parties calling on their behalf, to contact me at the number provided below for marketing purposes including through the use of automated technology, such as SMS/MMS messages, AI generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and I can reach out to them directly at (888) 508-3081.
+                  <br />
+                  My phone number where these companies may contact me is: {phone}
+                </p>
+              </div>
+            </>
+          )}
+
+          <div className="mt-20 flex justify-center">
+            <button
+              type="button"
+              onClick={handleSubmit}
+              className="w-full max-w-xs px-0 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-8px]"
+            >
+              Confirm Consultation
+            </button>
           </div>
         </div>
       )}

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import ProgressBar from '../../ui/ProgressBar';
-import Step1Info from './Step1Info';
-import Step2OptIn from './Step2OptIn';
+import Step2Info from './Step2Info';
+import Step1OptIn from './Step1OptIn';
 import Step3Invoice from './Step3Invoice';
 
 interface DetailsFormProps {
@@ -37,8 +37,8 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext }) => {
         </div>
       </div>
       <div>
-        {currentStep === 1 && <Step1Info onNext={handleNextStep} />}
-        {currentStep === 2 && <Step2OptIn onNext={handleNextStep} />}
+        {currentStep === 1 && <Step1OptIn onNext={handleNextStep} />}
+        {currentStep === 2 && <Step2Info onNext={handleNextStep} />}
         {currentStep === 3 && <Step3Invoice onNext={handleNextStep} />}
       </div>
     </div>

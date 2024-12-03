@@ -5,6 +5,7 @@ import FAQ from '@/components/FAQ';
 import TabSection from '@/components/TabSection';
 import Testimonials from '@/components/Testimonials';
 import Footer from '@/components/Footer';
+import HowItWorks from '@/components/HowItWorks';
 
 
 const Home = () => {
@@ -18,7 +19,7 @@ const Home = () => {
 
             <TabSection/> 
           
-          {/* <HowItWorks /> */}
+          <HowItWorks />
 
             <Benefits />
             <FAQ />

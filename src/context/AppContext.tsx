@@ -9,6 +9,7 @@ interface Contractor {
   zip: string;
   state: string;
   services: number[];
+  optIn: boolean;
 }
 
 // Define the Appointment interface
@@ -16,9 +17,6 @@ interface Appointment {
   id: number;
   date: string;
   time: string;
-  optIn: boolean;
-  contactPreferences: string[];
-  contractor?: Contractor;
 }
 
 // Define the shape of your context data
@@ -39,6 +37,8 @@ interface AppContextType {
   newsletterOptIn: boolean;
   appointment: Appointment;
   scheduledAppointments: Appointment[];
+  type: string;
+  consentedContractors: Contractor[];
   setFirstname: Dispatch<SetStateAction<string | null>>;
   setLastname: Dispatch<SetStateAction<string | null>>;
   setZip: Dispatch<SetStateAction<string | null>>;
@@ -55,6 +55,8 @@ interface AppContextType {
   setNewsletterOptIn: Dispatch<SetStateAction<boolean>>;
   setAppointment: Dispatch<SetStateAction<Appointment>>;
   setScheduledAppointments: Dispatch<SetStateAction<Appointment[]>>;
+  setType: Dispatch<SetStateAction<string>>;
+  setConsentedContractors: Dispatch<SetStateAction<Contractor[]>>;
 }
 
 // Create a context with an empty object as default value
@@ -88,8 +90,10 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
   const [matchingContractors, setMatchingContractors] = useState<Contractor[]>([]);
   const [generalOptIn, setGeneralOptIn] = useState<boolean>(false);
   const [newsletterOptIn, setNewsletterOptIn] = useState<boolean>(false);
-  const [appointment, setAppointment] = useState<Appointment>({id:0, date: '', time: '', optIn: false, contactPreferences: [] });
+  const [appointment, setAppointment] = useState<Appointment>({ id: 0, date: '', time: '' });
   const [scheduledAppointments, setScheduledAppointments] = useState<Appointment[]>([]);
+  const [type, setType] = useState<string>('');
+  const [consentedContractors, setConsentedContractors] = useState<Contractor[]>([]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -120,6 +124,8 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         newsletterOptIn,
         appointment,
         scheduledAppointments,
+        type,
+        consentedContractors,
         setFirstname,
         setLastname,
         setZip,
@@ -136,6 +142,8 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         setNewsletterOptIn,
         setAppointment,
         setScheduledAppointments,
+        setType,
+        setConsentedContractors,
       }}
     >
       {children}

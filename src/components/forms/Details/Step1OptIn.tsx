@@ -3,11 +3,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../../context/AppContext';
 
 // Define props interface
-interface Step2OptInProps {
+interface Step1OptInProps {
   onNext: () => void;
 }
 
-const Step2OptIn: React.FC<Step2OptInProps> = ({ onNext }) => {
+const Step1OptIn: React.FC<Step1OptInProps> = ({ onNext }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
@@ -137,4 +137,4 @@ const Step2OptIn: React.FC<Step2OptInProps> = ({ onNext }) => {
   );
 };
 
-export default Step2OptIn;
+export default Step1OptIn;

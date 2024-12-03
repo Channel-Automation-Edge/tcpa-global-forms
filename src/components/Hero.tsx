@@ -69,7 +69,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 1 }}
               transition={{ delay: 0.6 }}
-              className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-gray-800 transition-transform transform hover:scale-105"
+              className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-xbg transition-transform transform hover:scale-105"
               onClick={handleButtonClick}
               style={{boxShadow: 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
                 transition: 'box-shadow 0.3s ease',}}

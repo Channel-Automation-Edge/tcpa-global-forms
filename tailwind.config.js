@@ -33,7 +33,7 @@ export default {
   				foreground: 'hsl(var(--secondary-foreground))'
   			},
 			xorange:{
-				DEFAULT: '#FDA619',
+				DEFAULT: '#FF5500',
 			},
 			xyellow:{
 				DEFAULT: '#FAD000',

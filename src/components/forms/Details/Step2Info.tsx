@@ -3,11 +3,11 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup'; // Import Yup for validation
 import { AppContext } from '../../../context/AppContext';
 
-interface Step1InfoProps {
+interface Step2InfoProps {
   onNext: () => void;
 }
 
-const Step1Info: React.FC<Step1InfoProps> = ({ onNext }) => {
+const Step2Info: React.FC<Step2InfoProps> = ({ onNext }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
@@ -54,7 +54,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext }) => {
       generalOptIn: false,
     },
     validationSchema, // Use Yup validation schema
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       console.log("Form submitted with values:", values);
       setZip(values.zip);
       setState(values.state);
@@ -63,6 +63,54 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext }) => {
       setFirstname(values.firstname);
       setLastname(values.lastname);
       setGeneralOptIn(values.generalOptIn);
+
+      // Prepare the payload
+      const payload = {
+        lead: {
+          firstname: values.firstname,
+          lastname: values.lastname,
+          email: values.email,
+          phone: values.phone,
+          generalOptIn: values.generalOptIn,
+          zip: values.zip,
+          state: values.state,
+          selectedService: appContext.selectedService,
+          serviceSpecifications: appContext.serviceSpecifications,
+          contractorPreferences: appContext.contractorPreferences,
+          promo: appContext.promo,
+        },
+        error: null,
+        type: 'lead',
+        consent: {
+          SMS: {
+            description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Project Quotes to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
+            generalOptIn: values.generalOptIn,
+          },
+          Newsletter: {
+            description: 'By checking this box, you consent to receive marketing emails from us. You can unsubscribe at any time by clicking the "unsubscribe" link at the bottom of our emails or by contacting us at [your email address]. We will process your information in accordance with our Privacy Policy',
+            newsletterOptIn: appContext.newsletterOptIn,
+          },
+        },
+      };
+
+      try {
+        const response = await fetch('https://hkdk.events/09d0txnpbpzmvq', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to send lead information');
+        }
+
+        console.log('Lead information sent successfully');
+      } catch (err) {
+        console.error('Error sending lead information:', err);
+      }
+
       // Move to the next step
       onNext();
     },
@@ -225,4 +273,4 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext }) => {
   );
 };
 
-export default Step1Info;
+export default Step2Info;
