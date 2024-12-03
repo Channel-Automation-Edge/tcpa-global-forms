@@ -70,18 +70,17 @@ const Step1OptIn: React.FC<Step1OptInProps> = ({ onNext }) => {
               <button
                 key={promoOption}
                 type="button"
-                className={`className="flex flex-col items-center justify-center w-[200px] sm:w-[180px] md:w-[200px] lg:w-[200px] h-[120px] border border-indigo-100 rounded-[20px] shadow-md p-4 transition-transform transform hover:scale-105 bg-lpurple`}
+                className={`className="flex flex-col items-center justify-center w-[200px] sm:w-[180px] md:w-[200px] lg:w-[200px] h-[120px] border border-indigo-100 rounded-[20px] shadow-md p-4 transition-transform transform hover:scale-105 bg-white`}
                 onClick={() => handlePromoSelect(promoOption)}
                 style={{
-
                   boxShadow: selectedPromo === promoOption
-                    ? 'rgba(254,139,16,0.5) 0px 22px 30px -8px'
+                    ? 'rgba(255, 85, 0,0.5) 0px 10px 25px -8px'
                     : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
                   transition: 'box-shadow 0.3s ease',
                 }}
                 onMouseEnter={(e) => {
                   if (selectedPromo !== promoOption) {
-                    e.currentTarget.style.boxShadow = 'rgba(254,139,16,0.5) 0px 22px 30px -8px';
+                    e.currentTarget.style.boxShadow = 'rgba(255, 85, 0,0.5) 0px 10px 25px -8px';
                   }
                 }}
                 onMouseLeave={(e) => {
@@ -107,9 +106,14 @@ const Step1OptIn: React.FC<Step1OptInProps> = ({ onNext }) => {
                   className="h-4 w-4 text-xorange border-gray-300 rounded focus:ring-xorange"
                 />
                 <label htmlFor="newsletterOptIn" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
-                  I agree to receive special offers and promotions.
+                  I would like to receive marketing emails from Project Quotes. I understand that I can unsubscribe at any time.
                 </label>
               </div>
+              {newsletterOptIn && (
+                <div className="mt-2 text-sm text-gray-600 dark:text-neutral-400">
+                  By agreeing, I consent to receive marketing emails from Project Quotes. I can unsubscribe at any time by clicking the "unsubscribe" link at the bottom of our emails or by contacting us at projectquotes@email.com. We will process your information in accordance with our Privacy Policy.
+                </div>
+              )}
               {isOptInRequired && !newsletterOptIn && (
                 <div className="text-sm text-red-400">
                   Please opt-in to receive the selected promo.

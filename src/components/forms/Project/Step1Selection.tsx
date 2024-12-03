@@ -40,12 +40,12 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
               {servicesData.services.map((service) => (
                 <div
                   key={service.id}
-                  className="flex flex-col items-center justify-center w-[256px] sm:w-[180px] md:w-[256px] lg:w-[256px] h-[156px] border border-indigo-100 rounded-[20px] shadow-md p-4 transition-transform transform hover:scale-105 bg-lpurple"
+                  className="flex flex-col items-center justify-center w-[256px] sm:w-[180px] md:w-[256px] lg:w-[256px] h-[156px] border border-indigo-100 rounded-[20px] shadow-md p-4 transition-transform transform hover:scale-105 bg-white"
                   onClick={() => handleServiceSelect(service.id)}
                   style={{boxShadow: 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
                     transition: 'box-shadow 0.3s ease',}}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = 'rgba(254,139,16,0.5) 0px 22px 30px -8px';
+                    e.currentTarget.style.boxShadow = 'rgba(255, 85, 0,0.5) 0px 10px 25px -8px';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px';

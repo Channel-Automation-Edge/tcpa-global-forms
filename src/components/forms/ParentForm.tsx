@@ -1,24 +1,30 @@
 // ParentForm.tsx
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import ProjectForm from './Project/ProjectForm';
 import DetailsForm from './Details/DetailsForm';
 import AppointmentForm from './Appointment/AppointmentForm';
 import Stepper from '../ui/Stepper';
+import { AppContext } from '../../context/AppContext';
 
 const ParentForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
+  const appContext = useContext(AppContext);
+
+  if (!appContext) {
+    return null;
+  }
+
+  const { setSelectedService } = appContext;
 
   const handleNextStep = () => {
     setCurrentStep((prevStep) => prevStep + 1);
   };
 
-  // const handleRestart = () => {
-  //   setCurrentStep(1); // Go back to Step 1
-  // };
-
-  // const handleHome = () => {
-  //   // Reset any other state needed for a clean start
-  // };
+  const handleReset = () => {
+    setCurrentStep(1);
+    // clear selected service
+    setSelectedService(0);
+  }
 
   return (
     <div className='bg-xbg min-h-screen'>
@@ -30,13 +36,10 @@ const ParentForm = () => {
       <div>
         {currentStep === 1 && <ProjectForm onNext={handleNextStep} />}
         {currentStep === 2 && <DetailsForm onNext={handleNextStep} />}
-        {currentStep === 3 && <AppointmentForm onNext={handleNextStep} />}
+        {currentStep === 3 && <AppointmentForm onNext={handleNextStep} onReset={handleReset} />}
       </div>
     </div>
   );
 };
 
 export default ParentForm;
-
-
-// ?firstname=Tricia&lastname=Pastrano&email=email@example.com&phone=1234567890&zip=12345&state=IL

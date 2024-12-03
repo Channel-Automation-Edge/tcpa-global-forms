@@ -5,9 +5,10 @@ import contractorsData from '../../../assets/assets.json';
 
 interface Step3ContractorsProps {
   onCompleted: () => void;
+  onReset: () => void;
 }
 
-const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted }) => {
+const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onReset }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
@@ -182,7 +183,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted }) => {
                 type="checkbox"
                 checked={contractor.optIn}
                 onChange={(e) => handleContractorOptInChange(contractor.id, e.target.checked)}
-                className="h-4 w-4 text-xorange border-gray-300 rounded focus:ring-xorange"
+                className="h-4 w-4 text-xorange border-xorange border-2 rounded focus:ring-transparent"
               />
             </div>
           )}
@@ -237,111 +238,127 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted }) => {
             </p>
           </div>
 
-          {error && (
-            <div className="mt-4 text-center text-red-600">
-              {error}
-            </div>
-          )}
-
-          <div className="mt-6 text-center">
-            {contactDirectly && (
-              <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">
-                Select companies below to allow them to contact you regarding your {numberOfQuotes > 1 ? 'consultations' : 'consultation'}<strong> if they are assigned</strong> to your project.
-              </p>
-            )}
-          </div>
-
-          {renderContractorCards()}
-
-          {contactDirectly && (
-            <div className="mt-4 text-left">
+          {matchingContractors.length === 0 ? (
+            <div className="mt-6 text-center">
               <button
                 type="button"
-                onClick={() => {
-                  const allSelected = matchingContractors.every((contractor) => contractor.optIn);
-                  const updatedContractors = matchingContractors.map((contractor) => ({
-                    ...contractor,
-                    optIn: !allSelected,
-                  }));
-                  setMatchingContractors(updatedContractors);
-                  setConsentedContractors(!allSelected ? updatedContractors : []);
-                  console.log('Select All Contractors:', updatedContractors);
-                }}
+                onClick={onReset}
                 className="py-2 px-4 bg-xorange text-white rounded-lg hover:bg-xorange-dark"
               >
-                {matchingContractors.every((contractor) => contractor.optIn) ? 'Deselect All' : 'Select All'}
+                Select Another Service
               </button>
             </div>
-          )}
-
-          <div className="mt-20 text-center">
-            <p className="text-sm text-gray-600 dark:text-neutral-400">
-              You will receive an update from us regarding your scheduled <strong>FREE {numberOfQuotes > 1 ? 'consultations' : 'consultation'}</strong>. If you prefer to be contacted directly by the assigned contractor(s), please check the box below:
-            </p>
-            <div className="mt-4">
-              <input
-                id="contactDirectly"
-                name="contactDirectly"
-                type="checkbox"
-                checked={contactDirectly}
-                onChange={(e) => handleContactDirectlyChange(e.target.checked)}
-                className="h-4 w-4 text-xorange border-gray-300 rounded focus:ring-xorange"
-              />
-              <label htmlFor="contactDirectly" className="ml-2 text-sm text-gray-900 dark:text-gray-300">
-                Optional: I authorize the assigned contractor(s) to contact me directly.
-              </label>
-            </div>
-          </div>
-
-          {contactDirectly && consentedContractors.length > 0 && (
+          ) : (
             <>
+              {error && (
+                <div className="mt-4 text-center text-red-600">
+                  {error}
+                </div>
+              )}
+
               <div className="mt-6 text-center">
-                <p className="text-sm text-gray-600 dark:text-neutral-400">I prefer to be contacted through:</p>
-                <div className="mt-4 flex flex-wrap justify-center gap-2">
-                  {['phone', 'sms', 'email'].map((method) => (
-                    <label
-                      key={method}
-                      htmlFor={`contact-${method}`}
-                      className={`cursor-pointer inline-flex items-center gap-x-2 py-2 px-4 border rounded-full text-sm font-medium transition ${
-                        contactPreferences.includes(method)
-                          ? 'bg-orange-100 text-xorange border-xorange'
-                          : 'bg-white text-gray-800 border-gray-300'
-                      }`}
-                    >
-                      <input
-                        id={`contact-${method}`}
-                        name={`contact-${method}`}
-                        type="checkbox"
-                        value={method}
-                        checked={contactPreferences.includes(method)}
-                        onChange={handleContactPreferencesChange}
-                        className="hidden"
-                      />
-                      {method.charAt(0).toUpperCase() + method.slice(1)}
-                    </label>
-                  ))}
+                {contactDirectly && (
+                  <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">
+                    Select companies below to allow them to contact you regarding your {numberOfQuotes > 1 ? 'consultations' : 'consultation'}<strong> if they are assigned</strong> to your project.
+                  </p>
+                )}
+              </div>
+
+              {renderContractorCards()}
+
+              
+
+              <div className="mt-20 text-center">
+                <p className="text-sm text-gray-600 dark:text-neutral-400">
+                  You will receive an update from us regarding your scheduled <strong>FREE {numberOfQuotes > 1 ? 'consultations' : 'consultation'}</strong>. If you prefer to be contacted directly by the assigned contractor(s), please check the box below:
+                </p>
+                <div className="mt-4">
+                  <input
+                    id="contactDirectly"
+                    name="contactDirectly"
+                    type="checkbox"
+                    checked={contactDirectly}
+                    onChange={(e) => handleContactDirectlyChange(e.target.checked)}
+                    className="h-4 w-4 text-xorange border-gray-300 rounded focus:ring-xorange"
+                  />
+                  <label htmlFor="contactDirectly" className="ml-2 text-sm text-gray-900 dark:text-gray-300">
+                    Optional: I authorize the assigned contractor(s) to contact me directly.
+                  </label>
                 </div>
               </div>
 
-              <div className="mt-6 text-center">
-                <p className="text-sm text-gray-600 dark:text-neutral-400">
-                  By clicking <span className="font-semibold">Confirm Consulation(s)</span>, I am providing my ESIGN signature and express written consent agreement to permit the company, or companies selected above, and parties calling on their behalf, to contact me at the number provided below for marketing purposes including through the use of automated technology, such as SMS/MMS messages, AI generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and I can reach out to them directly at (888) 508-3081.
-                  <br />
-                  My phone number where these companies may contact me is: {phone}
-                </p>
+              {contactDirectly && (
+                <div className="mt-4 text-left">
+                  {/* <button
+                    type="button"
+                    onClick={() => {
+                      const allSelected = matchingContractors.every((contractor) => contractor.optIn);
+                      const updatedContractors = matchingContractors.map((contractor) => ({
+                        ...contractor,
+                        optIn: !allSelected,
+                      }));
+                      setMatchingContractors(updatedContractors);
+                      setConsentedContractors(!allSelected ? updatedContractors : []);
+                      console.log('Select All Contractors:', updatedContractors);
+                    }}
+                    className="py-2 px-4 bg-xorange text-white rounded-lg hover:bg-xorange-dark"
+                  >
+                    {matchingContractors.every((contractor) => contractor.optIn) ? 'Deselect All' : 'Select All'}
+                  </button> */}
+                </div>
+              )}
+
+              {contactDirectly && consentedContractors.length > 0 && (
+                <>
+                  <div className="mt-6 text-center">
+                    <p className="text-sm text-gray-600 dark:text-neutral-400">I prefer to be contacted through:</p>
+                    <div className="mt-4 flex flex-wrap justify-center gap-2">
+                      {['phone', 'sms', 'email'].map((method) => (
+                        <label
+                          key={method}
+                          htmlFor={`contact-${method}`}
+                          className={`cursor-pointer inline-flex items-center gap-x-2 py-2 px-4 border rounded-full text-sm font-medium transition ${
+                            contactPreferences.includes(method)
+                              ? 'bg-orange-100 text-xorange border-xorange'
+                              : 'bg-white text-gray-800 border-gray-300'
+                          }`}
+                        >
+                          <input
+                            id={`contact-${method}`}
+                            name={`contact-${method}`}
+                            type="checkbox"
+                            value={method}
+                            checked={contactPreferences.includes(method)}
+                            onChange={handleContactPreferencesChange}
+                            className="hidden"
+                          />
+                          {method.charAt(0).toUpperCase() + method.slice(1)}
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="mt-6 text-center">
+                    <p className="text-sm text-gray-600 dark:text-neutral-400">
+                      By clicking <span className="font-semibold">Confirm Consulation(s)</span>, I am providing my ESIGN signature and express written consent agreement to permit the company, or companies selected above, and parties calling on their behalf, to contact me at the number provided below for marketing purposes including through the use of automated technology, such as SMS/MMS messages, AI generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and I can reach out to them directly at (888) 508-3081.
+                      <br />
+                      My phone number where these companies may contact me is: {phone}
+                    </p>
+                  </div>
+                </>
+              )}
+
+              <div className="mt-20 flex justify-center">
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  className="w-full max-w-xs px-0 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-8px]"
+                >
+                  Confirm Consultation
+                </button>
               </div>
             </>
           )}
-
-          <div className="mt-20 flex justify-center">
-            <button
-              type="button"
-              onClick={handleSubmit}
-              className="w-full max-w-xs px-0 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-8px]"
-            >
-              Confirm Consultation
-            </button>
-          </div>
         </div>
       )}
     </div>

@@ -238,9 +238,14 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext }) => {
                   className="h-4 w-4 text-xorange border-gray-300 rounded focus:ring-xorange"
                 />
                 <label htmlFor="generalOptIn" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
-                  By clicking <span className='font-semibold'>Select and Agree</span> , I am providing my ESIGN signature and express written consent for Project Quotes to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, AI generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and I can reach out to them directly at (888) 508-3081.<br></br><br></br> My phone number where Project Quotes may contact me is: {formik.values.phone && <span>{formik.values.phone}</span>}
+                  I agree to the Terms of Service and Privacy Policy
                 </label>
               </div>
+              {formik.values.generalOptIn && (
+                <div className="mt-2 text-sm text-gray-600 dark:text-neutral-400">
+                  By clicking <span className='font-semibold'>Confirm Information</span> , I am providing my ESIGN signature and express written consent for Project Quotes to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, AI generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and I can reach out to them directly at (888) 508-3081.<br></br><br></br> My phone number where Project Quotes may contact me is: {formik.values.phone && <span>{formik.values.phone}</span>}
+                </div>
+              )}
               {formik.errors.generalOptIn && (
                 <div className="text-sm text-red-500">
                   {formik.errors.generalOptIn}

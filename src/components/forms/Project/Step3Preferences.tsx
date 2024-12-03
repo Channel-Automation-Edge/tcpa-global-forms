@@ -59,17 +59,17 @@ const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack }) =
               <button
                 key={index}
                 type="button"
-                className={`className="flex flex-col items-center justify-center w-[200px] sm:w-[180px] md:w-[200px] lg:w-[200px] h-[156px] border border-indigo-100 rounded-[20px] shadow-md p-4 transition-transform transform hover:scale-105 bg-lpurple`}
+                className={`className="flex flex-col items-center justify-center w-[200px] sm:w-[180px] md:w-[200px] lg:w-[200px] h-[156px] border border-indigo-100 rounded-[20px] shadow-md p-4 transition-transform transform hover:scale-105 bg-white`}
                 onClick={() => handlePreferenceSelect(preference)}
                 style={{
                   boxShadow: selectedPreferences.includes(preference)
-                    ? 'rgba(254,139,16,0.5) 0px 22px 30px -8px'
+                    ? 'rgba(255, 85, 0,0.5) 0px 10px 25px -8px'
                     : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
                   transition: 'box-shadow 0.3s ease',
                 }}
                 onMouseEnter={(e) => {
                   if (!selectedPreferences.includes(preference)) {
-                    e.currentTarget.style.boxShadow = 'rgba(254,139,16,0.5) 0px 22px 30px -8px';
+                    e.currentTarget.style.boxShadow = 'rgba(255, 85, 0,0.5) 0px 10px 25px -8px';
                   }
                 }}
                 onMouseLeave={(e) => {

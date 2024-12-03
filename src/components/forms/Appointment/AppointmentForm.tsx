@@ -7,11 +7,12 @@ import Step1Quotes from './Step1Quotes';
 
 interface DetailsFormProps {
   onNext: () => void;
+  onReset: () => void;
 }
 
 
 
-const DetailsForm: React.FC<DetailsFormProps> = ({ onNext }) => {
+const DetailsForm: React.FC<DetailsFormProps> = ({ onNext, onReset }) => {
   const [currentStep, setCurrentStep] = useState(1);
   const navigate = useNavigate();
 
@@ -28,6 +29,10 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext }) => {
     navigate('/thank-you');
   };
 
+  const handleReset = () => {
+    onReset();
+  };
+
   const progress = (currentStep - 1) * 33.33339; 
 
   return (
@@ -42,7 +47,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext }) => {
       <div>
         {currentStep === 1 && <Step1Quotes onNext={handleNextStep}/>}
         {currentStep === 2 && <Step2Schedule onNext={handleNextStep}/>}
-        {currentStep === 3 && <Step3Contractors onCompleted={handleCompleted}/>}
+        {currentStep === 3 && <Step3Contractors onCompleted={handleCompleted} onReset={handleReset}/>}
 
       </div>
     </div>
