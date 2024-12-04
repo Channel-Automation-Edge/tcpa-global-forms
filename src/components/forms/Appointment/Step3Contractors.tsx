@@ -33,6 +33,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
     consentedContractors,
     setConsentedContractors,
     numberOfQuotes,
+    termsAndPrivacyOptIn
   } = appContext;
 
   const [error, setError] = useState<string | null>(null);
@@ -142,6 +143,10 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
           description: 'By clicking Confirm Consulation(s), I am providing my ESIGN signature and express written consent agreement to permit the company, or companies selected above, and parties calling on their behalf, to contact me at the number provided below for marketing purposes including through the use of automated technology, such as SMS/MMS messages, AI generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and I can reach out to them directly at (888) 508-3081.',
           consentedContractors,
           contactPreferences,
+        },
+        TermsAndPrivacy: {
+          description: "I have read and accept the Terms & Conditions and Privacy Policy",
+          termsAndPrivacy: termsAndPrivacyOptIn,
         },
       },
     };
