@@ -48,13 +48,12 @@ const Step1Quotes: React.FC<Step1QuotesProps> = ({ onNext }) => {
   return (
     <div className="z-10 max-w-[100rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto relative">
       <div className="space-y-8">
-        <div className="text-center">
-          <h1 className="block text-3xl font-bold text-primary dark:text-white">
-            Request Quotes
-          </h1>
-          <p className="mt-1 text-gray-600 dark:text-neutral-400">
-            How many quotes would you like to request?
-          </p>
+        <div className='flex justify-center text-center mb-8'>
+          <div className="max-w-[40rem] text-center">
+            <h1 className="block text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl font-bold sm:font-bold md:font-semibold lg:font-semibold text-gray-800 dark:text-white">
+            How many free consultations would you like to schedule? Each one will be handled by a <span className="text-xorange">dedicated expert</span>!
+            </h1>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-12 flex flex-col h-full">

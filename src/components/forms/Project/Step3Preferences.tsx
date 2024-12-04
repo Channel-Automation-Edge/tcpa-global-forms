@@ -41,13 +41,12 @@ const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack }) =
         <img src="/images/back.png" alt="Go Back" className="w-6 h-6" />
       </button>
       <div className="space-y-8">
-        <div className="text-center">
-          <h1 className="block text-3xl font-bold text-primary dark:text-white">
-            Contractor Preferences
-          </h1>
-          <p className="mt-1 text-gray-600 dark:text-neutral-400">
-            Select the preferences that apply to your contractor
-          </p>
+        <div className='flex justify-center text-center mb-8'>
+          <div className="max-w-[40rem] text-center">
+            <h1 className="block text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl font-bold sm:font-bold md:font-semibold lg:font-semibold text-gray-800 dark:text-white">
+            What <span className="text-xorange">kind of expert</span> are you looking for? Don't worry, choosing won't cost you a thing!
+            </h1>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-12 flex flex-col h-full">

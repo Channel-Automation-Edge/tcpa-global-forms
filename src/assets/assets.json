@@ -4,7 +4,7 @@
       "id": 1,
       "name": "Roofing",
       "type": "outdoor",
-      "photo": "/images/sample.png",
+      "photo": "/images/roof.svg",
       "description": "Comprehensive roof replacement services to ensure durability and weather resistance.",
       "specifiedService": ["Leak prevention", "Weather resistance", "Durability"]
     },
@@ -12,7 +12,7 @@
       "id": 2,
       "name": "Windows & Doors",
       "type": "outdoor",
-      "photo": "/images/sample.png",
+      "photo": "/images/window.svg",
       "description": "Energy-efficient window replacement to improve insulation and reduce energy costs.",
       "specifiedService": ["Energy efficiency", "Improved insulation", "Cost reduction"]
     },
@@ -20,7 +20,7 @@
       "id": 3,
       "name": "Baths",
       "type": "outdoor",
-      "photo": "/images/sample.png",
+      "photo": "/images/bathtub.svg",
       "description": "Professional foundation repair services to stabilize and secure your home.",
       "specifiedService": ["Stabilization", "Home security", "Crack repair"]
     },
@@ -28,7 +28,7 @@
       "id": 4,
       "name": "Kitchen",
       "type": "outdoor",
-      "photo": "/images/sample.png",
+      "photo": "/images/kitchen.svg",
       "description": "Crawl space repair solutions to enhance structural integrity and prevent moisture issues.",
       "specifiedService": ["Moisture control", "Structural integrity", "Pest prevention"]
     },
@@ -36,7 +36,7 @@
       "id": 5,
       "name": "Foundation Repair",
       "type": "outdoor",
-      "photo": "/images/sample.png",
+      "photo": "/images/building.svg",
       "description": "High-quality fencing services for privacy and protection around your property.",
       "specifiedService": ["Privacy", "Property protection", "Durability"]
     },
@@ -44,7 +44,7 @@
       "id": 6,
       "name": "Crawl Space Repair",
       "type": "outdoor",
-      "photo": "/images/sample.png",
+      "photo": "/images/ceiling.svg",
       "description": "Custom deck construction to extend your living space into the outdoors.",
       "specifiedService": ["Outdoor living", "Custom design", "Durability"]
     },
@@ -52,7 +52,7 @@
       "id":7,
       "name": "Basement Waterproofing",
       "type": "indoor",
-      "photo": "/images/sample.png",
+      "photo": "/images/trowel.svg",
       "description": "Prevent leaks and water damage with expert basement waterproofing solutions.",
       "specifiedService": ["Leak prevention", "Water damage", "Mold control"]
     },
@@ -60,7 +60,7 @@
       "id":8,
       "name": "Decks",
       "type": "indoor",
-      "photo": "/images/sample.png",
+      "photo": "/images/terrace.svg",
       "description": "Prevent leaks and water damage with expert basement waterproofing solutions.",
       "specifiedService": ["Leak prevention", "Water damage", "Mold control"]
     }

@@ -15,7 +15,7 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
     return null;
   }
 
-  const { setSelectedService } = appContext;
+  const { setSelectedService, firstname } = appContext;
 
   const handleServiceSelect = (serviceId: number) => {
     setSelectedService(serviceId);
@@ -26,13 +26,23 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
   return (
     <div className="z-10 max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
       <div className="space-y-8">
-        <div className="text-center">
-          <h1 className="block text-3xl font-bold text-primary dark:text-white">
-            Let us know what you need
-          </h1>
-          <p className="mt-1 mb-12 text-gray-600 dark:text-neutral-400">
-            Select a service you are interested in
-          </p>
+        
+        <div className='flex justify-center text-center mb-8'>
+          <div className="max-w-[40rem] text-center">
+            <h1 className="block text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl font-bold sm:font-bold md:font-semibold lg:font-semibold text-gray-800 dark:text-white">
+              {firstname ? (
+                <>
+                  Hi {firstname}! Let's bring your{' '}
+                  <span className="text-xorange">future project</span> to life—choose what fits your vision below
+                </>
+              ) : (
+                <>
+                  Hi there! Let's bring your{' '}
+                  <span className="text-xorange">dream project</span> to life—choose what fits your vision below
+                </>
+              )}
+            </h1>
+          </div>
         </div>
 
         <div className=" flex flex-wrap justify-center"

@@ -4,11 +4,20 @@ import BlurFade from './ui/blur-fade';
 
 const HowItWorks: React.FC = () => {
   return (
-    <div>
-      <BlurFade delay={1 * 0.15} inView yOffset={0} className="max-w-[85rem] grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 py-10 lg:py-10 px-4 sm:px-6 lg:px-8 mx-auto">
-      
-      
-        <BlurFade delay={1 * 0.15} inView yOffset={15} className="relative flex sm:pe-6">
+    <div className='bg-xbg'>
+      <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+      <BlurFade delay={3 * 0.15} inView yOffset={15} className="text-center ">
+          <h2 className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200">
+          Here's What to <span className="text-xorange">Expect</span>
+          </h2>
+          <p className="mt-2 md:mt-4 text-gray-500 dark:text-neutral-500">
+
+          </p>
+      </BlurFade>
+        <BlurFade delay={4 * 0.15} inView yOffset={0} className="max-w-[85rem] grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 py-10 lg:py-10 px-4 sm:px-6 lg:px-8 mx-auto">
+
+
+        <BlurFade delay={6 * 0.15} inView yOffset={15} className="relative flex sm:pe-6">
           <img src="/images/step1.svg" alt="Step 1" className="shrink-0 size-10 mt-1" />
           <div className="ms-6">
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white">1: Expert Assignment</h3>
@@ -19,8 +28,8 @@ const HowItWorks: React.FC = () => {
         </BlurFade>
 
 
-      
-        <BlurFade delay={2 * 0.15} inView yOffset={15} className="relative flex sm:pe-6">
+
+        <BlurFade delay={8 * 0.15} inView yOffset={15} className="relative flex sm:pe-6">
           <img src="/images/step2.svg" alt="Step 2" className="shrink-0 size-10 mt-1" />
           <div className="ms-6">
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white">2: Consultation Scheduling</h3>
@@ -32,7 +41,7 @@ const HowItWorks: React.FC = () => {
 
 
 
-        <BlurFade delay={3 * 0.15} inView yOffset={15} className="relative flex sm:pe-6">
+        <BlurFade delay={10 * 0.15} inView yOffset={15} className="relative flex sm:pe-6">
           <img src="/images/step3.svg" alt="Step 3" className="shrink-0 size-10 mt-1" />
           <div className="ms-6">
             <h3 className="text-lg font-semibold text-gray-800 dark:text-white">3: On-Site Visit and Free Quote</h3>
@@ -43,7 +52,9 @@ const HowItWorks: React.FC = () => {
         </BlurFade>
 
 
-    </BlurFade>
+        </BlurFade>
+      </div>
+      
     </div>
     
   );

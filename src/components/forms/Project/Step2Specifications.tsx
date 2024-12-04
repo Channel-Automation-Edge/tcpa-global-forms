@@ -46,13 +46,13 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
         <img src="/images/back.png" alt="Go Back" className="w-6 h-6" />
       </button>
       <div className="space-y-8">
-        <div className="text-center">
-          <h1 className="block text-3xl font-bold text-primary dark:text-white">
-            Specify Your Needs
-          </h1>
-          <p className="mt-1 text-gray-600 dark:text-neutral-400">
-            Select the specifications that apply to your selected service
-          </p>
+
+        <div className='flex justify-center text-center mb-8'>
+          <div className="max-w-[40rem] text-center">
+            <h1 className="block text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl font-bold sm:font-bold md:font-semibold lg:font-semibold text-gray-800 dark:text-white">
+            Pick the <span className="text-xorange">specifications</span> that match your project and let's get started!
+            </h1>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="mt-12 flex flex-col h-full">
@@ -116,9 +116,9 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
           <div className="mt-20 flex justify-center">
             <button
               type="submit"
-              className={`w-full max-w-xs px-24 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
+              className={`w-full max-w-xs px-24 py-6 inline-flex justify-center items-center gap-x-2 text-lg font-medium rounded-lg border border-transparent ${
                 selectedSpecs.length > 0
-                  ? 'bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-8px]'
+                  ? 'bg-xorange text-white shadow-lg shadow-[rgba(255,85,0,0.5)] transform transition-transform translate-y-[-8px]'
                   : 'bg-gray-200 text-white cursor-not-allowed'
               }`}
               disabled={selectedSpecs.length === 0}

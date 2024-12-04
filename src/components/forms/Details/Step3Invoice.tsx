@@ -36,12 +36,19 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext }) => {
   return (
     <div className="z-10 max-w-[100rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto relative">
       <div className="max-w-xl mx-auto">
-        <div className='text-center'> <h1 className='block text-3xl font-bold text-primary dark:text-white'> Review Our Proposal </h1> <p className='mt-1 text-gray-600 dark:text-neutral-400'> Please review the details below before submitting your request. </p> </div>
+
+        <div className='flex justify-center text-center mb-8'>
+          <div className="max-w-[40rem] text-center">
+            <h1 className="block text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl font-bold sm:font-bold md:font-semibold lg:font-semibold text-gray-800 dark:text-white">
+            Take a look at our proposal and let's connect you with the <span className="text-xorange">right experts</span> for your free consultation!
+            </h1>
+          </div>
+        </div>
 
         <div className="mt-6 space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8 bg-white">
         <div className="flex justify-between items-center mb-6">
           <img src="/images/logodark.svg" alt="Logo" className="h-10" />
-          <h1 className="text-xl font-bold text-primary dark:text-white">Proposal</h1>
+          <h1 className="text-xl font-bold text-gray-700 dark:text-white">Proposal</h1>
         </div>
           <div className="text-sm text-gray-700 dark:text-neutral-400">
             <p>Prepared for: {firstname} {lastname}</p>

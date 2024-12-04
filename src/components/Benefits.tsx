@@ -5,12 +5,6 @@ const Benefits: React.FC = () => {
   return (
     <div className='bg-xbg'>
       <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
-      <div className="aspect-w-16 aspect-h-7">
-        <img
-          className="w-full object-cover rounded-xl"
-          src=""
-        />
-      </div>
 
       <BlurFade delay={3 * 0.15} inView yOffset={15} className="text-center mb-12">
           <h2 className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200">

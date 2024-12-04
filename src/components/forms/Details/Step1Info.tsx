@@ -3,18 +3,18 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup'; // Import Yup for validation
 import { AppContext } from '../../../context/AppContext';
 
-interface Step2InfoProps {
+interface Step1InfoProps {
   onNext: () => void;
 }
 
-const Step2Info: React.FC<Step2InfoProps> = ({ onNext }) => {
+const Step1Info: React.FC<Step1InfoProps> = ({ onNext }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
     return null;
   }
 
-  const { zip, state, email, phone, firstname, lastname, generalOptIn, setZip, setEmail, setPhone, setFirstname, setLastname, setState, setGeneralOptIn } = appContext;
+  const { zip, state, email, phone, firstname, lastname, termsAndPrivacyOptIn, setZip, setEmail, setPhone, setFirstname, setLastname, setState, setTermsAndPrivacyOptIn } = appContext;
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -25,10 +25,10 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext }) => {
       state: params.get('state') || state || '',
       email: params.get('email') || email || '',
       phone: params.get('phone') || phone || '',
-      generalOptIn: generalOptIn || false,
+      termsAndPrivacyOptIn: termsAndPrivacyOptIn || false,
     });
-    formik.setFieldTouched('generalOptIn', true, true);
-  }, [firstname, lastname, zip, state, email, phone, generalOptIn]);
+    formik.setFieldTouched('termsAndPrivacyOptIn', true, true);
+  }, [firstname, lastname, zip, state, email, phone, termsAndPrivacyOptIn]);
 
   // Define the validation schema using Yup
   const validationSchema = Yup.object({
@@ -40,7 +40,7 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext }) => {
     phone: Yup.string()
       .matches(/^\d{10}$/, 'Phone number must be 10 digits')
       .required('Phone number is required'),
-    generalOptIn: Yup.boolean().oneOf([true], 'You must opt-in to continue'),
+    termsAndPrivacyOptIn: Yup.boolean().oneOf([true], 'You must opt-in to continue'),
   });
 
   const formik = useFormik({
@@ -51,10 +51,10 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext }) => {
       phone: '',
       firstname: '',
       lastname: '',
-      generalOptIn: false,
+      termsAndPrivacyOptIn: false,
     },
     validationSchema, // Use Yup validation schema
-    onSubmit: async (values) => {
+    onSubmit: (values) => {
       console.log("Form submitted with values:", values);
       setZip(values.zip);
       setState(values.state);
@@ -62,54 +62,7 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext }) => {
       setPhone(values.phone);
       setFirstname(values.firstname);
       setLastname(values.lastname);
-      setGeneralOptIn(values.generalOptIn);
-
-      // Prepare the payload
-      const payload = {
-        lead: {
-          firstname: values.firstname,
-          lastname: values.lastname,
-          email: values.email,
-          phone: values.phone,
-          generalOptIn: values.generalOptIn,
-          zip: values.zip,
-          state: values.state,
-          selectedService: appContext.selectedService,
-          serviceSpecifications: appContext.serviceSpecifications,
-          contractorPreferences: appContext.contractorPreferences,
-          promo: appContext.promo,
-        },
-        error: null,
-        type: 'lead',
-        consent: {
-          SMS: {
-            description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Project Quotes to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
-            generalOptIn: values.generalOptIn,
-          },
-          Newsletter: {
-            description: 'By checking this box, you consent to receive marketing emails from us. You can unsubscribe at any time by clicking the "unsubscribe" link at the bottom of our emails or by contacting us at [your email address]. We will process your information in accordance with our Privacy Policy',
-            newsletterOptIn: appContext.newsletterOptIn,
-          },
-        },
-      };
-
-      try {
-        const response = await fetch('https://hkdk.events/09d0txnpbpzmvq', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to send lead information');
-        }
-
-        console.log('Lead information sent successfully');
-      } catch (err) {
-        console.error('Error sending lead information:', err);
-      }
+      setTermsAndPrivacyOptIn(values.termsAndPrivacyOptIn);
 
       // Move to the next step
       onNext();
@@ -119,13 +72,12 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext }) => {
   return (
     <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
       <div className="max-w-xl mx-auto">
-        <div className="text-center">
-          <h1 className="block text-3xl font-bold text-primary dark:text-white">
-            Confirm Your Information
-          </h1>
-          <p className="mt-1 text-gray-600 dark:text-neutral-400">
-            Make sure this is accurate so contractors can reach you!
-          </p>
+        <div className='flex justify-center text-center mb-8'>
+          <div className="max-w-[40rem] text-center">
+            <h1 className="block text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl font-bold sm:font-bold md:font-semibold lg:font-semibold text-gray-800 dark:text-white">
+            Please <span className="text-xorange">confirm your information</span> so we can get everything ready for your project
+            </h1>
+          </div>
         </div>
         <div className="mb-0 mt-6 space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8 bg-white">
           <div className="mt-2">
@@ -139,10 +91,10 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext }) => {
                   onChange={formik.handleChange}
                   value={formik.values.firstname}
                   onBlur={formik.handleBlur}
-                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
                 />
                 {formik.touched.firstname && formik.errors.firstname && (
-                  <div className="error text-sm text-red-400">{formik.errors.firstname}</div>
+                  <div className="error text-sm text-red-500">{formik.errors.firstname}</div>
                 )}
               </div>
 
@@ -158,7 +110,7 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext }) => {
                   className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
                 />
                 {formik.touched.lastname && formik.errors.lastname && (
-                  <div className="error text-sm text-red-400">{formik.errors.lastname}</div>
+                  <div className="error text-sm text-red-500">{formik.errors.lastname}</div>
                 )}
               </div>
 
@@ -172,10 +124,10 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext }) => {
                     onChange={formik.handleChange}
                     value={formik.values.zip}
                     onBlur={formik.handleBlur}
-                    className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
+                    className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
                   />
                   {formik.touched.zip && formik.errors.zip && (
-                    <div className="error text-sm text-red-400">{formik.errors.zip}</div>
+                    <div className="error text-sm text-red-500">{formik.errors.zip}</div>
                   )}
                 </div>
 
@@ -188,10 +140,10 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext }) => {
                     onChange={formik.handleChange}
                     value={formik.values.state}
                     onBlur={formik.handleBlur}
-                    className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
+                    className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
                   />
                   {formik.touched.state && formik.errors.state && (
-                    <div className="error text-sm text-red-400">{formik.errors.state}</div>
+                    <div className="error text-sm text-red-500">{formik.errors.state}</div>
                   )}
                 </div>
               </div>
@@ -205,10 +157,10 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext }) => {
                   onChange={formik.handleChange}
                   value={formik.values.email}
                   onBlur={formik.handleBlur}
-                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
                 />
                 {formik.touched.email && formik.errors.email && (
-                  <div className="error text-sm text-red-400">{formik.errors.email}</div>
+                  <div className="error text-sm text-red-500">{formik.errors.email}</div>
                 )}
               </div>
 
@@ -221,34 +173,36 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext }) => {
                   onChange={formik.handleChange}
                   value={formik.values.phone}
                   onBlur={formik.handleBlur}
-                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
                 />
                 {formik.touched.phone && formik.errors.phone && (
-                  <div className="error text-sm text-red-400">{formik.errors.phone}</div>
+                  <div className="error text-sm text-red-500">{formik.errors.phone}</div>
                 )}
               </div>
 
               <div className="flex items-start mt-4">
                 <input
-                  id="generalOptIn"
-                  name="generalOptIn"
+                  id="termsAndPrivacyOptIn"
+                  name="termsAndPrivacyOptIn"
                   type="checkbox"
                   onChange={formik.handleChange}
-                  checked={formik.values.generalOptIn}
-                  className="h-4 w-4 text-xorange border-gray-300 rounded focus:ring-xorange"
+                  checked={formik.values.termsAndPrivacyOptIn}
+                  className="h-6 w-6 text-xorange border-gray-300 rounded focus:ring-xorange"
                 />
-                <label htmlFor="generalOptIn" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
-                  I agree to the Terms of Service and Privacy Policy
+                <label htmlFor="termsAndPrivacyOptIn" className="ml-4 block text-base text-gray-900 dark:text-gray-300">
+                  I have read and agree to the 
+                  <a href="https://projectquote.com/terms-and-conditions" target="_blank" rel="noopener noreferrer" className="text-xorange underline ml-1">
+                    Terms & Conditions
+                  </a> 
+                  {" "}and 
+                  <a href="https://projectquote.com/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-xorange underline ml-1">
+                    Privacy Policy
+                  </a>.
                 </label>
               </div>
-              {formik.values.generalOptIn && (
-                <div className="mt-2 text-sm text-gray-600 dark:text-neutral-400">
-                  By clicking <span className='font-semibold'>Confirm Information</span> , I am providing my ESIGN signature and express written consent for Project Quotes to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, AI generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and I can reach out to them directly at (888) 508-3081.<br></br><br></br> My phone number where Project Quotes may contact me is: {formik.values.phone && <span>{formik.values.phone}</span>}
-                </div>
-              )}
-              {formik.errors.generalOptIn && (
+              {formik.errors.termsAndPrivacyOptIn && (
                 <div className="text-sm text-red-500">
-                  {formik.errors.generalOptIn}
+                  {formik.errors.termsAndPrivacyOptIn}
                 </div>
               )}
 
@@ -256,11 +210,11 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext }) => {
                 <button
                   type="submit"
                   className={`w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
-                    formik.isValid && formik.values.generalOptIn
+                    formik.isValid && formik.values.termsAndPrivacyOptIn
                       ? 'bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform'
                       : 'bg-gray-200 text-white cursor-not-allowed'
                   }`}
-                  disabled={!formik.isValid || !formik.values.generalOptIn}
+                  disabled={!formik.isValid || !formik.values.termsAndPrivacyOptIn}
                 >
                   Confirm Information
                 </button>
@@ -278,4 +232,4 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext }) => {
   );
 };
 
-export default Step2Info;
+export default Step1Info;

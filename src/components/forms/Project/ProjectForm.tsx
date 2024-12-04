@@ -44,10 +44,17 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onNext }) => {
 
   return (
     <div>
-      <div className="mx-auto max-w-screen-xl px-4 pb-8 pt-3 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-screen-xl px-4 pb-6 pt-6 sm:px-6 lg:px-8 relative">
         <div className="flex justify-center">
           <div className="w-[600px]">
             <ProgressBar progress={progress} />
+          </div>
+          <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <img
+              src="/images/avatar.jpg"
+              alt="Avatar"
+              className="w-20 h-20 rounded-full border-2 border-lpurple object-cover"
+            />
           </div>
         </div>
       </div>

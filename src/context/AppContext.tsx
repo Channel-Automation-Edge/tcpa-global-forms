@@ -34,6 +34,7 @@ interface AppContextType {
   promo: string;
   matchingContractors: Contractor[];
   generalOptIn: boolean;
+  termsAndPrivacyOptIn: boolean;
   newsletterOptIn: boolean;
   appointment: Appointment;
   scheduledAppointments: Appointment[];
@@ -52,6 +53,7 @@ interface AppContextType {
   setPromo: Dispatch<SetStateAction<string>>;
   setMatchingContractors: Dispatch<SetStateAction<Contractor[]>>;
   setGeneralOptIn: Dispatch<SetStateAction<boolean>>;
+  setTermsAndPrivacyOptIn: Dispatch<SetStateAction<boolean >>;
   setNewsletterOptIn: Dispatch<SetStateAction<boolean>>;
   setAppointment: Dispatch<SetStateAction<Appointment>>;
   setScheduledAppointments: Dispatch<SetStateAction<Appointment[]>>;
@@ -89,6 +91,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
   const [promo, setPromo] = useState<string>('');
   const [matchingContractors, setMatchingContractors] = useState<Contractor[]>([]);
   const [generalOptIn, setGeneralOptIn] = useState<boolean>(false);
+  const [termsAndPrivacyOptIn, setTermsAndPrivacyOptIn] = useState<boolean>(false);
   const [newsletterOptIn, setNewsletterOptIn] = useState<boolean>(false);
   const [appointment, setAppointment] = useState<Appointment>({ id: 0, date: '', time: '' });
   const [scheduledAppointments, setScheduledAppointments] = useState<Appointment[]>([]);
@@ -121,6 +124,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         promo,
         matchingContractors,
         generalOptIn,
+        termsAndPrivacyOptIn,
         newsletterOptIn,
         appointment,
         scheduledAppointments,
@@ -139,6 +143,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         setPromo,
         setMatchingContractors,
         setGeneralOptIn,
+        setTermsAndPrivacyOptIn,
         setNewsletterOptIn,
         setAppointment,
         setScheduledAppointments,

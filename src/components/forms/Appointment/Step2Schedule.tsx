@@ -165,16 +165,23 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext }) => {
   return (
     <div className="z-10 max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
       <div className="max-w-xl mx-auto">
-        <div className="text-center">
-          <h1 className="block text-3xl font-bold text-primary dark:text-white">
-            Schedule your FREE consultation
-          </h1>
-          <p className=" text-gray-600 dark:text-neutral-400 mt-4 mb-10">
-            {numberOfQuotes === 1
-              ? 'Select a date to be visited by one of our professional contractors to give you a free estimate.'
-              : `You requested ${numberOfQuotes} FREE consultations. Set a date for each one to be visited by our professional contractors to give you a free estimate.`}
-          </p>
-        </div>
+      <div className='flex justify-center text-center mb-8'>
+            <div className="max-w-[40rem] text-center">
+              <h1 className="block text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl font-bold sm:font-bold md:font-semibold lg:font-semibold text-gray-800 dark:text-white">
+                {numberOfQuotes === 1 ? (
+                  <>
+                    Great! Let's  
+                    <span className="text-xorange"> schedule your consultation</span>—pick a date and time for an expert to visit you for your quote
+                  </>
+                ) : (
+                  <>
+                    Great! Let's 
+                    <span className="text-xorange"> schedule your consultations</span>—pick a date and time for each expert to visit you for your quote
+                  </>
+                )}
+              </h1>
+            </div>
+          </div>
 
         {numberOfQuotes > 1 && (
           <div>

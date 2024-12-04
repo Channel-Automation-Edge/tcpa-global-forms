@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../../context/AppContext';
 import contractorsData from '../../../assets/assets.json';
 
+// Define props interface
 interface Step3ContractorsProps {
   onCompleted: () => void;
   onReset: () => void;
@@ -83,6 +84,10 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
         return updatedConsentedContractors;
       });
     }
+
+    if (consentedContractors.length === 0) {
+      setContactPreferences([]);
+    }
   };
 
   const handleContactPreferencesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -106,10 +111,6 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
   };
 
   const handleSubmit = async () => {
-    if (consentedContractors.length === 0) {
-      setContactPreferences([]);
-    }
-
     const payload = {
       lead: {
         firstname,
@@ -167,30 +168,13 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
   };
 
   const renderContractorCards = () => (
-    <div className="mt-4 space-y-4">
+    <div className="mt-6 space-y-4">
       {matchingContractors.map((contractor) => (
-        <div
-          key={contractor.id}
-          className={`p-4 border rounded-lg shadow-sm bg-white dark:bg-neutral-800 dark:border-neutral-700 flex flex-col sm:flex-row items-start sm:items-center max-w-[950px] mx-auto ${
-            contractor.optIn ? 'border-xorange' : ''
-          }`}
-        >
-          {contactDirectly && (
-            <div className="flex items-center mr-4">
-              <input
-                id={`contractor-${contractor.id}`}
-                name={`contractor-${contractor.id}`}
-                type="checkbox"
-                checked={contractor.optIn}
-                onChange={(e) => handleContractorOptInChange(contractor.id, e.target.checked)}
-                className="h-4 w-4 text-xorange border-xorange border-2 rounded focus:ring-transparent"
-              />
-            </div>
-          )}
+        <div key={contractor.id} className="p-4 border rounded-lg shadow-sm bg-white dark:bg-neutral-800 dark:border-neutral-700 flex flex-col sm:flex-row items-start sm:items-center max-w-[950px] mx-auto">
           <div className="flex items-center mb-4 sm:mb-0 sm:mr-4" style={{ minWidth: '150px' }}>
             <img src={contractor.photo} alt={contractor.name} className="w-16 h-16 rounded-full" />
             <div className="ml-4">
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white">{contractor.name}</h3>
+              <h3 className="text-lg font-bold text-gray-800 dark:text-white">{contractor.name}</h3>
               <p className="text-sm text-gray-600 dark:text-neutral-400">{contractor.zip}, {contractor.state}</p>
             </div>
           </div>
@@ -223,19 +207,18 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
         </div>
       ) : (
         <div className="max-w-7xl mx-auto">
-          <div className="text-center">
-            <h1 className="block text-3xl font-bold text-primary dark:text-white">
-              {matchingContractors.length === 0
-                ? 'No contractors are available in your area for the selected project.'
-                : matchingContractors.length < numberOfQuotes
-                ? `We only have ${matchingContractors.length} contractors available in your area`
-                : 'Your Matching Contractors'}
-            </h1>
-            <p className="mt-1 text-gray-600 dark:text-neutral-400">
-              {matchingContractors.length === 0
-                ? 'Please select another project.'
-                : 'We will assign the best available experts to meet your specifications. Below is a list of potential companies that may assist with your consultation.'}
-            </p>
+          <div className='flex justify-center text-center mb-8'>
+            <div className="max-w-[40rem] text-center">
+              <h1 className="block text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl font-bold sm:font-bold md:font-semibold lg:font-semibold text-gray-800 dark:text-white">
+                {matchingContractors.length === 0 ? (
+                  "Oh no! There are no experts in your area—please try another service"
+                ) : (
+                  <>
+                    Great news! We <span className="text-xorange">found experts</span> in your area who are ready to help
+                  </>
+                )}
+              </h1>
+            </div>
           </div>
 
           {matchingContractors.length === 0 ? (
@@ -245,116 +228,118 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
                 onClick={onReset}
                 className="py-2 px-4 bg-xorange text-white rounded-lg hover:bg-xorange-dark"
               >
-                Select Another Service
+                Select Another Project
               </button>
             </div>
           ) : (
             <>
+              {renderContractorCards()}
+
               {error && (
                 <div className="mt-4 text-center text-red-600">
                   {error}
                 </div>
               )}
 
-              <div className="mt-6 text-center">
-                {contactDirectly && (
-                  <p className="text-sm font-semibold text-gray-600 dark:text-neutral-400">
-                    Select companies below to allow them to contact you regarding your {numberOfQuotes > 1 ? 'consultations' : 'consultation'}<strong> if they are assigned</strong> to your project.
-                  </p>
-                )}
-              </div>
-
-              {renderContractorCards()}
-
-              
-
-              <div className="mt-20 text-center">
-                <p className="text-sm text-gray-600 dark:text-neutral-400">
-                  You will receive an update from us regarding your scheduled <strong>FREE {numberOfQuotes > 1 ? 'consultations' : 'consultation'}</strong>. If you prefer to be contacted directly by the assigned contractor(s), please check the box below:
+              <div className="mt-20 mb-6 text-center">
+                <p className="text-base text-gray-600 dark:text-neutral-400">
+                  You will receive an update from us regarding your scheduled <strong>FREE  {numberOfQuotes > 1 ? 'consultations' : 'consultation'}</strong>. If you prefer to be contacted directly by the assigned contractor(s), please check the checkbox below:
                 </p>
-                <div className="mt-4">
-                  <input
-                    id="contactDirectly"
-                    name="contactDirectly"
-                    type="checkbox"
-                    checked={contactDirectly}
-                    onChange={(e) => handleContactDirectlyChange(e.target.checked)}
-                    className="h-4 w-4 text-xorange border-gray-300 rounded focus:ring-xorange"
-                  />
-                  <label htmlFor="contactDirectly" className="ml-2 text-sm text-gray-900 dark:text-gray-300">
-                    Optional: I authorize the assigned contractor(s) to contact me directly.
-                  </label>
-                </div>
               </div>
 
-              {contactDirectly && (
-                <div className="mt-4 text-left">
-                  {/* <button
-                    type="button"
-                    onClick={() => {
-                      const allSelected = matchingContractors.every((contractor) => contractor.optIn);
-                      const updatedContractors = matchingContractors.map((contractor) => ({
-                        ...contractor,
-                        optIn: !allSelected,
-                      }));
-                      setMatchingContractors(updatedContractors);
-                      setConsentedContractors(!allSelected ? updatedContractors : []);
-                      console.log('Select All Contractors:', updatedContractors);
-                    }}
-                    className="py-2 px-4 bg-xorange text-white rounded-lg hover:bg-xorange-dark"
-                  >
-                    {matchingContractors.every((contractor) => contractor.optIn) ? 'Deselect All' : 'Select All'}
-                  </button> */}
+              <div className="relative flex flex-col justify-center items-center space-y-4">
+                <div className="w-[60rem] text-left mt-4">
+                  <div className="flex items-start">
+                    <input
+                      id="contactDirectly"
+                      name="contactDirectly"
+                      type="checkbox"
+                      checked={contactDirectly}
+                      onChange={(e) => handleContactDirectlyChange(e.target.checked)}
+                      className="h-6 w-6 text-xorange border-gray-300 rounded focus:ring-xorange"
+                    />
+                    <label htmlFor="contactDirectly" className="ml-4 block text-base text-gray-800 dark:text-gray-300">
+                      Optional: I authorize the assigned contractor(s) to contact me directly.
+                    </label>
+                  </div>
                 </div>
-              )}
 
-              {contactDirectly && consentedContractors.length > 0 && (
-                <>
-                  <div className="mt-6 text-center">
-                    <p className="text-sm text-gray-600 dark:text-neutral-400">I prefer to be contacted through:</p>
-                    <div className="mt-4 flex flex-wrap justify-center gap-2">
-                      {['phone', 'sms', 'email'].map((method) => (
-                        <label
-                          key={method}
-                          htmlFor={`contact-${method}`}
-                          className={`cursor-pointer inline-flex items-center gap-x-2 py-2 px-4 border rounded-full text-sm font-medium transition ${
-                            contactPreferences.includes(method)
-                              ? 'bg-orange-100 text-xorange border-xorange'
-                              : 'bg-white text-gray-800 border-gray-300'
-                          }`}
-                        >
-                          <input
-                            id={`contact-${method}`}
-                            name={`contact-${method}`}
-                            type="checkbox"
-                            value={method}
-                            checked={contactPreferences.includes(method)}
-                            onChange={handleContactPreferencesChange}
-                            className="hidden"
-                          />
-                          {method.charAt(0).toUpperCase() + method.slice(1)}
-                        </label>
-                      ))}
+                <div className="w-[60rem]">
+                  {contactDirectly && (
+                    <div className="mt-1 w-[50rem] text-left">
+                      <p className="text-base text-gray-600 dark:text-neutral-400">
+                        Select companies below to allow them to contact you regarding your {numberOfQuotes > 1 ? 'consultations' : 'consultation'}. Please note, the selected companies will contact you <strong>only if they are assigned</strong> to your consultation.
+                      </p>
+                      <div className="mt-4 space-y-2">
+                        {matchingContractors.map((contractor) => (
+                          <div key={contractor.id} className="flex items-center justify-left">
+                            <input
+                              id={`contractor-${contractor.id}`}
+                              name={`contractor-${contractor.id}`}
+                              type="checkbox"
+                              checked={contractor.optIn}
+                              onChange={(e) => handleContractorOptInChange(contractor.id, e.target.checked)}
+                              className="h-6 w-6 text-xorange border-gray-300 rounded focus:ring-xorange"
+                            />
+                            <label htmlFor={`contractor-${contractor.id}`} className="ml-2 text-base text-gray-800 dark:text-gray-300">
+                              {contractor.name}
+                            </label>
+                          </div>
+                        ))}
+                        <div className="mt-4">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const allSelected = matchingContractors.every((contractor) => contractor.optIn);
+                              const updatedContractors = matchingContractors.map((contractor) => ({
+                                ...contractor,
+                                optIn: !allSelected,
+                              }));
+                              setMatchingContractors(updatedContractors);
+                              setConsentedContractors(!allSelected ? updatedContractors : []);
+                              console.log('Select All Contractors:', updatedContractors);
+                            }}
+                            className=" text-xorange text-sm hover:bg-xorange-dark"
+                          >
+                            {matchingContractors.every((contractor) => contractor.optIn) ? 'Deselect All' : 'Select All'}
+                          </button>
+                        </div>
+                      </div>
+
+                      {consentedContractors.length > 0 && (
+                        <div className="mt-6 text-left">
+                          <p className="text-base text-gray-800 dark:text-neutral-400">I prefer to be contacted through:</p>
+                          <div className="mt-4 space-y-2">
+                            {['phone', 'sms', 'email'].map((method) => (
+                              <div key={method} className="flex items-left justify-left">
+                                <input
+                                  id={`contact-${method}`}
+                                  name={`contact-${method}`}
+                                  type="checkbox"
+                                  value={method}
+                                  checked={contactPreferences.includes(method)}
+                                  onChange={handleContactPreferencesChange}
+                                  className="h-6 w-6 text-xorange border-gray-300 rounded focus:ring-xorange"
+                                />
+                                <label htmlFor={`contact-${method}`} className="ml-2 text-base text-gray-800 dark:text-gray-300">
+                                  {method.charAt(0).toUpperCase() + method.slice(1)}
+                                </label>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  </div>
-
-                  <div className="mt-6 text-center">
-                    <p className="text-sm text-gray-600 dark:text-neutral-400">
-                      By clicking <span className="font-semibold">Confirm Consulation(s)</span>, I am providing my ESIGN signature and express written consent agreement to permit the company, or companies selected above, and parties calling on their behalf, to contact me at the number provided below for marketing purposes including through the use of automated technology, such as SMS/MMS messages, AI generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and I can reach out to them directly at (888) 508-3081.
-                      <br />
-                      My phone number where these companies may contact me is: {phone}
-                    </p>
-                  </div>
-                </>
-              )}
-
+                  )}
+                </div>
+              </div>
               <div className="mt-20 flex justify-center">
                 <button
                   type="button"
                   onClick={handleSubmit}
                   className="w-full max-w-xs px-0 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-8px]"
                 >
-                  Confirm Consultation
+                  Confirm Consultation(s)
                 </button>
               </div>
             </>

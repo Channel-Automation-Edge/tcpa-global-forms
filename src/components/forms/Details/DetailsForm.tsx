@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import ProgressBar from '../../ui/ProgressBar';
-import Step2Info from './Step2Info';
-import Step1OptIn from './Step1OptIn';
+import Step1Info from './Step1Info';
+import Step2PromoOptIn from './Step2PromoOptIn';
 import Step3Invoice from './Step3Invoice';
 
 interface DetailsFormProps {
@@ -19,26 +19,27 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext }) => {
     }
   };
 
-  // const handleBackStep = () => {
-  //   if (currentStep > 1) {
-  //     setCurrentStep((prevStep) => prevStep - 1);
-  //   }
-  // }
-
   const progress = (currentStep - 1) * 33; 
 
   return (
     <div>
-      <div className="mx-auto max-w-screen-xl px-4 pb-8 pt-3 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-screen-xl px-4 pb-6 pt-6 sm:px-6 lg:px-8 relative">
         <div className="flex justify-center">
           <div className="w-[600px]">
             <ProgressBar progress={progress} />
           </div>
+          <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <img
+              src="/images/avatar.jpg"
+              alt="Avatar"
+              className="w-20 h-20 rounded-full border-2 border-lpurple object-cover"
+            />
+          </div>
         </div>
       </div>
       <div>
-        {currentStep === 1 && <Step1OptIn onNext={handleNextStep} />}
-        {currentStep === 2 && <Step2Info onNext={handleNextStep} />}
+        {currentStep === 1 && <Step1Info onNext={handleNextStep} />}
+        {currentStep === 2 && <Step2PromoOptIn onNext={handleNextStep} />}
         {currentStep === 3 && <Step3Invoice onNext={handleNextStep} />}
       </div>
     </div>
