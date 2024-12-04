@@ -50,37 +50,55 @@ const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack }) =
         </div>
 
         <form onSubmit={handleSubmit} className="mt-12 flex flex-col h-full">
-          <div
-            className="flex flex-wrap justify-center"
-            style={{ gap: '20px 30px', marginTop: '15px', width: '100%' }}
-          >
-            {['Licensed', 'Insured', 'Bonded', 'Top Rated'].map((preference, index) => (
-              <button
-                key={index}
-                type="button"
-                className={`className="flex flex-col items-center justify-center w-[200px] sm:w-[180px] md:w-[200px] lg:w-[200px] h-[156px] border border-indigo-100 rounded-[20px] shadow-md p-4 transition-transform transform hover:scale-105 bg-white`}
-                onClick={() => handlePreferenceSelect(preference)}
-                style={{
-                  boxShadow: selectedPreferences.includes(preference)
-                    ? 'rgba(255, 85, 0,0.5) 0px 10px 25px -8px'
-                    : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
-                  transition: 'box-shadow 0.3s ease',
-                }}
-                onMouseEnter={(e) => {
-                  if (!selectedPreferences.includes(preference)) {
-                    e.currentTarget.style.boxShadow = 'rgba(255, 85, 0,0.5) 0px 10px 25px -8px';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!selectedPreferences.includes(preference)) {
-                    e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px';
-                  }
-                }}
-              >
-                <span className="text-xpurple text-center block">{preference}</span>
-              </button>
-            ))}
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-[20px]" style={{ marginTop: '15px', width: '100%' }}>
+            {['Licensed', 'Insured', 'Bonded', 'Top Rated'].map((preference, index) => {
+              // Determine the correct icon based on the preference
+              const iconSrc = {
+                Licensed: '/images/license.svg',
+                Insured: '/images/insured.svg',
+                Bonded: '/images/bond.svg',
+                'Top Rated': '/images/rated.svg',
+              }[preference];
+
+              return (
+                <button
+                  key={index}
+                  type="button"
+                  className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[200px] h-[80px] sm:h-[156px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
+                  onClick={() => handlePreferenceSelect(preference)}
+                  style={{
+                    boxShadow: selectedPreferences.includes(preference)
+                      ? 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px'
+                      : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -6px',
+                    transition: 'box-shadow 0.3s ease',
+                    borderColor: selectedPreferences.includes(preference)
+                      ? 'rgba(255, 81, 0, 0.7)'
+                      : 'rgba(157, 176, 197, 0.25)',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!selectedPreferences.includes(preference)) {
+                      e.currentTarget.style.boxShadow = 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px';
+                      e.currentTarget.style.borderColor = 'rgba(255, 81, 0, 0.7)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!selectedPreferences.includes(preference)) {
+                      e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -6px';
+                      e.currentTarget.style.borderColor = 'rgba(157, 176, 197, 0.25)';
+                    }
+                  }}
+                >
+                  <img
+                    src={iconSrc}
+                    alt={`${preference} icon`}
+                    className="w-12 h-12 sm:w-14 sm:h-14 sm:mb-4 ml-2 mr-4 sm:ml-0 sm:mr-0"
+                  />
+                  <span className="text-gray-800 text-base font-medium text-center sm:text-left">{preference}</span>
+                </button>
+              );
+            })}
           </div>
+
 
           <div className="mt-20 flex justify-center">
             <button

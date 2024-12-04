@@ -15,7 +15,6 @@ const Home = () => {
         <div className='bg-bxg'>
 
             <Testimonials />
-
             <TabSection/> 
 
             <Benefits />

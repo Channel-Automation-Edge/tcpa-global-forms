@@ -38,13 +38,13 @@ const Hero = () => {
           <NavBar />
           <div className="z-10 flex items-center justify-center flex-col px-4 mt-0 space-y-[25px]">
             <GradualSpacing
-              className="hidden sm:block font-display text-center text-4xl sm:text-4xl md:text-4xl lg:text-5xl xl:text-5xl font-bold -tracking-widest text-off dark:text-white mt-[120px] md:mt-[160px]"
+              className="hidden sm:block font-display text-center text-4xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-5xl font-semibold -tracking-widest text-off dark:text-white mt-[120px] md:mt-[160px]"
               text="The Easy Way to Fix Your Home"
             />
 
             <div className="block sm:hidden">
               <GradualSpacing
-                className="font-display text-center text-4xl font-bold -tracking-widest text-off dark:text-white mt-[120px]"
+                className="font-display text-center text-4xl font-bold -tracking-widest text-off dark:text-white mt-[80px]"
                 text="The Easy Way to"
               />
               <GradualSpacing
@@ -57,7 +57,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 1 }}
               transition={{ delay: 0.6 }}
-              className="text-sm sm:text-sm md:text-md lg:text-lg text-white/70 max-w-lg lg:max-w-[551px] text-center mt-8 mb-5"
+              className="text-sm sm:text-sm md:text-base lg:text-base text-white/70 max-w-lg lg:max-w-[551px] text-center mt-8 mb-5"
             >
               {firstname ? `${firstname}, connect with trusted contractors who have the skills and experience to get the job done right` : 
               "Connect with trusted contractors who have the skills and experience to get the job done right"}
@@ -72,7 +72,7 @@ const Hero = () => {
               style={{boxShadow: 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
                 transition: 'box-shadow 0.3s ease',}}
               onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = 'rgba(254,139,16,0.5) 0px 10px 20px -1px';
+                e.currentTarget.style.boxShadow = 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -4px';
@@ -99,7 +99,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 1 }}
               transition={{ delay: 0.6 }}
-              className="text-sm sm:text-sm md:text-md lg:text-lg text-white/70 max-w-lg lg:max-w-[551px] text-center mt-8 mb-5"
+              className="text-sm sm:text-sm md:text-base lg:text-base text-white/70 max-w-lg lg:max-w-[551px] text-center mt-8 mb-5"
             >
               Or select a service to get started
             </motion.p>
@@ -118,16 +118,16 @@ const Hero = () => {
                     style={{boxShadow: 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
                       transition: 'box-shadow 0.3s ease'}}
                     onMouseEnter={(e) => {
-                      e.currentTarget.style.boxShadow = 'rgba(254,139,16,0.5) 0px 22px 30px -8px';
+                      e.currentTarget.style.boxShadow = 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px';
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px';
+                      e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 10px 25px -6px';
                     }}
                   >
                     <img
                       src={service.photo}
                       alt={service.name}
-                      className="w-12 h-12 sm:mb-4"
+                      className="w-12 h-12 sm:w-14 sm:h-14 sm:mb-4 ml-2 mr-4 sm:ml-0 sm:mr-0"
                     />
                     <span className="text-white text-center">{service.name}</span>
                   </div>

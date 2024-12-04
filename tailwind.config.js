@@ -48,7 +48,7 @@ export default {
 				DEFAULT: '#E6E9FD',
 			},
 			xbg:{
-				DEFAULT: '#F0F1FB',
+				DEFAULT: '#F9F9FF', //#F0F1FB 
 			},
 			  off: {
 				DEFAULT: '#F0F0E6',

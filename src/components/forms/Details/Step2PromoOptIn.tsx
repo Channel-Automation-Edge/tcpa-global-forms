@@ -112,37 +112,40 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="mt-12 flex flex-col h-full">
-          <div
-            className="flex flex-wrap justify-center"
-            style={{ gap: '20px 30px', marginTop: '15px', width: '100%' }}
-          >
-            {['10% Off', 'Free Labor', 'Mystery Promo', 'Discounted Materials'].map((promoOption) => (
-              <button
-                key={promoOption}
-                type="button"
-                className={`className="flex flex-col items-center justify-center w-[200px] sm:w-[180px] md:w-[200px] lg:w-[200px] h-[120px] border border-indigo-100 rounded-[20px] shadow-md p-4 transition-transform transform hover:scale-105 bg-white`}
-                onClick={() => handlePromoSelect(promoOption)}
-                style={{
-                  boxShadow: selectedPromo === promoOption
-                    ? 'rgba(255, 85, 0,0.5) 0px 10px 25px -8px'
-                    : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
-                  transition: 'box-shadow 0.3s ease',
-                }}
-                onMouseEnter={(e) => {
-                  if (selectedPromo !== promoOption) {
-                    e.currentTarget.style.boxShadow = 'rgba(255, 85, 0,0.5) 0px 10px 25px -8px';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (selectedPromo !== promoOption) {
-                    e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px';
-                  }
-                }}
-              >
-                <span className="text-xpurple text-center block">{promoOption}</span>
-              </button>
-            ))}
-          </div>
+        <div className="flex flex-wrap justify-center gap-4 sm:gap-[20px]" style={{ marginTop: '15px', width: '100%' }}>
+  {['10% Off', 'Free Labor', 'Mystery Promo', 'Discounted Materials'].map((promoOption) => (
+    <button
+      key={promoOption}
+      type="button"
+      className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[200px] h-[80px] sm:h-[120px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
+      onClick={() => handlePromoSelect(promoOption)}
+      style={{
+        boxShadow: selectedPromo === promoOption
+          ? 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px'
+          : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -6px',
+        transition: 'box-shadow 0.3s ease',
+        borderColor: selectedPromo === promoOption
+          ? 'rgba(255, 81, 0, 0.7)'
+          : 'rgba(157, 176, 197, 0.25)',
+      }}
+      onMouseEnter={(e) => {
+        if (selectedPromo !== promoOption) {
+          e.currentTarget.style.boxShadow = 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px';
+          e.currentTarget.style.borderColor = 'rgba(255, 81, 0, 0.7)';
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (selectedPromo !== promoOption) {
+          e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -6px';
+          e.currentTarget.style.borderColor = 'rgba(157, 176, 197, 0.25)';
+        }
+      }}
+    >
+      <span className="text-gray-800 text-base font-medium text-center sm:text-left">{promoOption}</span>
+    </button>
+  ))}
+</div>
+
 
           <div className="flex justify-center mt-14 mb-10">
             <div className="mx-auto max-w-[900px]">

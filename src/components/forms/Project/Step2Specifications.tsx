@@ -57,66 +57,72 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
 
         <form onSubmit={handleSubmit} className="mt-12 flex flex-col h-full">
           
-          <div
-            className="flex flex-wrap justify-center"
-            style={{ gap: '20px 30px', marginTop: '15px', width: '100%' }}
-          >
-            {selectedServiceData?.specifiedService.map((spec, index) => (
-              <button
-                key={index}
-                type="button"
-                className={`className="flex flex-col items-center justify-center w-[200px] sm:w-[180px] md:w-[200px] lg:w-[200px] h-[156px] border border-indigo-100 rounded-[20px] shadow-md p-4 transition-transform transform hover:scale-105 bg-white`}
-                onClick={() => handleSpecSelect(spec)}
-                style={{
-                  boxShadow: selectedSpecs.includes(spec)
-                    ? 'rgba(255, 85, 0,0.5) 0px 10px 25px -8px'
-                    : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
-                  transition: 'box-shadow 0.3s ease',
-                }}
-                onMouseEnter={(e) => {
-                  if (!selectedSpecs.includes(spec)) {
-                    e.currentTarget.style.boxShadow = 'rgba(255, 85, 0,0.5) 0px 10px 25px -8px';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!selectedSpecs.includes(spec)) {
-                    e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px';
-                  }
-                }}
-              >
-                {/* <img src="/images/sample.png" alt={spec} className="w-16 h-16 mb-2 mx-auto" /> */}
-                <span className="text-xpurple text-center block">{spec}</span>
-              </button>
-            ))}
-            <button
-              type="button"
-              className={`className="flex flex-col items-center justify-center w-[200px] sm:w-[180px] md:w-[200px] lg:w-[200px] h-[156px] border border-indigo-100 rounded-[20px] shadow-md p-4 transition-transform transform hover:scale-105 bg-white`}
-              onClick={() => handleSpecSelect("Other")}
-              style={{
-                boxShadow: selectedSpecs.includes("Other")
-                  ? 'rgba(255, 85, 0,0.5) 0px 10px 25px -8px'
-                  : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
-                transition: 'box-shadow 0.3s ease',
-              }}
-              onMouseEnter={(e) => {
-                if (!selectedSpecs.includes("Other")) {
-                  e.currentTarget.style.boxShadow = 'rgba(255, 85, 0,0.5) 0px 10px 25px -8px';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!selectedSpecs.includes("Other")) {
-                  e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px';
-              }}}
-            >
-            {/* <img src="/images/sample.png" alt="Other" className="w-16 h-16 mb-2 mx-auto" /> */}
-              <span className="text-xpurple text-center block">Other</span>
-            </button>
-          </div>
+        <div className="flex flex-wrap justify-center gap-4 sm:gap-[20px]" style={{ marginTop: '15px', width: '100%' }}>
+  {selectedServiceData?.specifiedService.map((spec, index) => (
+    <button
+      key={index}
+      type="button"
+      className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[200px] h-[80px] sm:h-[120px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
+      onClick={() => handleSpecSelect(spec)}
+      style={{
+        boxShadow: selectedSpecs.includes(spec)
+          ? 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px'
+          : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -6px',
+        transition: 'box-shadow 0.3s ease',
+        borderColor: selectedSpecs.includes(spec)
+          ? 'rgba(255, 81, 0, 0.7)'
+          : 'rgba(157, 176, 197, 0.25)',
+      }}
+      onMouseEnter={(e) => {
+        if (!selectedSpecs.includes(spec)) {
+          e.currentTarget.style.boxShadow = 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px';
+          e.currentTarget.style.borderColor = 'rgba(255, 81, 0, 0.7)';
+        }
+      }}
+      onMouseLeave={(e) => {
+        if (!selectedSpecs.includes(spec)) {
+          e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -6px';
+          e.currentTarget.style.borderColor = 'rgba(157, 176, 197, 0.25)';
+        }
+      }}
+    >
+      <span className="text-gray-800 text-base font-medium text-center sm:text-left">{spec}</span>
+    </button>
+  ))}
+  <button
+    type="button"
+    className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[200px] h-[80px] sm:h-[120px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
+    onClick={() => handleSpecSelect("Other")}
+    style={{
+      boxShadow: selectedSpecs.includes("Other")
+        ? 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px'
+        : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -6px',
+      transition: 'box-shadow 0.3s ease',
+      borderColor: selectedSpecs.includes("Other")
+        ? 'rgba(255, 81, 0, 0.7)'
+        : 'rgba(157, 176, 197, 0.25)',
+    }}
+    onMouseEnter={(e) => {
+      if (!selectedSpecs.includes("Other")) {
+        e.currentTarget.style.boxShadow = 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px';
+        e.currentTarget.style.borderColor = 'rgba(255, 81, 0, 0.7)';
+      }
+    }}
+    onMouseLeave={(e) => {
+      if (!selectedSpecs.includes("Other")) {
+        e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -6px';
+        e.currentTarget.style.borderColor = 'rgba(157, 176, 197, 0.25)';
+    }}}
+  >
+    <span className="text-gray-800 text-base font-medium text-center sm:text-left">Other</span>
+  </button>
+</div>
+
 
           <div className="mt-20 flex justify-center">
             <button
               type="submit"
-              className={`w-full max-w-xs px-24 py-6 inline-flex justify-center items-center gap-x-2 text-lg font-medium rounded-lg border border-transparent ${
+              className={`w-full max-w-xs px-24 py-6 inline-flex justify-center items-center gap-x-2 text-base font-medium rounded-lg border border-transparent ${
                 selectedSpecs.length > 0
                   ? 'bg-xorange text-white shadow-lg shadow-[rgba(255,85,0,0.5)] transform transition-transform translate-y-[-8px]'
                   : 'bg-gray-200 text-white cursor-not-allowed'
