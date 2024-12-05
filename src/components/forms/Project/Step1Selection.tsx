@@ -24,7 +24,7 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
   };
 
   return (
-    <div className="z-10 max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+    <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
       <div className="space-y-8">
       
         <div className='flex justify-center text-center mb-8'>
@@ -75,13 +75,6 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
               </div>
             ))}
           </div>
-
-
-
-
-
-
-
       </div>
     </div>
   );

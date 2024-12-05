@@ -16,7 +16,7 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
     return null;
   }
 
-  const { selectedService, serviceSpecifications, setServiceSpecifications, contractorPreferences, setContractorPreferences } = appContext;
+  const { selectedService, serviceSpecifications, setServiceSpecifications} = appContext;
   const selectedServiceData = servicesData.services.find(service => service.id === selectedService);
   const [selectedSpecs, setSelectedSpecs] = useState<string[]>(serviceSpecifications);
 
@@ -29,10 +29,7 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     setServiceSpecifications(selectedSpecs);
-    const updatedPreferences = [...new Set([...contractorPreferences, 'Licensed', 'Insured', 'Bonded', 'Top Rated'])];
-    setContractorPreferences(updatedPreferences);
     console.log('Service Specifications:', selectedSpecs);
-    console.log('Contractor Preferences:', updatedPreferences);
     onNext();
   };
 
@@ -41,10 +38,26 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
   }, [serviceSpecifications]);
 
   return (
-    <div className="z-10 max-w-[100rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto relative">
-      <button onClick={onBack} className="absolute left-4 top-1/2 transform -translate-y-1/2">
-        <img src="/images/back.png" alt="Go Back" className="w-6 h-6" />
-      </button>
+    <div className="z-10 max-w-[100rem] px-4 md:px-14 py-10 lg:py-14 mx-auto relative">
+      <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-between p-4">
+  <button onClick={onBack} className="flex items-center">
+    <img
+      src="/images/back.svg"
+      alt="Go Back"
+      className="w-4 md:w-6 h-4 md:h-6 transition-colors duration-200 hover:filter hover:brightness-0"
+    />
+  </button>
+  <button className="flex items-center">
+    <img
+      src="/images/reset.svg"
+      alt="Reset"
+      className="w-4 md:w-6 h-4 md:h-6 transition-colors duration-200 hover:filter hover:brightness-0"
+    />
+  </button>
+</div>
+
+
+
       <div className="space-y-8">
 
         <div className='flex justify-center text-center mb-8'>
@@ -86,7 +99,7 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
         }
       }}
     >
-      <span className="text-gray-800 text-base font-medium text-center sm:text-left">{spec}</span>
+      <span className="text-gray-800 text-base font-medium sm:text-center text-left">{spec}</span>
     </button>
   ))}
   <button
@@ -114,9 +127,10 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
         e.currentTarget.style.borderColor = 'rgba(157, 176, 197, 0.25)';
     }}}
   >
-    <span className="text-gray-800 text-base font-medium text-center sm:text-left">Other</span>
+    <span className="text-gray-800 text-base font-medium sm:text-center text-left">Other</span>
   </button>
 </div>
+
 
 
           <div className="mt-20 flex justify-center">
@@ -124,7 +138,7 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
               type="submit"
               className={`w-full max-w-xs px-24 py-6 inline-flex justify-center items-center gap-x-2 text-base font-medium rounded-lg border border-transparent ${
                 selectedSpecs.length > 0
-                  ? 'bg-xorange text-white shadow-lg shadow-[rgba(255,85,0,0.5)] transform transition-transform translate-y-[-8px]'
+                  ? 'bg-xorange text-white hover:bg-xorangeDark shadow-lg shadow-[rgba(255,85,0,0.5)] transform transition-transform translate-y-[-8px]'
                   : 'bg-gray-200 text-white cursor-not-allowed'
               }`}
               disabled={selectedSpecs.length === 0}

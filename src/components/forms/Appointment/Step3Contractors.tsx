@@ -175,15 +175,15 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
   const renderContractorCards = () => (
     <div className="mt-6 space-y-4">
       {matchingContractors.map((contractor) => (
-        <div key={contractor.id} className="p-4 border rounded-lg shadow-sm bg-white dark:bg-neutral-800 dark:border-neutral-700 flex flex-col sm:flex-row items-start sm:items-center max-w-[950px] mx-auto">
-          <div className="flex items-center mb-4 sm:mb-0 sm:mr-4" style={{ minWidth: '150px' }}>
+        <div key={contractor.id} className="p-4 border rounded-lg shadow-sm bg-white dark:bg-neutral-800 dark:border-neutral-700 flex flex-row items-center max-w-[720px] mx-auto">
+          <div className="flex items-center mb-0 mr-4" style={{ minWidth: '150px' }}>
             <img src={contractor.photo} alt={contractor.name} className="w-16 h-16 rounded-full" />
             <div className="ml-4">
               <h3 className="text-lg font-bold text-gray-800 dark:text-white">{contractor.name}</h3>
               <p className="text-sm text-gray-600 dark:text-neutral-400">{contractor.zip}, {contractor.state}</p>
             </div>
           </div>
-          <div className="flex-grow sm:text-center mb-4 sm:mb-0 mx-3" style={{ width: '300px' }}>
+          <div className="flex-grow text-center mb-0 mx-3" >
             <div className="flex flex-wrap gap-2 justify-start">
               {contractorPreferences.map((pref, idx) => (
                 <span key={idx} className="py-1 px-2 inline-flex items-center gap-x-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
@@ -202,7 +202,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
   );
 
   return (
-    <div className="z-10 max-w-[100rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto relative">
+    <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
       {loading ? (
         <div className="flex flex-col items-center justify-center h-full">
           <div className="animate-spin inline-block size-8 border-[3px] border-current border-t-transparent text-xorange rounded-full dark:text-xorange" role="status" aria-label="loading">
@@ -246,14 +246,14 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
                 </div>
               )}
 
-              <div className="mt-20 mb-6 text-center">
-                <p className="text-base text-gray-600 dark:text-neutral-400">
-                  You will receive an update from us regarding your scheduled <strong>FREE  {numberOfQuotes > 1 ? 'consultations' : 'consultation'}</strong>. If you prefer to be contacted directly by the assigned contractor(s), please check the checkbox below:
+              <div className="mt-10 mb-10 text-center">
+                <p className="text-base text-gray-600  dark:text-neutral-400">
+                  You will receive an update from us regarding your scheduled <strong>FREE  {numberOfQuotes > 1 ? 'consultations' : 'consultation'}</strong>.
                 </p>
               </div>
 
               <div className="relative flex flex-col justify-center items-center space-y-4">
-                <div className="w-[60rem] text-left mt-4">
+                <div className="w-full max-w-[45rem] text-left mt-4">
                   <div className="flex items-start">
                     <input
                       id="contactDirectly"
@@ -264,14 +264,14 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
                       className="h-6 w-6 text-xorange border-gray-300 rounded focus:ring-xorange"
                     />
                     <label htmlFor="contactDirectly" className="ml-4 block text-base text-gray-800 dark:text-gray-300">
-                      Optional: I authorize the assigned contractor(s) to contact me directly.
+                      Optional: By checking this box, I authorize the assigned contractor(s) to contact me directly.
                     </label>
                   </div>
                 </div>
 
-                <div className="w-[60rem]">
+                <div className="w-full max-w-[45rem]">
                   {contactDirectly && (
-                    <div className="mt-1 w-[50rem] text-left">
+                    <div className="mt-1 text-left">
                       <p className="text-base text-gray-600 dark:text-neutral-400">
                         Select companies below to allow them to contact you regarding your {numberOfQuotes > 1 ? 'consultations' : 'consultation'}. Please note, the selected companies will contact you <strong>only if they are assigned</strong> to your consultation.
                       </p>
@@ -332,6 +332,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
                               </div>
                             ))}
                           </div>
+                          <p className="mt-4 text-sm text-gray-700 dark:text-neutral-400">By clicking Confirm Consulation(s), I am providing my ESIGN signature and express written consent agreement to permit the company, or companies selected above, and parties calling on their behalf, to contact me at the number provided below for marketing purposes including through the use of automated technology, such as SMS/MMS messages, AI generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and I can reach out to them directly at (888) 508-3081.</p>
                         </div>
                       )}
                     </div>

@@ -70,7 +70,8 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext }) => {
   });
 
   return (
-    <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+    <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
+      
       <div className="max-w-xl mx-auto">
         <div className='flex justify-center text-center mb-8'>
           <div className="max-w-[40rem] text-center">

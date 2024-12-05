@@ -46,7 +46,7 @@ const Step1Quotes: React.FC<Step1QuotesProps> = ({ onNext }) => {
   };
 
   return (
-    <div className="z-10 max-w-[100rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto relative">
+    <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
       <div className="space-y-8">
         <div className='flex justify-center text-center mb-8'>
           <div className="max-w-[40rem] text-center">
@@ -87,7 +87,7 @@ const Step1Quotes: React.FC<Step1QuotesProps> = ({ onNext }) => {
       }}
     >
       <span className="text-gray-800 text-base font-medium text-center sm:text-left">{quote}</span>
-      <span className="ml-4 text-xs font-semibold text-gray-700">{getBadgeText(quote)}</span>
+      <span className="ml-4 sm:ml-0 text-xs font-semibold text-gray-700">{getBadgeText(quote)}</span>
     </button>
   ))}
 </div>

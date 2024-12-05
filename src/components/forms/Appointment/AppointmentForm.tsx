@@ -38,7 +38,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext, onReset }) => {
   return (
     <div>
       <div className="mx-auto max-w-screen-xl px-4 pb-6 pt-6 sm:px-6 lg:px-8 relative">
-        <div className="flex justify-center">
+      <div className="flex justify-center">
           <div className="w-[600px]">
             <ProgressBar progress={progress} />
           </div>
@@ -46,7 +46,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext, onReset }) => {
             <img
               src="/images/avatar.jpg"
               alt="Avatar"
-              className="w-20 h-20 rounded-full border-2 border-lpurple object-cover"
+              className="w-12 h-12 custom-smallest:w-14 custom-smallest:h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full border-2 border-lpurple object-cover"
             />
           </div>
         </div>

@@ -35,6 +35,9 @@ export default {
 			xorange:{
 				DEFAULT: '#FA5100',
 			},
+			xorangeDark:{
+				DEFAULT: '#D94900',
+			},
 			xyellow:{
 				DEFAULT: '#FAD000',
 			},
@@ -51,7 +54,7 @@ export default {
 				DEFAULT: '#F9F9FF', //#F0F1FB 
 			},
 			  off: {
-				DEFAULT: '#F0F0E6',
+				DEFAULT: '#F0F0E6',	
 			},
   			muted: {
   				DEFAULT: 'hsl(var(--muted))',
@@ -97,7 +100,13 @@ export default {
   		animation: {
   			marquee: 'marquee var(--duration) infinite linear',
   			'marquee-vertical': 'marquee-vertical var(--duration) linear infinite'
-  		}
+  		},
+		screens: {
+		'custom-smallest': '390px',
+		'custom-400': '500px',
+		'small-stepper': '460px',
+		},
+	
   	}
   },
   plugins: [

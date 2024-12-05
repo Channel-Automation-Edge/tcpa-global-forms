@@ -34,7 +34,7 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext }) => {
   const selectedServiceName = servicesData.services.find(service => service.id === selectedService)?.name || 'Service';
 
   return (
-    <div className="z-10 max-w-[100rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto relative">
+    <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
       <div className="max-w-xl mx-auto">
 
         <div className='flex justify-center text-center mb-8'>
@@ -65,32 +65,32 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext }) => {
           <table className="min-w-full divide-y divide-gray-200 mt-4">
             <thead>
               <tr>
-                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Item</th>
-                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Amount</th>
+                <th className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">Item</th>
+                <th className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-3 bg-gray-50 text-xs font-medium text-gray-400 uppercase tracking-wider text-right">Amount</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{selectedServiceName}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">Pending</td>
+                <td className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">{selectedServiceName}</td>
+                <td className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm text-red-600">Pending</td>
               </tr>
               <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Dedicated Project Manager</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">Included</td>
+                <td className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">Project Manager</td>
+                <td className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm text-green-600">Included</td>
               </tr>
               {serviceSpecifications.map((spec, index) => (
                 <tr key={index}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{spec}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-red-600">Pending</td>
+                  <td className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">{spec}</td>
+                  <td className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm text-red-600">Pending</td>
                 </tr>
               ))}
               <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Professional Contractors</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">Included</td>
+                <td className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">Professional Contractors</td>
+                <td className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm text-green-600">Included</td>
               </tr>
               <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Priority Service</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-green-600">Included</td>
+                <td className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">Priority Service</td>
+                <td className="px-0 text-right custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-green-600">Included</td>
               </tr>
             </tbody>
           </table>
@@ -101,7 +101,7 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext }) => {
             <p className="text-sm text-gray-900">Total: <span className='text-red-600'>Pending Final Review</span></p>
           </div>
 
-          <div className="mt-6 text-center">
+          <div className="mt-6 text-left">
             <p className="text-sm text-gray-700 dark:text-white">
               Thank you, {firstname} {lastname}! We just need a bit more information to finalize your request. Please proceed to schedule your FREE appointment{numberOfQuotes > 1 ? 's' : ''} with our professional contractors. We'll match you with top contractors in your area. Alternatively, feel free to give us a call.
             </p>

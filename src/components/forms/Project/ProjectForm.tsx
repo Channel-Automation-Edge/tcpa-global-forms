@@ -53,10 +53,11 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onNext }) => {
             <img
               src="/images/avatar.jpg"
               alt="Avatar"
-              className="w-20 h-20 rounded-full border-2 border-lpurple object-cover"
+              className="w-12 h-12 custom-smallest:w-14 custom-smallest:h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full border-2 border-lpurple object-cover"
             />
           </div>
         </div>
+
       </div>
       <div>
         {currentStep === 1 && <Step1Selection onNext={handleNextStep} />}

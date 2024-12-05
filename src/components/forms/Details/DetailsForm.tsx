@@ -19,6 +19,12 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext }) => {
     }
   };
 
+  const handleBackStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep((prevStep) => prevStep - 1);
+    }
+  };
+
   const progress = (currentStep - 1) * 33; 
 
   return (
@@ -32,14 +38,14 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext }) => {
             <img
               src="/images/avatar.jpg"
               alt="Avatar"
-              className="w-20 h-20 rounded-full border-2 border-lpurple object-cover"
+              className="w-12 h-12 custom-smallest:w-14 custom-smallest:h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full border-2 border-lpurple object-cover"
             />
           </div>
         </div>
       </div>
       <div>
         {currentStep === 1 && <Step1Info onNext={handleNextStep} />}
-        {currentStep === 2 && <Step2PromoOptIn onNext={handleNextStep} />}
+        {currentStep === 2 && <Step2PromoOptIn onNext={handleNextStep} onBack={handleBackStep} />}
         {currentStep === 3 && <Step3Invoice onNext={handleNextStep} />}
       </div>
     </div>
