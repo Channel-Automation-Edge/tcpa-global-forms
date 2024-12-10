@@ -4,9 +4,10 @@ import { AppContext } from '../../../context/AppContext';
 
 interface Step1QuotesProps {
   onNext: () => void;
+  onReset: () => void;
 }
 
-const Step1Quotes: React.FC<Step1QuotesProps> = ({ onNext }) => {
+const Step1Quotes: React.FC<Step1QuotesProps> = ({ onNext, onReset }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
@@ -47,6 +48,22 @@ const Step1Quotes: React.FC<Step1QuotesProps> = ({ onNext }) => {
 
   return (
     <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
+      <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-between p-4">
+        <button className="items-center hidden ">
+          <img
+            src="/images/back.svg"
+            alt="Go Back"
+            className="w-4 md:w-6 h-4 md:h-6 transition-colors duration-200 hover:filter hover:brightness-0"
+          />
+        </button>
+        <button onClick={onReset} className="flex items-center">
+          <img
+            src="/images/reset.svg"
+            alt="Reset"
+            className="w-4 md:w-6 h-4 md:h-6 transition-colors duration-200 hover:filter hover:brightness-0"
+          />
+        </button>
+      </div>
       <div className="space-y-8">
         <div className='flex justify-center text-center mb-8'>
           <div className="max-w-[40rem] text-center">

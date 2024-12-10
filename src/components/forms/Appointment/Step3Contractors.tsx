@@ -2,6 +2,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../../context/AppContext';
 import contractorsData from '../../../assets/assets.json';
+import servicesData from '../../../assets/assets.json'; 
 
 // Define props interface
 interface Step3ContractorsProps {
@@ -112,6 +113,10 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
   };
 
   const handleSubmit = async () => {
+    const serviceName = servicesData.services.find(
+      (service) => service.id === selectedService
+    )?.name || 'Unknown Service';
+
     const payload = {
       lead: {
         firstname,
@@ -121,7 +126,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
         generalOptIn,
         zip,
         state,
-        selectedService,
+        service: serviceName,
         serviceSpecifications,
         contractorPreferences,
         promo,
@@ -131,22 +136,22 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
       matchingContractors,
       appointment: appContext.scheduledAppointments,
       consent: {
-        SMS: {
+        general: {
           description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Project Quotes to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
-          generalOptIn: generalOptIn,
+          value: generalOptIn,
         },
-        Newsletter: {
+        email: {
           description: 'By checking this box, you consent to receive marketing emails from us. You can unsubscribe at any time by clicking the "unsubscribe" link at the bottom of our emails or by contacting us at [your email address]. We will process your information in accordance with our Privacy Policy',
-          newsletterOptIn: appContext.newsletterOptIn,
+          value: appContext.newsletterOptIn,
         },
-        OneToOne: {
+        oneToOne: {
           description: 'By clicking Confirm Consulation(s), I am providing my ESIGN signature and express written consent agreement to permit the company, or companies selected above, and parties calling on their behalf, to contact me at the number provided below for marketing purposes including through the use of automated technology, such as SMS/MMS messages, AI generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and I can reach out to them directly at (888) 508-3081.',
           consentedContractors,
           contactPreferences,
         },
-        TermsAndPrivacy: {
+        termsAndPrivacy: {
           description: "I have read and accept the Terms & Conditions and Privacy Policy",
-          termsAndPrivacy: termsAndPrivacyOptIn,
+          value: termsAndPrivacyOptIn,
         },
       },
     };
@@ -212,6 +217,22 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
         </div>
       ) : (
         <div className="max-w-7xl mx-auto">
+          <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-between p-4">
+        <button className="items-center hidden ">
+          <img
+            src="/images/back.svg"
+            alt="Go Back"
+            className="w-4 md:w-6 h-4 md:h-6 transition-colors duration-200 hover:filter hover:brightness-0"
+          />
+        </button>
+        <button onClick={onReset} className="flex items-center">
+          <img
+            src="/images/reset.svg"
+            alt="Reset"
+            className="w-4 md:w-6 h-4 md:h-6 transition-colors duration-200 hover:filter hover:brightness-0"
+          />
+        </button>
+      </div>
           <div className='flex justify-center text-center mb-8'>
             <div className="max-w-[40rem] text-center">
               <h1 className="block text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl font-bold sm:font-bold md:font-semibold lg:font-semibold text-gray-800 dark:text-white">

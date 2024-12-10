@@ -1,28 +1,35 @@
-import { useState } from 'react';
 import ProgressBar from '../../ui/ProgressBar';
 import Step1Info from './Step1Info';
 import Step2PromoOptIn from './Step2PromoOptIn';
 import Step3Invoice from './Step3Invoice';
+import useFormPersistence from '../../../hooks/useFormPersistence';
 
 interface DetailsFormProps {
   onNext: () => void;
+  onReset: () => void;
 }
 
-const DetailsForm: React.FC<DetailsFormProps> = ({ onNext }) => {
-  const [currentStep, setCurrentStep] = useState(1);
+const DetailsForm: React.FC<DetailsFormProps> = ({ onNext, onReset }) => {
+  const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence(['detailsFormStep'], 1);
 
   const handleNextStep = () => {
     if (currentStep < 3) {
-      setCurrentStep((prevStep) => prevStep + 1);
+      setCurrentStep(currentStep + 1);
     } else {
+      resetCurrentStep(); 
       onNext(); 
     }
   };
 
   const handleBackStep = () => {
     if (currentStep > 1) {
-      setCurrentStep((prevStep) => prevStep - 1);
+      setCurrentStep(currentStep - 1);
     }
+  };
+
+  const handleReset = () => {
+    resetCurrentStep(); 
+    onReset();
   };
 
   const progress = (currentStep - 1) * 33; 
@@ -44,9 +51,9 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext }) => {
         </div>
       </div>
       <div>
-        {currentStep === 1 && <Step1Info onNext={handleNextStep} />}
-        {currentStep === 2 && <Step2PromoOptIn onNext={handleNextStep} onBack={handleBackStep} />}
-        {currentStep === 3 && <Step3Invoice onNext={handleNextStep} />}
+        {currentStep === 1 && <Step1Info onNext={handleNextStep} onReset={handleReset} />}
+        {currentStep === 2 && <Step2PromoOptIn onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} />}
+        {currentStep === 3 && <Step3Invoice onNext={handleNextStep} onReset={handleReset} />}
       </div>
     </div>
   );

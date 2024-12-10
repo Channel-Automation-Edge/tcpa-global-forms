@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import type { ConfettiRef } from '@/components/ui/confetti';
 import Confetti from '@/components/ui/confetti';
 import HowItWorks from '@/components/HowItWorks';
@@ -16,6 +16,7 @@ const ThankYou: React.FC = () => {
     return null; // Handle the case where appContext is not available
   }
   const navigate = useNavigate();
+  const location = useLocation();
   const confettiRef = useRef<ConfettiRef>(null);
   const { firstname } = appContext;
 
@@ -23,8 +24,13 @@ const ThankYou: React.FC = () => {
     confettiRef.current?.fire({});
   }, []);
 
+  const navigateWithParams = (path: string) => {
+    const currentParams = new URLSearchParams(location.search);
+    navigate(`${path}?${currentParams.toString()}`);
+  };
+
   const handleGoHome = () => {
-    navigate('/');
+    navigateWithParams('/');
   };
 
   return (
@@ -101,7 +107,6 @@ const ThankYou: React.FC = () => {
       />
       <HowItWorks />
     </div>
-    
   );
 };
 

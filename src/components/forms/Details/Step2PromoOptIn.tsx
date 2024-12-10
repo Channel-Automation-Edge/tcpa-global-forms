@@ -1,14 +1,16 @@
 "use client";
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../../context/AppContext';
+import servicesData from '../../../assets/assets.json'; 
 
 // Define props interface
 interface Step2PromoOptInProps {
   onNext: () => void;
   onBack: () => void;
+  onReset: () => void;
 }
 
-const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack }) => {
+const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onReset }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
@@ -42,16 +44,18 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack }) => 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (generalOptIn && (!isOptInRequired || (isOptInRequired && newsletterOptIn))) {
+      const serviceName = servicesData.services.find(
+        (service) => service.id === selectedService
+      )?.name || 'Unknown Service';
       const payload = {
         lead: {
           firstname,
           lastname,
           email,
           phone,
-          termsAndPrivacyOptIn,
           zip,
           state,
-          selectedService,
+          service: serviceName,
           serviceSpecifications,
           contractorPreferences,
           promo: selectedPromo,
@@ -59,17 +63,21 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack }) => 
         error: null,
         type: 'lead',
         consent: {
-          SMS: {
+          sms: {
             description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Project Quotes to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
-            termsAndPrivacyOptIn,
+            value: generalOptIn,
           },
-          Newsletter: {
+          call: {
+            description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Project Quotes to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
+            value: generalOptIn,
+          },
+          email: {
             description: 'By checking this box, you consent to receive marketing emails from us. You can unsubscribe at any time by clicking the "unsubscribe" link at the bottom of our emails or by contacting us at [your email address]. We will process your information in accordance with our Privacy Policy',
-            newsletterOptIn,
+            value: newsletterOptIn,
           },
-          TermsAndPrivacy: {
+          termsAndPrivacy: {
             description: "I have read and accept the Terms & Conditions and Privacy Policy",
-            termsAndPrivacy: termsAndPrivacyOptIn,
+            value: termsAndPrivacyOptIn,
           },
         },
       };
@@ -111,7 +119,7 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack }) => 
             className="w-4 md:w-6 h-4 md:h-6 transition-colors duration-200 hover:filter hover:brightness-0"
           />
         </button>
-        <button className="flex items-center">
+        <button onClick={onReset} className="flex items-center">
           <img
             src="/images/reset.svg"
             alt="Reset"

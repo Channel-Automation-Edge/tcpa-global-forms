@@ -1,35 +1,33 @@
-import { useState } from 'react';
 import ProgressBar from '../../ui/ProgressBar';
-import { useNavigate } from 'react-router-dom';
 import Step2Schedule from './Step2Schedule';
 import Step3Contractors from './Step3Contractors';
 import Step1Quotes from './Step1Quotes';
+import useFormPersistence from '../../../hooks/useFormPersistence';
 
-interface DetailsFormProps {
-  onNext: () => void;
+interface AppointmentFormProps {
+  onSubmit: () => void;
   onReset: () => void;
 }
 
-
-
-const DetailsForm: React.FC<DetailsFormProps> = ({ onNext, onReset }) => {
-  const [currentStep, setCurrentStep] = useState(1);
-  const navigate = useNavigate();
-
+const AppointmentForm: React.FC<AppointmentFormProps> = ({onSubmit, onReset }) => {
+  const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence(['appointmentFormStep'], 1);
+  
 
   const handleNextStep = () => {
     if (currentStep < 3) {
-      setCurrentStep((prevStep) => prevStep + 1);
+      setCurrentStep(currentStep + 1);
     } else {
-      onNext(); 
+      
     }
   };
 
-  const handleCompleted = () => {
-    navigate('/thank-you');
+  const handleSubmitted = () => {
+    resetCurrentStep(); 
+    onSubmit();
   };
 
   const handleReset = () => {
+    resetCurrentStep(); 
     onReset();
   };
 
@@ -38,7 +36,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext, onReset }) => {
   return (
     <div>
       <div className="mx-auto max-w-screen-xl px-4 pb-6 pt-6 sm:px-6 lg:px-8 relative">
-      <div className="flex justify-center">
+        <div className="flex justify-center">
           <div className="w-[600px]">
             <ProgressBar progress={progress} />
           </div>
@@ -52,14 +50,12 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext, onReset }) => {
         </div>
       </div>
       <div>
-        {currentStep === 1 && <Step1Quotes onNext={handleNextStep}/>}
-        {currentStep === 2 && <Step2Schedule onNext={handleNextStep}/>}
-        {currentStep === 3 && <Step3Contractors onCompleted={handleCompleted} onReset={handleReset}/>}
-
+        {currentStep === 1 && <Step1Quotes onNext={handleNextStep} onReset={handleReset} />}
+        {currentStep === 2 && <Step2Schedule onNext={handleNextStep} onReset={handleReset} />}
+        {currentStep === 3 && <Step3Contractors onCompleted={handleSubmitted} onReset={handleReset} />}
       </div>
     </div>
   );
 };
 
-export default DetailsForm;
-
+export default AppointmentForm;

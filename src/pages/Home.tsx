@@ -1,5 +1,4 @@
 import Hero from '../components/Hero';
-
 import Benefits from '@/components/Benefits';
 import FAQ from '@/components/FAQ';
 import TabSection from '@/components/TabSection';

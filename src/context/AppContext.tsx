@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, ReactNode, Dispatch, SetStateAction } from 'react';
+import React, { createContext, useState, ReactNode, Dispatch, SetStateAction } from 'react';
 
 // Define the Contractor interface
 interface Contractor {
@@ -21,6 +21,7 @@ interface Appointment {
 
 // Define the shape of your context data
 interface AppContextType {
+  resetForm: boolean;
   firstname: string | null;
   lastname: string | null;
   zip: string | null;
@@ -40,6 +41,7 @@ interface AppContextType {
   scheduledAppointments: Appointment[];
   type: string;
   consentedContractors: Contractor[];
+  setResetForm: Dispatch<SetStateAction<boolean>>;
   setFirstname: Dispatch<SetStateAction<string | null>>;
   setLastname: Dispatch<SetStateAction<string | null>>;
   setZip: Dispatch<SetStateAction<string | null>>;
@@ -53,7 +55,7 @@ interface AppContextType {
   setPromo: Dispatch<SetStateAction<string>>;
   setMatchingContractors: Dispatch<SetStateAction<Contractor[]>>;
   setGeneralOptIn: Dispatch<SetStateAction<boolean>>;
-  setTermsAndPrivacyOptIn: Dispatch<SetStateAction<boolean >>;
+  setTermsAndPrivacyOptIn: Dispatch<SetStateAction<boolean>>;
   setNewsletterOptIn: Dispatch<SetStateAction<boolean>>;
   setAppointment: Dispatch<SetStateAction<Appointment>>;
   setScheduledAppointments: Dispatch<SetStateAction<Appointment[]>>;
@@ -68,16 +70,9 @@ interface AppContextProviderProps {
   children: ReactNode;
 }
 
-// Function to capitalize the first letter of a string
-const capitalizeFirstLetter = (str: string | null): string | null => {
-  if (str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
-  return str;
-};
-
 // Create the provider component
 const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => {
+  const [resetForm, setResetForm] = useState<boolean>(false);
   const [firstname, setFirstname] = useState<string | null>(null);
   const [lastname, setLastname] = useState<string | null>(null);
   const [zip, setZip] = useState<string | null>(null);
@@ -98,19 +93,10 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
   const [type, setType] = useState<string>('');
   const [consentedContractors, setConsentedContractors] = useState<Contractor[]>([]);
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    setFirstname(capitalizeFirstLetter(params.get('firstname')));
-    setLastname(capitalizeFirstLetter(params.get('lastname')));
-    setZip(params.get('zip') || null);
-    setEmail(params.get('email') || null);
-    setPhone(params.get('phone') || null);
-    setState(params.get('state') || null);
-  }, []);
-
   return (
     <AppContext.Provider
       value={{
+        resetForm,
         firstname,
         lastname,
         zip,
@@ -130,6 +116,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         scheduledAppointments,
         type,
         consentedContractors,
+        setResetForm,
         setFirstname,
         setLastname,
         setZip,

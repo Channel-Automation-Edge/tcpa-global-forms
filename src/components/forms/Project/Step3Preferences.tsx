@@ -6,9 +6,10 @@ import { AppContext } from '../../../context/AppContext';
 interface Step3PreferencesProps {
   onNext: () => void;
   onBack: () => void;
+  onReset: () => void;
 }
 
-const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack }) => {
+const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack, onReset }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
@@ -27,6 +28,7 @@ const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack }) =
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     setContractorPreferences(selectedPreferences);
+    localStorage.setItem('contractorPreferences', JSON.stringify(contractorPreferences));
     console.log('Contractor Preferences:', selectedPreferences);
     onNext();
   };
@@ -45,7 +47,7 @@ const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack }) =
             className="w-4 md:w-6 h-4 md:h-6 transition-colors duration-200 hover:filter hover:brightness-0"
           />
         </button>
-        <button className="flex items-center">
+        <button onClick={onReset} className="flex items-center">
           <img
             src="/images/reset.svg"
             alt="Reset"

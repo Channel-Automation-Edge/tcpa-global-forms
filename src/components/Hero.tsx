@@ -1,32 +1,106 @@
 "use client";
-import { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import GradualSpacing from './ui/gradual-spacing';
 import { motion } from 'framer-motion';
 import { AppContext } from '../context/AppContext';
 import NavBar from './NavBar.tsx';
 import servicesData from '../assets/assets.json';
 import BlurFade from './ui/blur-fade.tsx';
+import useFormPersistence from '../hooks/useFormPersistence';
 
 const Hero = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const appContext = useContext(AppContext);
-
+  const [, , resetCurrentStep] = useFormPersistence(
+    ['parentFormStep', 'projectFormStep', 'detailsFormStep', 'appointmentFormStep'],
+    1
+  );
+  
   if (!appContext) {
     return null; // Handle the case where appContext is not available
   }
 
-  const { firstname } = appContext;
-  const { setSelectedService } = appContext;
+  const {
+    firstname,
+    setSelectedService,
+    setMatchingContractors,
+    setZip,
+    setState,
+    setContractorPreferences,
+    setFirstname,
+    setLastname,
+    setEmail,
+    setPhone,
+    setGeneralOptIn,
+    setServiceSpecifications,
+    setPromo,
+    setConsentedContractors,
+    setNumberOfQuotes,
+    setTermsAndPrivacyOptIn,
+  } = appContext;
+
+  const [buttonText, setButtonText] = useState("Get a Free Consultation Now");
+  const [subheadingText, setSubheadingText] = useState("Or select a service to get started");
+
+  useEffect(() => {
+    const selectedService = localStorage.getItem('selectedService');
+    if (selectedService && JSON.parse(selectedService) !== 0) {
+      setButtonText("Finish your Previous Quote");
+      setSubheadingText("Or reset your progress and select another service");
+    }
+  }, []);
+
+  // Function to append current URL parameters
+  const navigateWithParams = (path: string) => {
+    const currentParams = new URLSearchParams(location.search);
+    navigate(`${path}?${currentParams.toString()}`);
+  };
 
   const handleServiceSelect = (id: number) => {
+    resetCurrentStep();
+    setSelectedService(0);
+    setMatchingContractors([]);
+    setZip('');
+    setState('');
+    setContractorPreferences([]);
+    setFirstname('');
+    setLastname('');
+    setEmail('');
+    setPhone('');
+    setGeneralOptIn(false);
+    setServiceSpecifications([]);
+    setPromo('');
+    setConsentedContractors([]);
+    setNumberOfQuotes(0);
+    setTermsAndPrivacyOptIn(false);
+
+    localStorage.removeItem('selectedService');
+    localStorage.removeItem('matchingContractors');
+    localStorage.removeItem('zip');
+    localStorage.removeItem('state');
+    localStorage.removeItem('contractorPreferences');
+    localStorage.removeItem('firstname');
+    localStorage.removeItem('lastname');
+    localStorage.removeItem('email');
+    localStorage.removeItem('phone');
+    localStorage.removeItem('generalOptIn');
+    localStorage.removeItem('serviceSpecifications');
+    localStorage.removeItem('promo');
+    localStorage.removeItem('consentedContractors');
+    localStorage.removeItem('numberOfQuotes');
+    localStorage.removeItem('termsAndPrivacyOptIn');
+
+    // Set new service and update local storage
     setSelectedService(id);
-    console.log('Setting Initial Service:', id);
-    navigate('/request-quotes'); // Navigate to FormPage
+    localStorage.setItem('selectedService', JSON.stringify(id));
+    console.log('Reset form and setting Initial Service:', id);
+    navigateWithParams('/request-quotes');
   };
-  
+
   const handleButtonClick = () => {
-    navigate('/request-quotes');
+    navigateWithParams('/request-quotes'); // Navigate with params
   };
 
   return (
@@ -75,10 +149,10 @@ const Hero = () => {
                 e.currentTarget.style.boxShadow = 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -4px';
+                e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 10px 25px -4px';
               }}
             >
-              Get a Free Consultation Now
+              {buttonText}
               <svg
                 className="shrink-0 size-4"
                 xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +175,7 @@ const Hero = () => {
               transition={{ delay: 0.6 }}
               className="text-sm sm:text-sm md:text-base lg:text-base text-white/70 max-w-lg lg:max-w-[551px] text-center mt-8 mb-5"
             >
-              Or select a service to get started
+              {subheadingText}
             </motion.p>
 
             <div className="flex flex-wrap max-w-[1206px] justify-center mt-5 pb-10" style={{ gap: '20px 30px' }}>

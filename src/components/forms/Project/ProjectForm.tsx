@@ -1,15 +1,18 @@
-import { useState, useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import Step1Selection from './Step1Selection';
 import ProgressBar from '../../ui/ProgressBar';
 import Step2Specifications from './Step2Specifications';
 import Step3Preferences from './Step3Preferences';
 import { AppContext } from '../../../context/AppContext';
+import useFormPersistence from '../../../hooks/useFormPersistence';
 
 interface ProjectFormProps {
   onNext: () => void;
+  onReset: () => void;
 }
 
-const ProjectForm: React.FC<ProjectFormProps> = ({ onNext }) => {
+const ProjectForm: React.FC<ProjectFormProps> = ({ onNext, onReset }) => {
+  const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence(['projectFormStep'], 1);
   const appContext = useContext(AppContext);
 
   if (!appContext) {
@@ -17,8 +20,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onNext }) => {
   }
 
   const { selectedService } = appContext;
-
-  const [currentStep, setCurrentStep] = useState(1);
 
   useEffect(() => {
     if (selectedService) {
@@ -28,16 +29,23 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onNext }) => {
 
   const handleNextStep = () => {
     if (currentStep < 3) {
-      setCurrentStep((prevStep) => prevStep + 1);
+      setCurrentStep(currentStep + 1);
     } else {
-      onNext(); // Call the onNext function from ParentForm when the last step is completed
+      resetCurrentStep(); 
+      onNext(); // Notify ParentForm to move to the next step
+      
     }
   };
 
   const handleBackStep = () => {
     if (currentStep > 1) {
-      setCurrentStep((prevStep) => prevStep - 1);
+      setCurrentStep(currentStep - 1);
     }
+  };
+
+  const handleReset = () => {
+    resetCurrentStep(); 
+    onReset();
   };
 
   const progress = (currentStep - 1) * 33.333339;
@@ -57,18 +65,14 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onNext }) => {
             />
           </div>
         </div>
-
       </div>
       <div>
         {currentStep === 1 && <Step1Selection onNext={handleNextStep} />}
-        {currentStep === 2 && <Step2Specifications onNext={handleNextStep} onBack={handleBackStep} />}
-        {currentStep === 3 && <Step3Preferences onNext={handleNextStep} onBack={handleBackStep} />}
+        {currentStep === 2 && <Step2Specifications onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} />}
+        {currentStep === 3 && <Step3Preferences onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} />}
       </div>
     </div>
   );
 };
 
 export default ProjectForm;
-
-
-
