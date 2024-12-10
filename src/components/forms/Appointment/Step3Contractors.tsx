@@ -34,7 +34,8 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
     consentedContractors,
     setConsentedContractors,
     numberOfQuotes,
-    termsAndPrivacyOptIn
+    termsAndPrivacyOptIn,
+    userNs, teamId,
   } = appContext;
 
   const [error, setError] = useState<string | null>(null);
@@ -133,6 +134,8 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
       },
       error: null,
       type: 'appointment',
+      user_ns: userNs,
+      team_id: teamId,
       matchingContractors,
       appointment: appContext.scheduledAppointments,
       consent: {

@@ -41,6 +41,8 @@ interface AppContextType {
   scheduledAppointments: Appointment[];
   type: string;
   consentedContractors: Contractor[];
+  userNs: string | null;
+  teamId: string | null;
   setResetForm: Dispatch<SetStateAction<boolean>>;
   setFirstname: Dispatch<SetStateAction<string | null>>;
   setLastname: Dispatch<SetStateAction<string | null>>;
@@ -61,6 +63,8 @@ interface AppContextType {
   setScheduledAppointments: Dispatch<SetStateAction<Appointment[]>>;
   setType: Dispatch<SetStateAction<string>>;
   setConsentedContractors: Dispatch<SetStateAction<Contractor[]>>;
+  setUserNs: Dispatch<SetStateAction<string | null>>;
+  setTeamId: Dispatch<SetStateAction<string | null>>;
 }
 
 // Create a context with an empty object as default value
@@ -93,6 +97,11 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
   const [type, setType] = useState<string>('');
   const [consentedContractors, setConsentedContractors] = useState<Contractor[]>([]);
 
+  // Initialize userNs and teamId from URL parameters
+  const params = new URLSearchParams(window.location.search);
+  const [userNs, setUserNs] = useState<string | null>(params.get('user_ns'));
+  const [teamId, setTeamId] = useState<string | null>(params.get('team_id'));
+
   return (
     <AppContext.Provider
       value={{
@@ -116,6 +125,8 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         scheduledAppointments,
         type,
         consentedContractors,
+        userNs,
+        teamId,
         setResetForm,
         setFirstname,
         setLastname,
@@ -136,6 +147,8 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         setScheduledAppointments,
         setType,
         setConsentedContractors,
+        setUserNs,
+        setTeamId,
       }}
     >
       {children}
