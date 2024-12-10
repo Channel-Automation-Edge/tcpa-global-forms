@@ -10,7 +10,7 @@ interface DetailsFormProps {
 }
 
 const DetailsForm: React.FC<DetailsFormProps> = ({ onNext, onReset }) => {
-  const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence(['detailsFormStep'], 1);
+  const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence('detailsFormStep', 1);
 
   const handleNextStep = () => {
     if (currentStep < 3) {

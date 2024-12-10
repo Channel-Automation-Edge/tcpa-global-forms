@@ -1,7 +1,10 @@
 "use client";
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../../context/AppContext';
-import servicesData from '../../../assets/assets.json'; 
+import servicesData from '../../../assets/assets.json';
+import supabase from '../../../lib/supabaseClient';
+import ResetButton from '@/components/ui/resetButton';
+import BackButton from '@/components/ui/backButton';
 
 // Define props interface
 interface Step2PromoOptInProps {
@@ -17,9 +20,10 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
     return null;
   }
 
-  const { promo, setPromo, newsletterOptIn, setNewsletterOptIn, generalOptIn, setGeneralOptIn, phone, firstname, lastname, email, zip, state, selectedService, serviceSpecifications, contractorPreferences, termsAndPrivacyOptIn, userNs, teamId } = appContext;
+  const { promo, setPromo, newsletterOptIn, setNewsletterOptIn, generalOptIn, setGeneralOptIn, phone, firstname, lastname, email, zip, state, selectedService, serviceSpecifications, contractorPreferences, termsAndPrivacyOptIn, userNs, teamId, formId } = appContext;
   const [selectedPromo, setSelectedPromo] = useState<string>(promo);
   const [isOptInRequired, setIsOptInRequired] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false); // State to control spinner
 
   const handlePromoSelect = (selectedPromo: string) => {
     if (selectedPromo === promo) {
@@ -44,6 +48,7 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     if (generalOptIn && (!isOptInRequired || (isOptInRequired && newsletterOptIn))) {
+      setLoading(true); // Show spinner
       const serviceName = servicesData.services.find(
         (service) => service.id === selectedService
       )?.name || 'Unknown Service';
@@ -102,7 +107,105 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
         console.error('Error sending lead information:', err);
       }
 
+      
+
+
+      try {
+        // Check if formId exists in the database
+        const { data, error } = await supabase
+          .from('Forms')
+          .select('id')
+          .eq('id', formId)
+          .single();
+  
+        if (error && error.code !== 'PGRST116') {
+          console.error('Error checking formId:', error);
+          await sendErrorWebhook('Error checking formId', error);
+          setLoading(false);
+          return;
+        }
+  
+        if (data) {
+          // formId exists, update the updated_at column
+          const { error: updateError } = await supabase
+            .from('Forms')
+            .update({
+              updated_at: new Date().toISOString(),
+              optIn_completion: true,
+              smsAndCall_optIn: generalOptIn,
+              email_optIn: newsletterOptIn,
+              termsAndPrivacy_optIn: termsAndPrivacyOptIn,
+            })        
+            .eq('id', formId);
+  
+          if (updateError) {
+            console.error('Error updating formId:', updateError);
+            await sendErrorWebhook('Error updating formId', updateError);
+            setLoading(false);
+            return;
+          }
+  
+          console.log(`FormId ${formId} updated.`);
+        } else {
+          // formId does not exist, insert a new row
+          const { error: insertError } = await supabase
+            .from('Forms')
+            .insert([{
+              id: formId,
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+              optIn_completion: true,
+              smsAndCall_optIn: generalOptIn,
+              email_optIn: newsletterOptIn,
+              termsAndPrivacy_optIn: termsAndPrivacyOptIn,
+              phone: phone,
+            }]);
+          if (insertError) {
+            console.error('Error inserting formId:', insertError);
+            await sendErrorWebhook('Error inserting formId', insertError);
+            setLoading(false);
+            return;
+          }
+  
+          console.log(`FormId ${formId} inserted.`);
+        }
+      } catch (err) {
+        console.error('Unexpected error:', err);
+        await sendErrorWebhook('Unexpected error', err);
+        setLoading(false);
+        return;
+      }
+
+      setLoading(false); // Hide spinner
       onNext();
+    }
+  };
+
+  // Function to send a webhook with error details
+  const sendErrorWebhook = async (message: string, error: any) => {
+    try {
+      const response = await fetch('https://hkdk.events/09d0txnpbpzmvq', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          error: {
+            message,
+            details: error.message || error,
+          },
+          formId,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to send error webhook');
+      } else {
+        console.log('Error webhook sent successfully');
+      }
+    } catch (webhookError) {
+      console.error('Error sending webhook:', webhookError);
     }
   };
 
@@ -114,20 +217,8 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
   return (
     <div className="z-10 max-w-[100rem] px-4 md:px-14 py-10 lg:py-14 mx-auto relative">
       <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-between p-4">
-        <button onClick={onBack} className="flex items-center">
-          <img
-            src="/images/back.svg"
-            alt="Go Back"
-            className="w-4 md:w-6 h-4 md:h-6 transition-colors duration-200 hover:filter hover:brightness-0"
-          />
-        </button>
-        <button onClick={onReset} className="flex items-center">
-          <img
-            src="/images/reset.svg"
-            alt="Reset"
-            className="w-4 md:w-6 h-4 md:h-6 transition-colors duration-200 hover:filter hover:brightness-0"
-          />
-        </button>
+        <BackButton onClick={onBack} />
+        <ResetButton onClick={onReset} />
       </div>
       <div className="space-y-8">
         <div className='flex justify-center text-center mb-8'>
@@ -226,14 +317,18 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
           <div className="mt-6 flex justify-center">
             <button
               type="submit"
-              className={`w-full max-w-xs px-24 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
+              className={`w-full max-w-xs px-24 py-5 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
                 generalOptIn && (!isOptInRequired || (isOptInRequired && newsletterOptIn))
-                  ? 'bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-4px]'
+                  ? 'bg-xorange text-white hover:bg-xorangeDark shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-4px]'
                   : 'bg-gray-200 text-white cursor-not-allowed'
               }`}
               disabled={!generalOptIn || (isOptInRequired && !newsletterOptIn)}
-            >
-              Continue
+              >
+              {loading ? (
+                <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+              ) : (
+                'Continue'
+              )}
             </button>
           </div>
         </form>

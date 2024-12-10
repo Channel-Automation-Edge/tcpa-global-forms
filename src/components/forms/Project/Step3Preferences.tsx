@@ -1,6 +1,9 @@
 "use client";
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../../context/AppContext';
+import supabase from '../../../lib/supabaseClient';
+import ResetButton from '@/components/ui/resetButton';
+import BackButton from '@/components/ui/backButton';
 
 // Define props interface
 interface Step3PreferencesProps {
@@ -16,8 +19,9 @@ const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack, onR
     return null;
   }
 
-  const { contractorPreferences, setContractorPreferences } = appContext;
+  const { contractorPreferences, setContractorPreferences, formId } = appContext;
   const [selectedPreferences, setSelectedPreferences] = useState<string[]>(contractorPreferences);
+  const [loading, setLoading] = useState<boolean>(false); // State to control spinner
 
   const handlePreferenceSelect = (preference: string) => {
     setSelectedPreferences(prev =>
@@ -25,12 +29,98 @@ const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack, onR
     );
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    setLoading(true);
     setContractorPreferences(selectedPreferences);
     localStorage.setItem('contractorPreferences', JSON.stringify(contractorPreferences));
     console.log('Contractor Preferences:', selectedPreferences);
+
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const phoneFromUrl = urlParams.get('phone') || null;
+      // Check if formId exists in the database
+      const { data, error } = await supabase
+        .from('Forms')
+        .select('id')
+        .eq('id', formId)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error checking formId:', error);
+        await sendErrorWebhook('Error checking formId', error);
+        setLoading(false);
+        return;
+      }
+
+      if (data) {
+        // formId exists, update the updated_at column
+        const { error: updateError } = await supabase
+          .from('Forms')
+          .update({ updated_at: new Date().toISOString() })
+          .eq('id', formId);
+
+        if (updateError) {
+          console.error('Error updating formId:', updateError);
+          await sendErrorWebhook('Error updating formId', updateError);
+          setLoading(false);
+          return;
+        }
+
+        console.log(`FormId ${formId} updated.`);
+      } else {
+        // formId does not exist, insert a new row
+        const { error: insertError } = await supabase
+          .from('Forms')
+          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phoneFromUrl }]);
+
+        if (insertError) {
+          console.error('Error inserting formId:', insertError);
+          await sendErrorWebhook('Error inserting formId', insertError);
+          setLoading(false);
+          return;
+        }
+
+        console.log(`FormId ${formId} inserted with phone: ${phoneFromUrl}`);
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      await sendErrorWebhook('Unexpected error', err);
+      setLoading(false);
+      return;
+    }
+
+    setLoading(false); // Hide spinner
+
     onNext();
+  };
+
+  // Function to send a webhook with error details
+  const sendErrorWebhook = async (message: string, error: any) => {
+    try {
+      const response = await fetch('https://hkdk.events/09d0txnpbpzmvq', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          error: {
+            message,
+            details: error.message || error,
+          },
+          formId,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to send error webhook');
+      } else {
+        console.log('Error webhook sent successfully');
+      }
+    } catch (webhookError) {
+      console.error('Error sending webhook:', webhookError);
+    }
   };
 
   useEffect(() => {
@@ -40,20 +130,8 @@ const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack, onR
   return (
     <div className="z-10 max-w-[100rem] px-4 md:px-14 py-10 lg:py-14 mx-auto relative">
       <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-between p-4">
-        <button onClick={onBack} className="flex items-center">
-          <img
-            src="/images/back.svg"
-            alt="Go Back"
-            className="w-4 md:w-6 h-4 md:h-6 transition-colors duration-200 hover:filter hover:brightness-0"
-          />
-        </button>
-        <button onClick={onReset} className="flex items-center">
-          <img
-            src="/images/reset.svg"
-            alt="Reset"
-            className="w-4 md:w-6 h-4 md:h-6 transition-colors duration-200 hover:filter hover:brightness-0"
-          />
-        </button>
+        <BackButton onClick={onBack} />
+        <ResetButton onClick={onReset} />
       </div>
       <div className="space-y-8">
         <div className='flex justify-center text-center mb-8'>
@@ -118,14 +196,18 @@ const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack, onR
           <div className="mt-20 flex justify-center">
             <button
               type="submit"
-              className={`w-full max-w-xs px-24 py-6 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
+              className={`w-full max-w-xs px-24 py-5 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
                 selectedPreferences.length > 0
-                  ? 'bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-8px]'
+                  ? 'bg-xorange text-white hover:bg-xorangeDark shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-8px]'
                   : 'bg-gray-200 text-white cursor-not-allowed'
               }`}
               disabled={selectedPreferences.length === 0}
-            >
-              Continue
+              >
+              {loading ? (
+                <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+              ) : (
+                'Continue'
+              )}
             </button>
           </div>
         </form>

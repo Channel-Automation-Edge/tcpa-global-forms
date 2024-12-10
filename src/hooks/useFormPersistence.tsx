@@ -1,20 +1,21 @@
 import { useState, useEffect } from 'react';
 
-function useFormPersistence<T>(formKeys: string[], initialData: T) {
+function useFormPersistence<T>(formKey: string, initialData: T) {
+  // Initialize formData with saved data from localStorage or initialData
   const [formData, setFormData] = useState<T>(() => {
-    const savedData = localStorage.getItem(formKeys[0]); // Assume the first key is the primary one for initialization
+    const savedData = localStorage.getItem(formKey);
     return savedData ? JSON.parse(savedData) : initialData;
   });
 
+  // Update localStorage whenever formData changes
   useEffect(() => {
-    formKeys.forEach(key => {
-      localStorage.setItem(key, JSON.stringify(formData));
-    });
-  }, [formData, formKeys]);
+    localStorage.setItem(formKey, JSON.stringify(formData));
+  }, [formData, formKey]);
 
+  // Reset formData to initialData and clear localStorage entry
   const resetFormData = () => {
     setFormData(initialData);
-    formKeys.forEach(key => localStorage.removeItem(key));
+    localStorage.removeItem(formKey);
   };
 
   return [formData, setFormData, resetFormData] as const;

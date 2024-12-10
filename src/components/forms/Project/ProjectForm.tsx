@@ -1,9 +1,7 @@
-import { useEffect, useContext } from 'react';
 import Step1Selection from './Step1Selection';
 import ProgressBar from '../../ui/ProgressBar';
 import Step2Specifications from './Step2Specifications';
 import Step3Preferences from './Step3Preferences';
-import { AppContext } from '../../../context/AppContext';
 import useFormPersistence from '../../../hooks/useFormPersistence';
 
 interface ProjectFormProps {
@@ -12,20 +10,7 @@ interface ProjectFormProps {
 }
 
 const ProjectForm: React.FC<ProjectFormProps> = ({ onNext, onReset }) => {
-  const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence(['projectFormStep'], 1);
-  const appContext = useContext(AppContext);
-
-  if (!appContext) {
-    return null;
-  }
-
-  const { selectedService } = appContext;
-
-  useEffect(() => {
-    if (selectedService) {
-      setCurrentStep(2);
-    }
-  }, [selectedService]);
+  const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence('projectFormStep', 1);
 
   const handleNextStep = () => {
     if (currentStep < 3) {
@@ -36,7 +21,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onNext, onReset }) => {
       
     }
   };
-
   const handleBackStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);

@@ -8,15 +8,18 @@ import NavBar from './NavBar.tsx';
 import servicesData from '../assets/assets.json';
 import BlurFade from './ui/blur-fade.tsx';
 import useFormPersistence from '../hooks/useFormPersistence';
+import useClearFormState from '../hooks/useClearFormState';
+import supabase from '../lib/supabaseClient'; // Import your Supabase client
+
 
 const Hero = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const appContext = useContext(AppContext);
-  const [, , resetCurrentStep] = useFormPersistence(
-    ['parentFormStep', 'projectFormStep', 'detailsFormStep', 'appointmentFormStep'],
-    1
-  );
+  const [, , resetParentCurrentStep] = useFormPersistence('parentFormStep', 1);
+  const [, setProjectCurrentStep, resetProjectCurrentStep] = useFormPersistence('projectFormStep', 1);
+  const [, , resetDetailsCurrentStep] = useFormPersistence('detailsFormStep', 1);
+  const [, , resetAppointmentCurrentStep] = useFormPersistence('appointmentFormStep', 1);
   
   if (!appContext) {
     return null; // Handle the case where appContext is not available
@@ -25,20 +28,6 @@ const Hero = () => {
   const {
     firstname,
     setSelectedService,
-    setMatchingContractors,
-    setZip,
-    setState,
-    setContractorPreferences,
-    setFirstname,
-    setLastname,
-    setEmail,
-    setPhone,
-    setGeneralOptIn,
-    setServiceSpecifications,
-    setPromo,
-    setConsentedContractors,
-    setNumberOfQuotes,
-    setTermsAndPrivacyOptIn,
   } = appContext;
 
   const [buttonText, setButtonText] = useState("Get a Free Consultation Now");
@@ -58,49 +47,120 @@ const Hero = () => {
     navigate(`${path}?${currentParams.toString()}`);
   };
 
-  const handleServiceSelect = (id: number) => {
-    resetCurrentStep();
-    setSelectedService(0);
-    setMatchingContractors([]);
-    setZip('');
-    setState('');
-    setContractorPreferences([]);
-    setFirstname('');
-    setLastname('');
-    setEmail('');
-    setPhone('');
-    setGeneralOptIn(false);
-    setServiceSpecifications([]);
-    setPromo('');
-    setConsentedContractors([]);
-    setNumberOfQuotes(0);
-    setTermsAndPrivacyOptIn(false);
+  const clearFormState = useClearFormState();
 
-    localStorage.removeItem('selectedService');
-    localStorage.removeItem('matchingContractors');
-    localStorage.removeItem('zip');
-    localStorage.removeItem('state');
-    localStorage.removeItem('contractorPreferences');
-    localStorage.removeItem('firstname');
-    localStorage.removeItem('lastname');
-    localStorage.removeItem('email');
-    localStorage.removeItem('phone');
-    localStorage.removeItem('generalOptIn');
-    localStorage.removeItem('serviceSpecifications');
-    localStorage.removeItem('promo');
-    localStorage.removeItem('consentedContractors');
-    localStorage.removeItem('numberOfQuotes');
-    localStorage.removeItem('termsAndPrivacyOptIn');
+  const handleServiceSelect = async (id: number) => {
+    resetParentCurrentStep();
+    resetProjectCurrentStep();
+    resetDetailsCurrentStep();
+    resetAppointmentCurrentStep();
+    
+    clearFormState(); // Clear form state
+    
+    // Set formId and update local storage
+    let formId = localStorage.getItem('formID');
+    if (!formId) {
+      const urlParams = new URLSearchParams(location.search);
+      const phone = urlParams.get('phone') || generateRandomString(9);
+  
+      const dateTime = new Date().toISOString().replace(/[-:.T]/g, '').slice(0, 14); // YYYYMMDDHHMMSS format
+      const randomString = generateRandomString(4);
+  
+      formId = `${phone}-${dateTime}-${randomString}`;
+      localStorage.setItem('formID', formId);
+      console.log(`formId set: ${formId}`);
+    } else {
+      console.log(`formId already exists: ${formId}`);
+    }
+    appContext.setFormId(formId);
 
     // Set new service and update local storage
     setSelectedService(id);
     localStorage.setItem('selectedService', JSON.stringify(id));
     console.log('Reset form and setting Initial Service:', id);
+    setProjectCurrentStep(2);
     navigateWithParams('/request-quotes');
+
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const phoneFromUrl = urlParams.get('phone') || null;
+      // Check if formId exists in the database
+      const { data, error } = await supabase
+        .from('Forms')
+        .select('id')
+        .eq('id', formId)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error checking formId:', error);
+        return;
+      }
+
+      if (data) {
+        // formId exists, update the updated_at column
+        const { error: updateError } = await supabase
+          .from('Forms')
+          .update({ updated_at: new Date().toISOString(), optIn_completion: false,
+            appointment_completion: false,
+            email_optIn: false,
+            termsAndPrivacy_optIn: false,
+            smsAndCall_optIn: false, })
+          .eq('id', formId);
+
+        if (updateError) {
+          console.error('Error updating formId:', updateError);
+          return;
+        }
+
+        console.log(`FormId ${formId} updated.`);
+      } else {
+        // formId does not exist, insert a new row
+        const { error: insertError } = await supabase
+          .from('Forms')
+          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phoneFromUrl }]);
+
+        if (insertError) {
+          console.error('Error inserting formId:', insertError);
+          return;
+        }
+
+        console.log(`FormId ${formId} inserted with phone: ${phoneFromUrl}`);
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      return;
+    }
+  };
+
+  // Function to generate a random string
+  const generateRandomString = (length: number): string => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
   };
 
   const handleButtonClick = () => {
-    navigateWithParams('/request-quotes'); // Navigate with params
+    let formId = localStorage.getItem('formID');
+  
+    if (!formId) {
+      const urlParams = new URLSearchParams(location.search);
+      const phone = urlParams.get('phone') || generateRandomString(9);
+  
+      const dateTime = new Date().toISOString().replace(/[-:.T]/g, '').slice(0, 14); // YYYYMMDDHHMMSS format
+      const randomString = generateRandomString(4);
+  
+      formId = `${phone}-${dateTime}-${randomString}`;
+      localStorage.setItem('formID', formId);
+      console.log(`formId set: ${formId}`);
+    } else {
+      console.log(`formId already exists: ${formId}`);
+    }
+    appContext.setFormId(formId);
+    navigateWithParams('/request-quotes');
   };
 
   return (

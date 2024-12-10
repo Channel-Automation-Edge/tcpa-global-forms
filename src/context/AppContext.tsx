@@ -1,4 +1,5 @@
-import React, { createContext, useState, ReactNode, Dispatch, SetStateAction } from 'react';
+import React, { createContext, useState, ReactNode, Dispatch, SetStateAction, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 // Define the Contractor interface
 interface Contractor {
@@ -22,6 +23,7 @@ interface Appointment {
 // Define the shape of your context data
 interface AppContextType {
   resetForm: boolean;
+  formId: string | null;
   firstname: string | null;
   lastname: string | null;
   zip: string | null;
@@ -41,10 +43,12 @@ interface AppContextType {
   scheduledAppointments: Appointment[];
   type: string;
   consentedContractors: Contractor[];
+  contactPreferences: string[];
   userNs: string | null;
   teamId: string | null;
   setResetForm: Dispatch<SetStateAction<boolean>>;
   setFirstname: Dispatch<SetStateAction<string | null>>;
+  setFormId: Dispatch<SetStateAction<string | null>>;
   setLastname: Dispatch<SetStateAction<string | null>>;
   setZip: Dispatch<SetStateAction<string | null>>;
   setEmail: Dispatch<SetStateAction<string | null>>;
@@ -63,6 +67,7 @@ interface AppContextType {
   setScheduledAppointments: Dispatch<SetStateAction<Appointment[]>>;
   setType: Dispatch<SetStateAction<string>>;
   setConsentedContractors: Dispatch<SetStateAction<Contractor[]>>;
+  setContactPreferences: Dispatch<SetStateAction<string[]>>;
   setUserNs: Dispatch<SetStateAction<string | null>>;
   setTeamId: Dispatch<SetStateAction<string | null>>;
 }
@@ -76,7 +81,10 @@ interface AppContextProviderProps {
 
 // Create the provider component
 const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => {
+  const location = useLocation();
+  
   const [resetForm, setResetForm] = useState<boolean>(false);
+  const [formId, setFormId] = useState<string | null>(null);
   const [firstname, setFirstname] = useState<string | null>(null);
   const [lastname, setLastname] = useState<string | null>(null);
   const [zip, setZip] = useState<string | null>(null);
@@ -96,16 +104,22 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
   const [scheduledAppointments, setScheduledAppointments] = useState<Appointment[]>([]);
   const [type, setType] = useState<string>('');
   const [consentedContractors, setConsentedContractors] = useState<Contractor[]>([]);
+  const [contactPreferences, setContactPreferences] = useState<string[]>([]);
+  const [userNs, setUserNs] = useState<string | null>(null);
+  const [teamId, setTeamId] = useState<string | null>(null);
 
   // Initialize userNs and teamId from URL parameters
-  const params = new URLSearchParams(window.location.search);
-  const [userNs, setUserNs] = useState<string | null>(params.get('user_ns'));
-  const [teamId, setTeamId] = useState<string | null>(params.get('team_id'));
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    setUserNs(params.get('user_ns'));
+    setTeamId(params.get('team_id'));
+  }, [location.search]);
 
   return (
     <AppContext.Provider
       value={{
         resetForm,
+        formId,
         firstname,
         lastname,
         zip,
@@ -125,9 +139,11 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         scheduledAppointments,
         type,
         consentedContractors,
+        contactPreferences,
         userNs,
         teamId,
         setResetForm,
+        setFormId,
         setFirstname,
         setLastname,
         setZip,
@@ -147,6 +163,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         setScheduledAppointments,
         setType,
         setConsentedContractors,
+        setContactPreferences,
         setUserNs,
         setTeamId,
       }}

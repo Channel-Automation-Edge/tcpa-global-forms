@@ -1,7 +1,9 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup'; // Import Yup for validation
 import { AppContext } from '../../../context/AppContext';
+import supabase from '../../../lib/supabaseClient';
+import ResetButton from '@/components/ui/resetButton';
 
 interface Step1InfoProps {
   onNext: () => void;
@@ -15,22 +17,24 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
     return null;
   }
 
-  const { zip, state, email, phone, firstname, lastname, termsAndPrivacyOptIn, setZip, setEmail, setPhone, setFirstname, setLastname, setState, setTermsAndPrivacyOptIn } = appContext;
+  const { zip, state, email, phone, firstname, lastname, termsAndPrivacyOptIn, setZip, setEmail, setPhone, setFirstname, setLastname, setState, setTermsAndPrivacyOptIn, formId } = appContext;
+  const [loading, setLoading] = useState<boolean>(false); // State to control spinner
+
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     formik.setValues({
-      firstname: params.get('firstname') || firstname || '',
-      lastname: params.get('lastname') || lastname || '',
-      zip: params.get('zip') || zip || '',
-      state: params.get('state') || state || '',
-      email: params.get('email') || email || '',
-      phone: params.get('phone') || phone || '',
+      firstname: firstname || params.get('firstname') || '',
+      lastname: lastname || params.get('lastname') || '',
+      zip: zip || params.get('zip') || '',
+      state: state || params.get('state') || '',
+      email: email || params.get('email') || '',
+      phone: phone || params.get('phone') || '',
       termsAndPrivacyOptIn: termsAndPrivacyOptIn || false,
     });
     formik.setFieldTouched('termsAndPrivacyOptIn', true, true);
   }, [firstname, lastname, zip, state, email, phone, termsAndPrivacyOptIn]);
-
+  
   // Define the validation schema using Yup
   const validationSchema = Yup.object({
     firstname: Yup.string().required('First name is required'),
@@ -55,8 +59,9 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
       termsAndPrivacyOptIn: false,
     },
     validationSchema, // Use Yup validation schema
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       console.log("Form submitted with values:", values);
+      setLoading(true); // Show spinner
       setZip(values.zip);
       setState(values.state);
       setEmail(values.email);
@@ -65,29 +70,99 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
       setLastname(values.lastname);
       setTermsAndPrivacyOptIn(values.termsAndPrivacyOptIn);
 
+      try {
+        // Check if formId exists in the database
+        const { data, error } = await supabase
+          .from('Forms')
+          .select('id, phone')
+          .eq('id', formId)
+          .single();
+  
+        if (error && error.code !== 'PGRST116') {
+          console.error('Error checking formId:', error);
+          await sendErrorWebhook('Error checking formId', error);
+          setLoading(false);
+          return;
+        }
+  
+        if (data) {
+          // formId exists, update the updated_at column
+          const { error: updateError } = await supabase
+            .from('Forms')
+            .update({ updated_at: new Date().toISOString(), phone: values.phone })
+            .eq('id', formId);
+  
+          if (updateError) {
+            console.error('Error updating formId:', updateError);
+            await sendErrorWebhook('Error updating formId', updateError);
+            setLoading(false);
+            return;
+          }
+  
+          console.log(`FormId ${formId} updated.`);
+        } else {
+          // formId does not exist, insert a new row
+          const { error: insertError } = await supabase
+            .from('Forms')
+            .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phone }]);
+
+        if (insertError) {
+          console.error('Error inserting formId:', insertError);
+          await sendErrorWebhook('Error inserting formId', insertError);
+          setLoading(false);
+          return;
+        }
+
+        console.log(`FormId ${formId} inserted with phone: ${phone}`);
+      }
+      } catch (err) {
+        console.error('Unexpected error:', err);
+        await sendErrorWebhook('Unexpected error', err);
+        setLoading(false);
+        return;
+      }
+  
+      setLoading(false); // Hide spinner
+
       // Move to the next step
       onNext();
     },
+    
   });
+
+  // Function to send a webhook with error details
+  const sendErrorWebhook = async (message: string, error: any) => {
+    try {
+      const response = await fetch('https://hkdk.events/09d0txnpbpzmvq', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          error: {
+            message,
+            details: error.message || error,
+          },
+          formId,
+          timestamp: new Date().toISOString(),
+        }),
+      });
+
+      if (!response.ok) {
+        console.error('Failed to send error webhook');
+      } else {
+        console.log('Error webhook sent successfully');
+      }
+    } catch (webhookError) {
+      console.error('Error sending webhook:', webhookError);
+    }
+  };
 
   return (
     <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
 
-      <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-between p-4">
-        <button className="items-center hidden ">
-          <img
-            src="/images/back.svg"
-            alt="Go Back"
-            className="w-4 md:w-6 h-4 md:h-6 transition-colors duration-200 hover:filter hover:brightness-0"
-          />
-        </button>
-        <button onClick={onReset} className="flex items-center">
-          <img
-            src="/images/reset.svg"
-            alt="Reset"
-            className="w-4 md:w-6 h-4 md:h-6 transition-colors duration-200 hover:filter hover:brightness-0"
-          />
-        </button>
+      <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-end p-4">
+        <ResetButton onClick={onReset} />
       </div>
       
       <div className="max-w-xl mx-auto">
@@ -228,14 +303,18 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
               <div className="mt-6 grid">
                 <button
                   type="submit"
-                  className={`w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
+                  className={`w-full py-5 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
                     formik.isValid && formik.values.termsAndPrivacyOptIn
-                      ? 'bg-xorange text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform'
+                      ? 'bg-xorange text-white hover:bg-xorangeDark shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform'
                       : 'bg-gray-200 text-white cursor-not-allowed'
                   }`}
                   disabled={!formik.isValid || !formik.values.termsAndPrivacyOptIn}
-                >
-                  Confirm Information
+                  >
+                  {loading ? (
+                    <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+                  ) : (
+                    'Confirm Information'
+                  )}
                 </button>
               </div>
               <div className="mt-3 text-center">

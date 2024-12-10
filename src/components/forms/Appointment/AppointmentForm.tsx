@@ -10,7 +10,7 @@ interface AppointmentFormProps {
 }
 
 const AppointmentForm: React.FC<AppointmentFormProps> = ({onSubmit, onReset }) => {
-  const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence(['appointmentFormStep'], 1);
+  const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence('appointmentFormStep', 1);
   
 
   const handleNextStep = () => {
