@@ -209,6 +209,7 @@ const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack, onR
                 'Continue'
               )}
             </button>
+            
           </div>
         </form>
       </div>
