@@ -26,7 +26,7 @@ const NavBar = () => {
           </div>
 
           
-      <!--
+/**
           <div className="flex items-center gap-4">
             <div className="sm:flex sm:gap-4">
               <a
@@ -45,7 +45,7 @@ const NavBar = () => {
                 </a>
               </div>
             </div>
-            -->
+  **/
 
             <div className="block md:hidden">
               <button className="rounded bg-gray-100 p-2 text-gray-600 transition hover:text-gray-600/75">
