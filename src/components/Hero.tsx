@@ -249,16 +249,6 @@ const Hero = () => {
     <path d="m9 18 6-6-6-6" />
   </svg>
   
-  {/* Added animation to the promo text */}
-  <span 
-    className="absolute -top-6 -right-2 text-red-500 text-sm"
-    style={{
-      animation: 'wiggle 2s ease-in-out infinite',
-      transformOrigin: 'center'
-    }}
-  >
-    Claim mystery promo!
-  </span>
 </motion.button>
 
             <motion.p
