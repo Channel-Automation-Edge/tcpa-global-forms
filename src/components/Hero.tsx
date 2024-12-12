@@ -208,37 +208,58 @@ const Hero = () => {
               "Connect with trusted contractors who have the skills and experience to get the job done right"}
             </motion.p>
 
+            <style>{`
+  @keyframes wiggle {
+    0%, 100% { transform: rotate(6deg); }
+    25% { transform: rotate(8deg); }
+    75% { transform: rotate(4deg); }
+  }
+`}</style>
+
             <motion.button
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 1 }}
-              transition={{ delay: 0.6 }}
-              className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-xbg transition-transform transform hover:scale-105"
-              onClick={handleButtonClick}
-              style={{boxShadow: 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
-                transition: 'box-shadow 0.3s ease',}}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 10px 25px -4px';
-              }}
-            >
-              {buttonText}
-              <svg
-                className="shrink-0 size-4"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="m9 18 6-6-6-6" />
-              </svg>
-            </motion.button>
+  initial={{ opacity: 0, y: 5 }}
+  animate={{ opacity: 1, y: 1 }}
+  transition={{ delay: 0.6 }}
+  className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-xbg transition-transform transform hover:scale-105 relative"
+  onClick={handleButtonClick}
+  style={{
+    boxShadow: 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
+    transition: 'box-shadow 0.3s ease',
+  }}
+  onMouseEnter={(e) => {
+    e.currentTarget.style.boxShadow = 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px';
+  }}
+  onMouseLeave={(e) => {
+    e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 10px 25px -4px';
+  }}
+>
+{buttonText}
+  <svg
+    className="shrink-0 size-4"
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="m9 18 6-6-6-6" />
+  </svg>
+  
+  {/* Added animation to the promo text */}
+  <span 
+    className="absolute -top-6 -right-2 text-red-500 text-sm"
+    style={{
+      animation: 'wiggle 2s ease-in-out infinite',
+      transformOrigin: 'center'
+    }}
+  >
+    Claim mystery promo!
+  </span>
+</motion.button>
 
             <motion.p
               initial={{ opacity: 0, y: 5 }}
