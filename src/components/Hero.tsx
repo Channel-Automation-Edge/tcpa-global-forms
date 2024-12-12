@@ -166,7 +166,7 @@ const Hero = () => {
   return (
     <div>
       <div className="relative min-h-screen">
-        <div className="absolute inset-0 bg-[#21284de0] opacity-100"></div> {/* Overlay */}
+      
         <div className="absolute inset-0">
           <video
             autoPlay
@@ -177,8 +177,9 @@ const Hero = () => {
             src="https://storage.googleapis.com/channel_automation/Webassets/video/homeprojectparterns-hero_9.0.10.webm"
           ></video>
         </div>
+        <div className="absolute inset-0 bg-[#21284de0] z-[1]"></div> {/* Moved overlay after video and added z-index */}
 
-        <div className="relative w-full overflow-hidden">
+        <div className="relative z-[2] w-full overflow-hidden"> {/* Added z-index to content container */}
           <NavBar />
           <div className="z-10 flex items-center justify-center flex-col px-4 mt-0 space-y-[25px]">
             <GradualSpacing
