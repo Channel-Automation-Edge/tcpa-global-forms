@@ -165,8 +165,18 @@ const Hero = () => {
 
   return (
     <div>
-      <div className="relative min-h-screen bg-[url('https://storage.googleapis.com/channel_automation/Webassets/video/homeprojectparterns-hero_9.0.10.webm')] bg-cover bg-center">
+      <div className="relative min-h-screen">
         <div className="absolute inset-0 bg-[#21284de0] opacity-100"></div> {/* Overlay */}
+        <div className="absolute inset-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+            src="https://storage.googleapis.com/channel_automation/Webassets/video/homeprojectparterns-hero_9.0.10.webm"
+          ></video>
+        </div>
 
         <div className="relative w-full overflow-hidden">
           <NavBar />
