@@ -30,7 +30,7 @@ interface AppContextType {
   email: string | null;
   phone: string | null;
   state: string | null;
-  selectedService: number;
+  selectedService: string | null;
   serviceSpecifications: string[];
   contractorPreferences: string[];
   numberOfQuotes: number;
@@ -54,7 +54,7 @@ interface AppContextType {
   setEmail: Dispatch<SetStateAction<string | null>>;
   setPhone: Dispatch<SetStateAction<string | null>>;
   setState: Dispatch<SetStateAction<string | null>>;
-  setSelectedService: Dispatch<SetStateAction<number>>;
+  setSelectedService: Dispatch<SetStateAction<string | null>>;
   setServiceSpecifications: Dispatch<SetStateAction<string[]>>;
   setContractorPreferences: Dispatch<SetStateAction<string[]>>;
   setNumberOfQuotes: Dispatch<SetStateAction<number>>;
@@ -91,7 +91,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
   const [email, setEmail] = useState<string | null>(null);
   const [phone, setPhone] = useState<string | null>(null);
   const [state, setState] = useState<string | null>(null);
-  const [selectedService, setSelectedService] = useState<number>(0);
+  const [selectedService, setSelectedService] = useState<string | null>(null);
   const [serviceSpecifications, setServiceSpecifications] = useState<string[]>([]);
   const [contractorPreferences, setContractorPreferences] = useState<string[]>([]);
   const [numberOfQuotes, setNumberOfQuotes] = useState<number>(0);

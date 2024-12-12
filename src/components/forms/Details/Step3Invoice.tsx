@@ -1,10 +1,7 @@
-"use client";
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../../../context/AppContext';
-import servicesData from '../../../assets/assets.json';
 import supabase from '../../../lib/supabaseClient';
 import ResetButton from '@/components/ui/resetButton';
-
 
 interface Step3InvoiceProps {
   onNext: () => void;
@@ -36,8 +33,32 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext, onReset }) => {
   const proposalDate = currentDate.toLocaleDateString();
   const offerValidUntil = new Date(currentDate.setDate(currentDate.getDate() + 20)).toLocaleDateString();
   const [loading, setLoading] = useState<boolean>(false); // State to control spinner
+  const [selectedServiceName, setSelectedServiceName] = useState<string>('Service'); // State to store the service name
 
-  const selectedServiceName = servicesData.services.find(service => service.id === selectedService)?.name || 'Service';
+  useEffect(() => {
+    const fetchServiceName = async () => {
+      if (!selectedService) return;
+
+      try {
+        const { data, error } = await supabase
+          .from('Services')
+          .select('name')
+          .eq('id', selectedService)
+          .single();
+
+        if (error) {
+          console.error('Error fetching service name:', error);
+          return;
+        }
+
+        setSelectedServiceName(data.name); // Set the fetched service name
+      } catch (err) {
+        console.error('Unexpected error fetching service name:', err);
+      }
+    };
+
+    fetchServiceName();
+  }, [selectedService]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -78,15 +99,15 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext, onReset }) => {
           .from('Forms')
           .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phone }]);
 
-          if (insertError) {
-            console.error('Error inserting formId:', insertError);
-            await sendErrorWebhook('Error inserting formId', insertError);
-            setLoading(false);
-            return;
-          }
-  
-          console.log(`FormId ${formId} inserted with phone: ${phone}`);
+        if (insertError) {
+          console.error('Error inserting formId:', insertError);
+          await sendErrorWebhook('Error inserting formId', insertError);
+          setLoading(false);
+          return;
         }
+
+        console.log(`FormId ${formId} inserted with phone: ${phone}`);
+      }
     } catch (err) {
       console.error('Unexpected error:', err);
       await sendErrorWebhook('Unexpected error', err);

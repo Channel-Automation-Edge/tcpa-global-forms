@@ -36,7 +36,7 @@ const useClearFormState = () => {
     setPhone('');
     setZip('');
     setState('');
-    setSelectedService(0);
+    setSelectedService(''); // Set to an empty string to reset the selected service
     setServiceSpecifications([]);
     setContractorPreferences([]);
     setPromo('');

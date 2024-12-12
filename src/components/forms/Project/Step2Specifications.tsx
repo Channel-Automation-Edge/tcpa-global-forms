@@ -1,7 +1,5 @@
-"use client";
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../../context/AppContext';
-import servicesData from '../../../assets/assets.json';
 import supabase from '../../../lib/supabaseClient';
 import ResetButton from '@/components/ui/resetButton';
 import BackButton from '@/components/ui/backButton';
@@ -21,9 +19,34 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
   }
 
   const { selectedService, serviceSpecifications, setServiceSpecifications, formId } = appContext;
-  const selectedServiceData = servicesData.services.find(service => service.id === selectedService);
   const [selectedSpecs, setSelectedSpecs] = useState<string[]>(serviceSpecifications);
   const [loading, setLoading] = useState<boolean>(false); // State to control spinner
+  const [selectedServiceData, setSelectedServiceData] = useState<any>(null); // State to store service data
+
+  useEffect(() => {
+    const fetchServiceData = async () => {
+      if (!selectedService) return;
+
+      try {
+        const { data, error } = await supabase
+          .from('Services')
+          .select('*')
+          .eq('id', selectedService)
+          .single();
+
+        if (error) {
+          console.error('Error fetching service data:', error);
+          return;
+        }
+
+        setSelectedServiceData(data); // Set the fetched service data
+      } catch (err) {
+        console.error('Unexpected error fetching service data:', err);
+      }
+    };
+
+    fetchServiceData();
+  }, [selectedService]);
 
   const handleSpecSelect = (spec: string) => {
     setSelectedSpecs(prev =>
@@ -33,8 +56,8 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
 
   const handleBack = () => { 
     setServiceSpecifications([]);
-    
-    onBack(); };
+    onBack(); 
+  };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -151,7 +174,7 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
 
         <form onSubmit={handleSubmit} className="mt-12 flex flex-col h-full">
           <div className="flex flex-wrap justify-center gap-4 sm:gap-[20px]" style={{ marginTop: '15px', width: '100%' }}>
-            {selectedServiceData?.specifiedService.map((spec, index) => (
+          {selectedServiceData?.specifiedService.map((spec: string, index: number)=> (
               <button
                 key={index}
                 type="button"
@@ -213,7 +236,7 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
           <div className="mt-20 flex justify-center">
             <button
               type="submit"
-              className={`w-full max-w-xs px-24 py-5 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
+              className={`w-full max-w-xs px-24 py-6 inline-flex justify-center items-center gap-x-2 text-base font-medium rounded-lg border border-transparent ${
                 selectedSpecs.length > 0
                   ? 'bg-xorange text-white hover:bg-xorangeDark shadow-lg shadow-[rgba(255,85,0,0.5)] transform transition-transform translate-y-[-8px]'
                   : 'bg-gray-200 text-white cursor-not-allowed'

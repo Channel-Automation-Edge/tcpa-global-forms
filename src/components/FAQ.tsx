@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import BlurFade from './ui/blur-fade';
 
 interface FAQItem {
   id: number;
@@ -56,7 +57,7 @@ const FAQ: React.FC = () => {
       <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
       {/* Grid */}
       <div className="grid md:grid-cols-5 gap-10">
-        <div className="md:col-span-2">
+        <BlurFade delay={3 * 0.15} inView yOffset={15} className="md:col-span-2">
           <div className="max-w-xs">
             <h2 className="text-2xl font-semibold md:text-4xl md:leading-tight dark:text-white">
               Frequently Asked Questions
@@ -65,16 +66,16 @@ const FAQ: React.FC = () => {
               Here are some of the most common questions we receive.
             </p>
           </div>
-        </div>
+        </BlurFade>
         {/* End Col */}
 
-        <div className="md:col-span-3">
+        <BlurFade delay={4 * 0.15} inView yOffset={15} className="md:col-span-3">
           {/* Accordion */}
           <div className="hs-accordion-group divide-y divide-gray-200 dark:divide-neutral-700">
             {faqData.map((item, index) => (
               <div className="hs-accordion pt-6 pb-3" key={item.id}>
                 <button
-                  className="hs-accordion-toggle group pb-3 inline-flex items-center justify-between gap-x-3 w-full md:text-lg font-semibold text-start text-gray-800 rounded-lg transition hover:text-gray-500 focus:outline-none focus:text-gray-500 dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400"
+                  className="hs-accordion-toggle group pb-3 inline-flex items-center justify-between gap-x-3 w-full md:text-lg font-semibold text-start text-gray-800 rounded-lg transition hover:text-xorange focus:outline-none focus:text-xorange dark:text-neutral-200 dark:hover:text-neutral-400 dark:focus:text-neutral-400"
                   aria-expanded={activeIndex === index}
                   aria-controls={`hs-basic-with-title-and-arrow-stretched-collapse-${item.id}`}
                   onClick={() => toggleAccordion(index)}
@@ -109,7 +110,7 @@ const FAQ: React.FC = () => {
             ))}
           </div>
           {/* End Accordion */}
-        </div>
+        </BlurFade>
         {/* End Col */}
       </div>
       {/* End Grid */}

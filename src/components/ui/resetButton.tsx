@@ -58,11 +58,11 @@ const ResetButton: React.FC<ResetButtonProps> = ({ onClick }) => {
           >
             <div className="flex justify-between items-center px-4 py-3 border-b">
               <h3 className="font-bold text-gray-800">Confirm Reset</h3>
-              <button onClick={handleCancel} className="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-none focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600">
-              <svg className="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 6 6 18"></path>
-            <path d="m6 6 12 12"></path>
-          </svg>
+              <button onClick={handleCancel} className="text-gray-500 hover:text-gray-700">
+                <svg className="shrink-0 size-5" fill="none" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
+                  <path d="M18 6 L6 18"></path>
+                  <path d="M6 6 L18 18"></path>
+                </svg>
               </button>
             </div>
             <div className="p-4">

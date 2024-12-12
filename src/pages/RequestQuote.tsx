@@ -48,7 +48,7 @@ const RequestQuote = () => {
             <div className="flex justify-between items-center px-4 py-4 border-b">
               <h3 className="font-bold text-gray-800">Wait!</h3>
               <button onClick={handleCancel} className="text-gray-500 hover:text-gray-700">
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <svg className="shrink-0 size-5" fill="none" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
                   <path d="M18 6 L6 18"></path>
                   <path d="M6 6 L18 18"></path>
                 </svg>

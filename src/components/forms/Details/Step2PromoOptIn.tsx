@@ -1,7 +1,6 @@
 "use client";
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../../context/AppContext';
-import servicesData from '../../../assets/assets.json';
 import supabase from '../../../lib/supabaseClient';
 import ResetButton from '@/components/ui/resetButton';
 import BackButton from '@/components/ui/backButton';
@@ -24,6 +23,33 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
   const [selectedPromo, setSelectedPromo] = useState<string>(promo);
   const [isOptInRequired, setIsOptInRequired] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false); // State to control spinner
+  const [serviceName, setServiceName] = useState<string>('Unknown Service'); // State to store the service name
+
+  useEffect(() => {
+    const fetchServiceName = async () => {
+      if (!selectedService) return;
+
+      try {
+        const { data, error } = await supabase
+          .from('Services')
+          .select('name')
+          .eq('id', selectedService)
+          .single();
+
+        if (error) {
+          console.error('Error fetching service name:', error);
+          return;
+        }
+
+        setServiceName(data.name); // Set the fetched service name
+      } catch (err) {
+        console.error('Unexpected error fetching service name:', err);
+      }
+    };
+
+    fetchServiceName();
+  }, [selectedService]);
+
 
   const handlePromoSelect = (selectedPromo: string) => {
     if (selectedPromo === promo) {
@@ -49,9 +75,7 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
     event.preventDefault();
     if (generalOptIn && (!isOptInRequired || (isOptInRequired && newsletterOptIn))) {
       setLoading(true); // Show spinner
-      const serviceName = servicesData.services.find(
-        (service) => service.id === selectedService
-      )?.name || 'Unknown Service';
+
       const payload = {
         lead: {
           firstname,
@@ -60,7 +84,7 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
           phone,
           zip,
           state,
-          service: serviceName,
+          service: serviceName, // Use the fetched service name
           serviceSpecifications,
           contractorPreferences,
           promo: selectedPromo,

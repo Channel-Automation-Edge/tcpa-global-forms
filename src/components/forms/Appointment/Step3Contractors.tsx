@@ -1,8 +1,6 @@
 "use client";
 import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../../context/AppContext';
-import contractorsData from '../../../assets/assets.json';
-import servicesData from '../../../assets/assets.json';
 import supabase from '../../../lib/supabaseClient';
 import ResetButton from '@/components/ui/resetButton';
 
@@ -50,26 +48,33 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
   const [loading, setLoading] = useState<boolean>(false); // Loading state
 
   useEffect(() => {
-    // Simulate loading process
-    const timer = setTimeout(() => {
-      setMatchLoading(false);
-    }, 3000); // 3-second delay
+    // Fetch contractors from Supabase
+    const fetchContractors = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('Contractors')
+          .select('*')
+          .filter('services', 'cs', `["${selectedService}"]`)
+          .filter('statesServed', 'cs', `["${state}"]`);
 
-    return () => clearTimeout(timer);
-  }, []);
+        if (error) {
+          console.error('Error fetching contractors:', error);
+          setError('Error fetching contractors');
+          return;
+        }
 
-  useEffect(() => {
-    const filteredContractors = contractorsData.contractors
-      .filter(
-        (contractor) =>
-          contractor.services.includes(selectedService) &&
-          contractor.zip === zip &&
-          contractor.state === state
-      )
-      .map((contractor) => ({ ...contractor, optIn: false }));
+        const filteredContractors = data.map((contractor: any) => ({ ...contractor, optIn: false }));
+        setMatchingContractors(filteredContractors);
+      } catch (err) {
+        console.error('Unexpected error fetching contractors:', err);
+        setError('Unexpected error fetching contractors');
+      } finally {
+        setMatchLoading(false);
+      }
+    };
 
-    setMatchingContractors(filteredContractors);
-  }, [selectedService, zip, state, setMatchingContractors]);
+    fetchContractors();
+  }, [selectedService, state, setMatchingContractors]);
 
   const handleContractorOptInChange = (contractorId: number, checked: boolean) => {
     const updatedContractors = matchingContractors.map((contractor) =>
@@ -120,9 +125,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
   };
 
   const handleSubmit = async () => {
-    const serviceName = servicesData.services.find(
-      (service) => service.id === selectedService
-    )?.name || 'Unknown Service';
+    const serviceName = selectedService; // Use selectedService directly as name
 
     const payload = {
       lead: {

@@ -1,7 +1,5 @@
-"use client";
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../../../context/AppContext';
-import servicesData from '../../../assets/assets.json';
 import supabase from '../../../lib/supabaseClient'; // Import your Supabase client
 
 // Define props interface
@@ -18,8 +16,30 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
 
   const { setSelectedService, firstname, formId } = appContext; // Ensure formId is included in the context
   const [loading, setLoading] = useState<boolean>(false); // State to control spinner
+  const [services, setServices] = useState<any[]>([]); // State to store fetched services
 
-  const handleServiceSelect = async (serviceId: number) => {
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('Services')
+          .select('*');
+
+        if (error) {
+          console.error('Error fetching services:', error);
+          return;
+        }
+
+        setServices(data); // Set fetched services to state
+      } catch (err) {
+        console.error('Unexpected error fetching services:', err);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
+  const handleServiceSelect = async (serviceId: string) => { // Assuming serviceId is a string
     setLoading(true); // Show spinner
     setSelectedService(serviceId);
     console.log(`Selected service updated to: ${serviceId}`);
@@ -133,7 +153,7 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
         </div>
 
         <div className="flex flex-wrap justify-center gap-4 sm:gap-[20px]" style={{ marginTop: '15px', width: '100%' }}>
-          {servicesData.services.map((service) => (
+          {services.map((service) => (
             <div
               key={service.id}
               className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[256px] h-[80px] sm:h-[156px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
@@ -148,7 +168,7 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
                 e.currentTarget.style.borderColor = 'rgba(255, 81, 0, 0.7)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -6px';
+                e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 10px 25px -6px';
                 e.currentTarget.style.borderColor = 'rgba(157, 176, 197, 0.25)';
               }}
             >

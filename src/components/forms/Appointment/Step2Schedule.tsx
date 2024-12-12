@@ -21,22 +21,10 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
 
   const { numberOfQuotes, appointment, scheduledAppointments, setScheduledAppointments, formId, phone } = appContext;
   const [currentAppointmentIndex, setCurrentAppointmentIndex] = useState(0);
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [date, setDate] = useState<Date | undefined>();
   const [loading, setLoading] = useState<boolean>(false); // State to control spinner
 
-  useEffect(() => {
-    const currentAppointment = scheduledAppointments[currentAppointmentIndex];
-    if (currentAppointment) {
-      setDate(new Date(currentAppointment.date));
-      formik.setValues({
-        date: currentAppointment.date,
-        time: currentAppointment.time || '',
-      });
-    } else {
-      setDate(new Date());
-      formik.resetForm();
-    }
-  }, [currentAppointmentIndex]);
+  
 
   const formik = useFormik({
     initialValues: {
@@ -129,6 +117,20 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
     },
   });
 
+  useEffect(() => {
+    const currentAppointment = scheduledAppointments[currentAppointmentIndex];
+    if (currentAppointment) {
+      setDate(new Date(currentAppointment.date));
+      formik.setValues({
+        date: currentAppointment.date,
+        time: currentAppointment.time || '',
+      });
+    } else {
+      setDate(undefined);  // Set to undefined instead of new Date()
+      formik.resetForm();
+    }
+  }, [currentAppointmentIndex]);
+  
   // Function to send a webhook with error details
   const sendErrorWebhook = async (message: string, error: any) => {
     try {
@@ -171,6 +173,7 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
     console.log('Selected Time:', time);
   };
 
+
   const renderAppointmentForm = () => (
     <form onSubmit={formik.handleSubmit}>
       <div className="mt-[-4px] p-4 shadow-lg rounded-md border border-gray-200 border-t-transparent">
@@ -184,8 +187,9 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
                 mode="single"
                 selected={date}
                 onSelect={handleDateChange}
+                initialFocus
                 modifiers={{
-                  today: new Date(),
+                  
                   disabled: [
                     { before: new Date() },
                     { after: new Date(new Date().setDate(new Date().getDate() + 20)) },
@@ -220,7 +224,7 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
           </div>
 
           {formik.values.time && (
-            <div className="mt-2 text-center text-gray-700 dark:text-neutral-200">
+            <div className="mt-2 text-center text-gray-700 dark:text-neutral-200 hidden">
               Selected Time: {formik.values.time}
             </div>
           )}
