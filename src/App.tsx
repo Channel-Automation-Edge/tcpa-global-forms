@@ -5,6 +5,7 @@ import ThankYou from './pages/ThankYou';
 import "preline/preline";
 import { IStaticMethods } from "preline/preline";
 import { useEffect } from 'react';
+import ConfirmDetails from './pages/ConfirmDetails';
 declare global {
   interface Window {
     HSStaticMethods: IStaticMethods;
@@ -24,6 +25,8 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path='/request-quotes' element={<RequestQuote />} />
         <Route path='/thank-you' element={<ThankYou />} />
+        <Route path='/confirm-details' element={<ConfirmDetails />} />
+        <Route path="*" element={<Home />} />
       </Routes>
     </>
   );

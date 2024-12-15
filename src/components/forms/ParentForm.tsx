@@ -7,9 +7,7 @@ import Stepper from '../ui/Stepper';
 import { AppContext } from '../../context/AppContext';
 import useFormPersistence from '../../hooks/useFormPersistence';
 import useClearFormState from '../../hooks/useClearFormState';
-import supabase from '../../lib/supabaseClient';
-
-
+import useResetDatabase from '@/hooks/useResetDatabase';
 
 const ParentForm = () => {
   const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence('parentFormStep', 1);
@@ -144,6 +142,7 @@ const ParentForm = () => {
   ]);
 
   const clearFormState = useClearFormState();
+  const resetDatabase = useResetDatabase();
 
 
   const navigateWithParams = (path: string) => {
@@ -158,56 +157,24 @@ const ParentForm = () => {
   const handleReset = async () => {
     resetCurrentStep();
     clearFormState();
-  
-    try {
-      // Assuming formId is available in your context or component state
-      const { formId } = appContext; // Ensure formId is accessible
-  
-      // Check if formId exists in the database
-      const { data, error } = await supabase
-        .from('Forms')
-        .select('id')
-        .eq('id', formId)
-        .single();
-  
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error checking formId:', error);
-        return;
-      }
-  
-      if (data) {
-        // formId exists, clear specific fields
-        const { error: updateError } = await supabase
-          .from('Forms')
-          .update({
-            optIn_completion: false,
-            appointment_completion: false,
-            email_optIn: false,
-            termsAndPrivacy_optIn: false,
-            smsAndCall_optIn: false,
-          })
-          .eq('id', formId);
-  
-        if (updateError) {
-          console.error('Error clearing form fields:', updateError);
-          return;
-        }
-  
-        console.log(`FormId ${formId} fields cleared.`);
-      }
-    } catch (err) {
-      console.error('Unexpected error during reset:', err);
-    }
+    await resetDatabase();
   };
   
 
   const handleSubmitted = () => {
     navigateWithParams('/thank-you');
+    localStorage.setItem('summaryContractors', JSON.stringify(matchingContractors));
+    localStorage.setItem('summaryPreferences', JSON.stringify(contractorPreferences));
     resetCurrentStep();
     clearFormState();
     setFormId('');
     localStorage.removeItem('formID');
   };
+
+  const handleNotify = () => {
+    resetCurrentStep();
+    navigateWithParams('/confirm-details');
+  }
 
   return (
     <div className='bg-xbg min-h-screen'>
@@ -217,7 +184,7 @@ const ParentForm = () => {
         </div>
       </div>
       <div>
-        {currentStep === 1 && <ProjectForm onNext={handleNextStep} onReset={handleReset} />}
+        {currentStep === 1 && <ProjectForm onNext={handleNextStep} onReset={handleReset} onNotify={handleNotify} />}
         {currentStep === 2 && <DetailsForm onNext={handleNextStep} onReset={handleReset} />}
         {currentStep === 3 && <AppointmentForm onSubmit={handleSubmitted} onReset={handleReset} />}
       </div>

@@ -3,7 +3,7 @@ import BlurFade from './ui/blur-fade';
 
 const Benefits: React.FC = () => {
   return (
-    <div className='bg-xbg'>
+    <div className='bg-white'>
       <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
 
       <BlurFade delay={3 * 0.15} inView yOffset={15} className="text-center mb-12">

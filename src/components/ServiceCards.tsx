@@ -101,6 +101,8 @@ const ServiceCards: React.FC = () => {
             email_optIn: false,
             termsAndPrivacy_optIn: false,
             smsAndCall_optIn: false,
+            service: serviceId,
+            phone: phoneFromUrl,
           })
           .eq('id', formId);
 
@@ -114,7 +116,7 @@ const ServiceCards: React.FC = () => {
         // formId does not exist, insert a new row
         const { error: insertError } = await supabaseClient
           .from('Forms')
-          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phoneFromUrl }]);
+          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phoneFromUrl, service: serviceId }]);
 
         if (insertError) {
           console.error('Error inserting formId:', insertError);
@@ -147,19 +149,22 @@ const ServiceCards: React.FC = () => {
   };
 
   return (
-    <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
+    <div className="z-10 max-w-[100rem] px-4 py-10 lg:py-14 mx-auto relative bg-white">
         <div className="text-center">
-          <BlurFade delay={3 * 0.15} inView yOffset={15} className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200 mb-[25px]">
+          <BlurFade delay={3 * 0.15}  yOffset={15} className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200 mt-6">
           Or select a <span className="text-xorange">service</span> to get started
           </BlurFade>
           <p className="mt-2 md:mt-4 text-gray-500 dark:text-neutral-500"></p>
         </div>
       <div className="space-y-8">
       <div className="flex flex-wrap justify-center gap-4 sm:gap-[20px]" style={{ marginTop: '15px', width: '100%' }}>
-      {services.map((service) => (
-        <div
+      {services.map((service, index) => (
+        <BlurFade
           key={service.id}
-          className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[256px] h-[80px] sm:h-[156px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
+          delay={index * 0.1} // Incremental delay for staggered effect
+                  inView
+                  yOffset={8}
+          className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[210px] h-[80px] sm:h-[156px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
           onClick={() => handleServiceSelect(service.id)}
           style={{
             boxShadow: 'rgba(0, 0, 0, 0.07) 0px 22px 30px -6px',
@@ -179,10 +184,10 @@ const ServiceCards: React.FC = () => {
             src={service.photo}
             alt={service.name}
             className="w-12 h-12 sm:w-14 sm:h-14 sm:mb-4 ml-2 mr-4 sm:ml-0 sm:mr-0"
-            style={{ filter: 'invert(100%) sepia(0%) saturate(0%) hue-rotate(180deg) brightness(0%) contrast(90%) invert(18%) sepia(10%) saturate(504%) hue-rotate(185deg) brightness(90%) contrast(96%)' }}
+            
           />
-          <span className="text-gray-800 text-base font-medium text-center sm:text-left">{service.name}</span>
-        </div>
+          <span className="text-gray-800 text-base font-medium text-left sm:text-center">{service.name}</span>
+        </BlurFade>
       ))}
     </div>
       </div>

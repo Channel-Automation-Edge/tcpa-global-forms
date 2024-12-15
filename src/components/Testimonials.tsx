@@ -61,7 +61,7 @@ const ReviewCard: React.FC<Review> = ({ img, name, body }) => {
 const Testimonials: React.FC = () => {
   return (
     <div>
-      <div className="relative flex w-full pt-16 pb-10 flex-col   items-center justify-center overflow-hidden bg-xbg">
+      <div className="relative flex w-full pt-16 pb-10 flex-col   items-center justify-center overflow-hidden bg-white">
         <div className="text-center">
           <BlurFade delay={3 * 0.15} inView yOffset={15} className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200 mb-[25px]">
             What our  <span className="text-xorange">satisfied</span> clients say about us

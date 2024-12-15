@@ -13,32 +13,41 @@ const Hero = () => {
 
   type HeroContentKey = 'default' | 'fresh' | 'scheduled' | 'past';
 
+  const urlParams = new URLSearchParams(location.search);
+  const segment = (urlParams.get('segment') as HeroContentKey) || 'default'; // Type-casting segment
+  const firstnameParam = urlParams.get('firstname') || '';
+  const stateParam = urlParams.get('state') || '';
+  const zipParam = urlParams.get('zip') || '';
+
   const heroContent: Record<HeroContentKey, { h1: string; lede: string; ctaLabel: string }> = {
     default: {
       h1: "The Easy Way to Fix Your Home",
       lede: "Connect with trusted contractors who have the skills and experience to get the job done right",
-      ctaLabel: "Get a Free Consultation Now",
+      ctaLabel: "Get Started Now",
     },
     fresh: {
-      h1: "Is Your Remodel Budget Future-Proof?",
-      lede: "Hi First Name, are you ready to transform your home? Discover exclusive VIP offers and ensure your remodel stays on track and within budget. Explore our services and see how we can help bring your vision to life. Not ready to commit? No problem, stay in touch for future updates and inspiration.",
-      ctaLabel: "View VIP Offers",
+      h1: "Control Your 2025 Remodel Quotes",
+      lede: zipParam ? `Hi First Name, find top contractors in ${stateParam} near ${zipParam} for your upcoming remodel and control your quotes`
+           : stateParam ? `Hi First Name, find top contractors in ${stateParam} for your upcoming remodel and control your quotes`
+           : "Hi First Name, find top contractors in your area for your upcoming remodel and control your quotes",
+      ctaLabel: "Get Started Now",
     },
     scheduled: {
-      h1: "You're One Step Closer to Your Dream Home",
-      lede: "Hi First Name, we're excited to connect with you! As a valued VIP client, you'll have access to exclusive discounts and priority service. Get ready to experience the difference and let us help you create the home you've always wanted.",
-      ctaLabel: "Claim Your Discount",
+      h1: "Manage Your Home Project Matches",
+      lede: zipParam ? `Hi First Name, find top contractors in ${stateParam} near ${zipParam} for your home project and control your matches`
+           : stateParam ? `Hi First Name, find top contractors in ${stateParam} for your home project and control your matches`
+           : "Hi First Name, find top contractors in your area for your home project and control your matches",
+      ctaLabel: "See My Matches",
     },
     past: {
-      h1: "What's Next on Your Home Improvement List?",
-      lede: "Welcome back, First Name! We're thrilled to have you as a returning VIP client. Explore our latest offerings and enjoy exclusive discounts designed just for you.",
-      ctaLabel: "See Exclusive Offers",
+      h1: "Control Exclusive Discounts on Future Projects",
+      lede: zipParam ? `Hi First Name, find top contractors in ${stateParam} near ${zipParam} for your next project and control exclusive discounts.`
+           : stateParam ? `Hi First Name, find top contractors in ${stateParam} for your next project and control exclusive discounts.`
+           : "Hi First Name, find top contractors in your area for your next project and control exclusive discounts.",
+      ctaLabel: "Explore Exclusive Discounts",
     },
   };
 
-  const urlParams = new URLSearchParams(location.search);
-  const segment = (urlParams.get('segment') as HeroContentKey) || 'default'; // Type-casting segment
-  const firstnameParam = urlParams.get('firstname') || '';
   const currentHeroContent = heroContent[segment];
 
   if (!appContext) {
@@ -75,7 +84,7 @@ const Hero = () => {
     const selectedService = localStorage.getItem('selectedService');
     const dynamicSubheading = adjustedHeroContent.lede || `Hi ${firstnameParam}! Connect with trusted contractors who have the skills and experience to get the job done right`;
 
-    if (selectedService && JSON.parse(selectedService) !== 0) {
+    if (selectedService && JSON.parse(selectedService) !== "") {
       setButtonText("Finish your Previous Quote");
       setSubheadingText("Or reset your progress and select another service");
     } else {
@@ -137,23 +146,23 @@ const Hero = () => {
             src="https://storage.googleapis.com/channel_automation/Webassets/video/homeprojectparterns-hero_9.0.10.webm"
           ></video>
         </div>
-        <div className="absolute inset-0 bg-[#21284de0] z-[1]"></div> {/* Moved overlay after video and added z-index */}
+        <div className="absolute inset-0 bg-[#12121d99] opacity-100 z-[1]"></div> {/* Moved overlay after video and added z-index */}
 
         <div className="relative z-[2] w-full overflow-hidden"> {/* Added z-index to content container */}
           <NavBar />
-          <div className="z-10 pb-24 flex items-center justify-center flex-col px-4 mt-0 space-y-[25px]">
+          <div className="z-10 pb-12 md:pb-14 lg:pb-16 flex items-center justify-center flex-col px-4 mt-0 space-y-[25px]">
             <GradualSpacing
-              className="hidden sm:block font-display text-center text-4xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-5xl font-semibold -tracking-widest text-off dark:text-white mt-[80px] md:mt-[80px]"
+              className="hidden sm:block font-display text-center text-4xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-5xl font-semibold -tracking-widest text-white dark:text-white mt-14 lg:mt-20"
               text={adjustedHeroContent.h1}
             />
 
             <div className="block sm:hidden">
               <GradualSpacing
-                className="font-display text-center text-4xl font-bold -tracking-widest text-off dark:text-white mt-[80px]"
+                className="font-display text-center text-4xl font-bold -tracking-widest text-white dark:text-white mt-4"
                 text={adjustedHeroContent.h1.split(' ').slice(0, 3).join(' ')}
               />
               <GradualSpacing
-                className="font-display text-center text-4xl font-bold -tracking-widest text-off dark:text-white"
+                className="font-display text-center text-4xl font-bold -tracking-widest text-white dark:text-white"
                 text={adjustedHeroContent.h1.split(' ').slice(3).join(' ')}
               />
             </div>
@@ -161,7 +170,7 @@ const Hero = () => {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 1 }}
               transition={{ delay: 0.6 }}
-              className="text-sm sm:text-sm md:text-base lg:text-base text-white/70 max-w-lg lg:max-w-[551px] text-center mt-8 mb-5"
+              className="text-sm sm:text-sm md:text-base lg:text-base text-white/80 max-w-lg lg:max-w-[551px] text-center mt-8 mb-5"
             >
               {firstname ? `${firstname}, ${subheadingText1}` : subheadingText1}
             </motion.p>
@@ -207,15 +216,6 @@ const Hero = () => {
                 <path d="m9 18 6-6-6-6" />
               </svg>
             </motion.button>
-
-            {/* <motion.p
-              initial={{ opacity: 0, y: 5 }}
-              animate={{ opacity: 1, y: 1 }}
-              transition={{ delay: 0.6 }}
-              className="text-sm sm:text-sm md:text-base lg:text-base text-white/70 max-w-lg lg:max-w-[551px] text-center mt-8 mb-5"
-            >
-              {subheadingText}
-            </motion.p> */}
           </div>
         </div>
       </div>

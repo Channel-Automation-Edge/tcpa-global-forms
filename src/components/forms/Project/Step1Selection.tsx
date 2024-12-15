@@ -65,7 +65,7 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
         // formId exists, update the updated_at column
         const { error: updateError } = await supabase
           .from('Forms')
-          .update({ updated_at: new Date().toISOString() })
+          .update({ updated_at: new Date().toISOString(), service: serviceId })
           .eq('id', formId);
 
         if (updateError) {
@@ -80,7 +80,7 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
         // formId does not exist, insert a new row
         const { error: insertError } = await supabase
           .from('Forms')
-          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phoneFromUrl }]);
+          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phoneFromUrl, service: serviceId }]);
 
         if (insertError) {
           console.error('Error inserting formId:', insertError);
@@ -156,7 +156,7 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
           {services.map((service) => (
             <div
               key={service.id}
-              className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[256px] h-[80px] sm:h-[156px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
+              className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[210px] h-[80px] sm:h-[156px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
               onClick={() => handleServiceSelect(service.id)}
               style={{
                 boxShadow: 'rgba(0, 0, 0, 0.07) 0px 22px 30px -6px',
@@ -176,9 +176,9 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
                 src={service.photo}
                 alt={service.name}
                 className="w-12 h-12 sm:w-14 sm:h-14 sm:mb-4 ml-2 mr-4 sm:ml-0 sm:mr-0"
-                style={{ filter: 'invert(100%) sepia(0%) saturate(0%) hue-rotate(180deg) brightness(0%) contrast(90%) invert(18%) sepia(10%) saturate(504%) hue-rotate(185deg) brightness(90%) contrast(96%)' }}
+                
               />
-              <span className="text-gray-800 text-base font-medium text-center sm:text-left">{service.name}</span>
+              <span className="text-gray-800 text-base font-medium text-left sm:text-center">{service.name}</span>
             </div>
           ))}
         </div>

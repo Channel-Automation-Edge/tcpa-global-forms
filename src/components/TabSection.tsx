@@ -3,7 +3,7 @@ import BlurFade from './ui/blur-fade';
 
 const TabSection: React.FC = () => {
   return (
-    <div className='bg-xbg'>
+    <div className='bg-white'>
       <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
       <div className="relative p-6 md:p-16">
         {/* Grid */}

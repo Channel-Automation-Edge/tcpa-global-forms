@@ -161,7 +161,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
   return (
     <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
 
-      <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-end p-4">
+      <div className="absolute top-[-53px]  left-0 w-full flex justify-end p-4">
         <ResetButton onClick={onReset} />
       </div>
       
@@ -169,7 +169,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
         <div className='flex justify-center text-center mb-8'>
           <div className="max-w-[40rem] text-center">
             <h1 className="block text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl font-bold sm:font-bold md:font-semibold lg:font-semibold text-gray-800 dark:text-white">
-            Please <span className="text-xorange">confirm your information</span> so we can get everything ready for your project
+            Please <span className="text-xorange">confirm your information</span> so we can notify you when the service is available in your area
             </h1>
           </div>
         </div>

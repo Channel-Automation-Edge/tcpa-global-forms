@@ -1,6 +1,6 @@
 "use client";
-import React, { useRef, useEffect, useContext } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useRef, useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { ConfettiRef } from '@/components/ui/confetti';
 import Confetti from '@/components/ui/confetti';
 import HowItWorks from '@/components/HowItWorks';
@@ -8,6 +8,8 @@ import NavBar from '@/components/NavBar';
 import GradualSpacing from '@/components/ui/gradual-spacing';
 import { motion } from 'framer-motion';
 import { AppContext } from '../context/AppContext';
+import Footer from '@/components/Footer';
+import BlurFade from '@/components/ui/blur-fade';
 
 const ThankYou: React.FC = () => {
   const appContext = useContext(AppContext);
@@ -15,40 +17,62 @@ const ThankYou: React.FC = () => {
   if (!appContext) {
     return null; // Handle the case where appContext is not available
   }
+
   const navigate = useNavigate();
-  const location = useLocation();
   const confettiRef = useRef<ConfettiRef>(null);
   const { firstname } = appContext;
+  const [contractors, setContractors] = useState<any[]>([]); // State to hold contractors
+  const [preferences, setPreferences] = useState<string[]>([]); // State to hold preferences
 
   useEffect(() => {
-    confettiRef.current?.fire({});
-  }, []);
+    // Load contractors from local storage
+    const storedContractors = localStorage.getItem('summaryContractors');
+    if (storedContractors) {
+      setContractors(JSON.parse(storedContractors));
+    }
 
-  const navigateWithParams = (path: string) => {
-    const currentParams = new URLSearchParams(location.search);
-    navigate(`${path}?${currentParams.toString()}`);
-  };
+    // Load summaryPreferences from local storage
+    const storedPreferences = localStorage.getItem('summaryPreferences');
+    if (storedPreferences) {
+      setPreferences(JSON.parse(storedPreferences));
+    }
+
+    // Trigger confetti
+    confettiRef.current?.fire({});
+
+    // Override the back button to redirect to "/"
+    const handlePopState = () => {
+      navigate('/');
+    };
+
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [navigate]);
 
   const handleGoHome = () => {
-    navigateWithParams('/');
+    localStorage.removeItem('summaryContractors');
+    navigate('/');
   };
 
   return (
-    <div className='bg-xbg relative'>
-      <div className="relative h-[450px] bg-[url('/images/hero.jpg')] bg-cover bg-center z-10">
-        <div className="absolute inset-0 bg-[#21284de0] opacity-100"></div> {/* Overlay */}
+    <div className='bg-white relative'>
+      <div className="relative bg-[url('/images/hero.jpg')] bg-cover bg-center z-10">
+        <div className="absolute inset-0 bg-[#12121d99] opacity-100"></div> {/* Overlay */}
 
         <div className="relative w-full overflow-hidden z-20">
           <NavBar />
-          <div className="z-30 flex items-center justify-center flex-col px-4 mt-0 space-y-[25px]">
+          <div className="z-10 pb-12 md:pb-14 lg:pb-16 flex items-center justify-center flex-col px-4 mt-0 space-y-[25px]">
             <GradualSpacing
-              className="hidden sm:block font-display text-center text-4xl sm:text-4xl md:text-4xl lg:text-5xl xl:text-5xl font-bold -tracking-widest text-off dark:text-white mt-[120px] md:mt-[120px]"
+              className="hidden sm:block font-display text-center text-4xl sm:text-4xl md:text-4xl lg:text-5xl xl:text-5xl font-bold -tracking-widest text-off dark:text-white mt-14 lg:mt-20"
               text="Your Dream Project is Taking Shape!"
             />
 
             <div className="block sm:hidden">
               <GradualSpacing
-                className="font-display text-center text-4xl font-bold -tracking-widest text-off dark:text-white mt-[80px]"
+                className="font-display text-center text-4xl font-bold -tracking-widest text-off dark:text-white mt-4"
                 text="Your Dream Project"
               />
               <GradualSpacing
@@ -106,6 +130,50 @@ const ThankYou: React.FC = () => {
         className="absolute left-0 top-0 z-50 w-full h-full pointer-events-none"
       />
       <HowItWorks />
+      
+      {/* Contractors Section */}
+      <div className="px-4 pb-24">
+        <BlurFade delay={3 * 0.15} inView yOffset={15} className="text-center mb-6">
+          <h2 className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200">
+            Your Possible <span className="text-xorange">Contractors</span>
+          </h2>
+          <p className="mt-2 md:mt-4 text-gray-500 dark:text-neutral-500">
+            These are the possible contractors that will show up to your scheduled consultation/s
+          </p>
+        </BlurFade>
+        <div className="mt-4 space-y-4">
+          {contractors.map((contractor, index) => (
+            <BlurFade key={contractor.id} delay={0.8 + index * 0.2} inView yOffset={15}>
+              <div className="p-4 border rounded-lg shadow-sm bg-white dark:bg-neutral-800 dark:border-neutral-700 flex flex-row items-center max-w-[720px] mx-auto">
+                <div className="flex items-center mb-0 mr-4" style={{ minWidth: '150px' }}>
+                  <img src={contractor.logo} alt={contractor.name} className="w-16 h-16 rounded-full" />
+                  <div className="ml-4">
+                    <h3 className="text-lg font-bold text-gray-800 dark:text-white">{contractor.name}</h3>
+                    <p className="text-sm text-gray-600 dark:text-neutral-400">{contractor.zip}, {contractor.state}</p>
+                  </div>
+                </div>
+                <div className="flex-grow text-center mb-0 mx-3" >
+                  <div className="flex flex-wrap gap-2 justify-start">
+                    {preferences.map((preference: string, idx: number) => (
+                      <span key={idx} className="py-1 px-2 inline-flex items-center gap-x-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
+                        <svg className="shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
+                          <path d="m9 12 2 2 4-4"></path>
+                        </svg>
+                        {preference}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </BlurFade>
+          ))}
+        </div>
+      </div>
+
+      {/* End of Contractors Section */}
+      
+      <Footer />
     </div>
   );
 };

@@ -71,6 +71,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
       } finally {
         setMatchLoading(false);
       }
+      
     };
 
     fetchContractors();
@@ -276,7 +277,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
       {matchingContractors.map((contractor) => (
         <div key={contractor.id} className="p-4 border rounded-lg shadow-sm bg-white dark:bg-neutral-800 dark:border-neutral-700 flex flex-row items-center max-w-[720px] mx-auto">
           <div className="flex items-center mb-0 mr-4" style={{ minWidth: '150px' }}>
-            <img src={contractor.photo} alt={contractor.name} className="w-16 h-16 rounded-full" />
+            <img src={contractor.logo} alt={contractor.name} className="w-16 h-16 rounded-full" />
             <div className="ml-4">
               <h3 className="text-lg font-bold text-gray-800 dark:text-white">{contractor.name}</h3>
               <p className="text-sm text-gray-600 dark:text-neutral-400">{contractor.zip}, {contractor.state}</p>
@@ -415,7 +416,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
 
                       {consentedContractors.length > 0 && (
                         <div className="mt-6 text-left">
-                          <p className="text-base text-gray-800 dark:text-neutral-400">I prefer to be contacted through:</p>
+                          <p className="text-base text-gray-800 dark:text-neutral-400">I consent to be contacted through:</p>
                           <div className="mt-4 space-y-2">
                             {['phone', 'sms', 'email'].map((method) => (
                               <div key={method} className="flex items-left justify-left">

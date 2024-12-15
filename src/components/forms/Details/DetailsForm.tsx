@@ -33,6 +33,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext, onReset }) => {
   };
 
   const progress = (currentStep - 1) * 33; 
+  const notifyServiceAvailablility = false;
 
   return (
     <div>
@@ -52,7 +53,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext, onReset }) => {
       </div>
       <div>
         {currentStep === 1 && <Step1Info onNext={handleNextStep} onReset={handleReset} />}
-        {currentStep === 2 && <Step2PromoOptIn onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} />}
+        {currentStep === 2 && <Step2PromoOptIn onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} notifyServiceAvailablility = {notifyServiceAvailablility} />}
         {currentStep === 3 && <Step3Invoice onNext={handleNextStep} onReset={handleReset} />}
       </div>
     </div>

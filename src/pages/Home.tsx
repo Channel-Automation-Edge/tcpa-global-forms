@@ -11,22 +11,20 @@ const Home = () => {
   return (
     <div>
         
-        <Hero/>
-        <div className='bg-bxg'>
-          <ServiceCards />
+      <Hero/>
+      <ServiceCards />
 
-            <Testimonials />
-            <TabSection/> 
+        <Testimonials />
+        <TabSection/> 
 
-            <Benefits />
-            <FAQ />
+        <Benefits />
+        <FAQ />
 
-          
-
-        </div>
         
 
-        <Footer />
+      
+
+      <Footer />
     </div>
   )
 }

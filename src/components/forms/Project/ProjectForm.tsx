@@ -3,17 +3,19 @@ import ProgressBar from '../../ui/ProgressBar';
 import Step2Specifications from './Step2Specifications';
 import Step3Preferences from './Step3Preferences';
 import useFormPersistence from '../../../hooks/useFormPersistence';
+import Step2Zip from './Step2Zip';
 
 interface ProjectFormProps {
   onNext: () => void;
   onReset: () => void;
+  onNotify: () => void;
 }
 
-const ProjectForm: React.FC<ProjectFormProps> = ({ onNext, onReset }) => {
+const ProjectForm: React.FC<ProjectFormProps> = ({ onNext, onReset, onNotify }) => {
   const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence('projectFormStep', 1);
 
   const handleNextStep = () => {
-    if (currentStep < 3) {
+    if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
     } else {
       resetCurrentStep(); 
@@ -32,7 +34,14 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onNext, onReset }) => {
     onReset();
   };
 
-  const progress = (currentStep - 1) * 33.333339;
+  const handleNotify = () => {
+    resetCurrentStep(); 
+    onNotify();
+  };
+
+
+
+  const progress = (currentStep - 1) * 25;
 
   return (
     <div>
@@ -52,8 +61,9 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onNext, onReset }) => {
       </div>
       <div>
         {currentStep === 1 && <Step1Selection onNext={handleNextStep} />}
-        {currentStep === 2 && <Step2Specifications onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} />}
-        {currentStep === 3 && <Step3Preferences onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} />}
+        {currentStep === 2 && <Step2Zip onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} onNotify={handleNotify} />}
+        {currentStep === 3 && <Step2Specifications onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} />}
+        {currentStep === 4 && <Step3Preferences onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} />}
       </div>
     </div>
   );
