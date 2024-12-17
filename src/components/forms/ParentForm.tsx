@@ -77,7 +77,7 @@ const ParentForm = () => {
     loadFromLocalStorage('zip', setZip, '');
     loadFromLocalStorage('state', setState, '');
 
-    loadFromLocalStorage('selectedService', setSelectedService, 0);
+    loadFromLocalStorage('selectedService', setSelectedService, '');
     loadFromLocalStorage('serviceSpecifications', setServiceSpecifications, []);
     loadFromLocalStorage('contractorPreferences', setContractorPreferences, []);
     loadFromLocalStorage('promo', setPromo, false);

@@ -20,7 +20,7 @@ const Step2Zip: React.FC<Step2ZipProps> = ({ onNext, onBack, onReset, onNotify }
     return null;
   }
 
-  const { selectedService } = appContext;
+  const { selectedService, setZip, setState, zip } = appContext;
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [serviceName, setServiceName] = useState<string>(''); // Service name from Services table
@@ -53,7 +53,7 @@ const Step2Zip: React.FC<Step2ZipProps> = ({ onNext, onBack, onReset, onNotify }
 
   const formik = useFormik({
     initialValues: {
-      zip: new URLSearchParams(window.location.search).get('zip') || '',
+      zip: zip || new URLSearchParams(window.location.search).get('zip') || '',
     },
     onSubmit: async (values) => {
       setLoading(true);
@@ -72,13 +72,16 @@ const Step2Zip: React.FC<Step2ZipProps> = ({ onNext, onBack, onReset, onNotify }
         .gte('zipMax', zip)
         .single();
 
-      if (zipError || !zipData) {
+      if (zipError || !zipData || zip === 0) {
         setMessage('Please enter a valid ZIP Code');
         setLoading(false);
         return;
       }
 
       const stateCode = zipData.stateCode;
+      setState(stateCode);
+      setZip(zip.toString());
+      
 
       // Find contractor from Contractors table
       try {

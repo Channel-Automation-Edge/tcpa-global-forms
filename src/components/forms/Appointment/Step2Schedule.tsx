@@ -6,6 +6,15 @@ import { Calendar } from '@/components/ui/calendar';
 import { format } from 'date-fns';
 import supabase from '../../../lib/supabaseClient';
 import ResetButton from '@/components/ui/resetButton';
+import BlurFade from '@/components/ui/blur-fade';
+import { Dialog, DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+ } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { DialogClose } from '@radix-ui/react-dialog';
 
 interface Step2ScheduleProps {
   onNext: () => void;
@@ -23,6 +32,10 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
   const [currentAppointmentIndex, setCurrentAppointmentIndex] = useState(0);
   const [date, setDate] = useState<Date | undefined>();
   const [loading, setLoading] = useState<boolean>(false); // State to control spinner
+  const [, setUnsavedChanges] = useState(false);
+  const [initialValues, setInitialValues] = useState({ date: '', time: '' });
+  const [targetIndex, setTargetIndex] = useState<number | null>(null);
+
 
   
 
@@ -117,16 +130,23 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
     },
   });
 
+  // Update useEffect to handle initial values more accurately
   useEffect(() => {
     const currentAppointment = scheduledAppointments[currentAppointmentIndex];
     if (currentAppointment) {
-      setDate(new Date(currentAppointment.date));
+      // Appointment exists, use its values as initial
+      const initDate = currentAppointment.date;
+      const initTime = currentAppointment.time || '';
+      setInitialValues({ date: initDate, time: initTime });
+      setDate(new Date(initDate));
       formik.setValues({
-        date: currentAppointment.date,
-        time: currentAppointment.time || '',
+        date: initDate,
+        time: initTime,
       });
     } else {
-      setDate(undefined);  // Set to undefined instead of new Date()
+      // No saved appointment, consider it unchanged initially
+      setInitialValues({ date: '', time: '' });
+      setDate(undefined);
       formik.resetForm();
     }
   }, [currentAppointmentIndex]);
@@ -159,30 +179,64 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
     }
   };
 
+    // Update handleDateChange and handleTimeSelect to track unsaved changes
   const handleDateChange = (date: Date | undefined) => {
     if (date) {
       setDate(date);
       const formattedDate = format(date, 'yyyy-MM-dd');
       formik.setFieldValue('date', formattedDate);
+      setUnsavedChanges(true); // Mark changes as unsaved
       console.log('Selected Date:', formattedDate);
     }
   };
 
   const handleTimeSelect = (time: string) => {
     formik.setFieldValue('time', time);
+    setUnsavedChanges(true); // Mark changes as unsaved
     console.log('Selected Time:', time);
+  };
+
+  // Updated handleNavigation to check for unsaved changes more accurately
+  const handleNavigation = (index: number) => {
+    const currentAppointment = scheduledAppointments[currentAppointmentIndex];
+    const hasChanges =
+      (currentAppointment && (formik.values.date !== initialValues.date || formik.values.time !== initialValues.time)) ||
+      (!currentAppointment && (formik.values.date !== '' || formik.values.time !== ''));
+      
+    if (hasChanges) {
+
+      document.getElementById("modal")?.click();
+      setTargetIndex(index);
+    } else {
+      setCurrentAppointmentIndex(index);
+    }
+  };
+
+
+    // Handle saving changes and navigation
+  const handleSaveChanges = () => {
+    formik.handleSubmit();
+    setUnsavedChanges(false);
+  };
+
+  // Handle discarding changes and navigating
+  const handleDiscardChanges = () => {
+    if (targetIndex !== null) {
+      setCurrentAppointmentIndex(targetIndex);
+    }
+    setUnsavedChanges(false);
   };
 
 
   const renderAppointmentForm = () => (
     <form onSubmit={formik.handleSubmit}>
-      <div className="mt-[-4px] p-4 shadow-lg rounded-md border border-gray-200 border-t-transparent">
-        <div className="flex-grow">
+      <div className="mt-4 rounded-lg px-4 py-4 shadow-lg sm:px-6 sm:py-4 lg:px-8 bg-white">
+        <BlurFade key={currentAppointmentIndex} delay={0.1} duration={0.4} blur='none' inView yOffset={0} className="flex-grow">
           <h2 className="text-center mt-2 mb-4 text-xl font-semibold text-gray-800 dark:text-neutral-200">
             Select a date
           </h2>
           <div className="flex justify-center mb-4">
-            <div className="border border-gray-300 p-2">
+            <div className="rounded-lg small-stepper:border small-stepper:border-gray-300  small-stepper:p-4 small-stepper:shadow-xl sm:p-6 lg:p-8 small-stepper:bg-white">
               <Calendar
                 mode="single"
                 selected={date}
@@ -201,20 +255,20 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
             </div>
           </div>
 
-          <h2 className="text-center mt-2 mb-4 text-xl font-semibold text-gray-800 dark:text-neutral-200">
+          <h2 className="text-center mt-6 mb-4 text-xl font-semibold text-gray-800 dark:text-neutral-200">
             Select Time
           </h2>
           {/* Time Selection Buttons */}
           <div
-            className="flex flex-wrap justify-center"
+            className="flex flex-wrap justify-center pb-2"
             style={{ gap: '10px', marginTop: '15px', width: '100%' }}
           >
             {['10am', '11am', '1pm', '2pm', '3pm', '4pm', '5pm', '6pm', '7pm', '8pm'].map((time) => (
               <button
                 key={time}
                 type="button"
-                className={`flex items-center justify-center w-[80px] h-[40px] border border-indigo-100 rounded-[10px] shadow-md p-2 transition-transform transform hover:scale-105 ${
-                  formik.values.time === time ? 'bg-orange-100 text-xorange' : 'bg-white text-gray-800'
+                className={`py-3 px-4 w-20 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-100 ${
+                  formik.values.time === time ? 'bg-xorange text-white border-xorange hover:bg-xorange' : 'bg-white text-gray-800'
                 }`}
                 onClick={() => handleTimeSelect(time)}
               >
@@ -228,7 +282,7 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
               Selected Time: {formik.values.time}
             </div>
           )}
-        </div>
+        </BlurFade>
       </div>
       <div className="mt-6 flex flex-col space-y-4">
         <button
@@ -262,6 +316,32 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
 
   return (
     <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
+
+      <Dialog>
+        <DialogTrigger asChild>
+          <button id='modal' className='hidden'>Edit Profile</button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <h4 className='text-md font-semibold'>Unsaved Changes</h4>
+            <DialogDescription>
+              You have unsaved changes. Do you want to save them?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+          <DialogClose>
+            <Button className='bg-gray-200 hover:bg-gray-300 text-gray-800' onClick={handleDiscardChanges}>Discard Changes</Button>
+          </DialogClose>
+
+          <DialogClose>
+            <Button className='bg-xorange hover:bg-xorangeDark' onClick={handleSaveChanges}>Save Changes</Button>
+
+          </DialogClose>
+          
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-end p-4">
         <ResetButton onClick={onReset} />
       </div>
@@ -284,45 +364,36 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
             </div>
           </div>
 
-        {numberOfQuotes > 1 && (
-          <div>
-            <div className="sm:hidden">
-              <label htmlFor="Tab" className="sr-only">Tab</label>
-              <select
-                id="Tab"
-                className="w-full rounded-md border-gray-200"
-                value={currentAppointmentIndex}
-                onChange={(e) => setCurrentAppointmentIndex(Number(e.target.value))}
-              >
-                {Array.from({ length: numberOfQuotes }, (_, index) => (
-                  <option key={index} value={index}>
-                    Appointment {index + 1}
-                  </option>
-                ))}
-              </select>
-            </div>
+          {numberOfQuotes > 1 && (
+  <div>
 
-            <div className="hidden sm:block">
-              <div className="border-b-xbg border-gray-200">
-                <nav className="-mb-px flex w-full">
-                  {Array.from({ length: numberOfQuotes }, (_, index) => (
-                    <a
-                      key={index}
-                      onClick={() => setCurrentAppointmentIndex(index)}
-                      className={`flex-1 border p-3 text-sm font-medium text-center cursor-pointer ${
-                        currentAppointmentIndex === index
-                          ? 'rounded-t-lg border-gray-200 border-b-xbg text-xorange'
-                          : 'border-transparent text-gray-500'
-                      }`}
-                    >
-                      Consultation {index + 1}
-                    </a>
-                  ))}
-                </nav>
-              </div>
-            </div>
-          </div>
-        )}
+
+    <div className="flex w-full">
+      <div className="flex bg-gray-100  rounded-lg transition p-1 dark:bg-neutral-700 dark:hover:bg-neutral-600 w-full">
+        <nav className="flex gap-x-1 w-full" aria-label="Tabs" role="tablist" aria-orientation="horizontal">
+          {Array.from({ length: numberOfQuotes }, (_, index) => (
+            <button
+              key={index}
+              type="button"
+              onClick={() => handleNavigation(index)}
+              className={`flex-1 py-3 px-1 small-stepper:px-3 sm:px-4 inline-flex items-center justify-center gap-x-2 bg-transparent text-xs small-stepper:text-sm font-medium rounded-lg transition ${
+                currentAppointmentIndex === index
+                  ? 'bg-white text-xorange dark:bg-neutral-800 dark:text-neutral-400'
+                  : 'text-gray-500  focus:outline-none hover:bg-gray-200 focus:text-xorange dark:text-neutral-400 dark:hover:text-white dark:focus:text-white'
+              }`}
+              id={`segment-item-${index}`}
+              aria-selected={currentAppointmentIndex === index}
+              role="tab"
+            >
+              Consultation {index + 1}
+            </button>
+          ))}
+        </nav>
+      </div>
+    </div>
+  </div>
+)}
+
 
         {renderAppointmentForm()}
       </div>
