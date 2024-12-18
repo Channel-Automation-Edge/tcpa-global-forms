@@ -247,7 +247,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
                   onChange={formik.handleChange}
                   value={formik.values.firstname}
                   onBlur={formik.handleBlur}
-                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange bg-white"
                 />
                 {formik.touched.firstname && (
                   <img
@@ -270,7 +270,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
                   onChange={formik.handleChange}
                   value={formik.values.lastname}
                   onBlur={formik.handleBlur}
-                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange bg-white"
                 />
                 {formik.touched.lastname && (
                   <img
@@ -337,7 +337,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
                   onChange={formik.handleChange}
                   value={formik.values.email}
                   onBlur={formik.handleBlur}
-                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange bg-white"
                 />
                 {formik.touched.email && (
                   <img
@@ -360,7 +360,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
                   onChange={formik.handleChange}
                   value={formik.values.phone}
                   onBlur={formik.handleBlur}
-                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange bg-white"
                 />
                 {formik.touched.phone && (
                   <img
@@ -381,7 +381,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
                   type="checkbox"
                   onChange={formik.handleChange}
                   checked={formik.values.termsAndPrivacyOptIn}
-                  className="h-6 w-6 text-xorange border-gray-300 rounded focus:ring-xorange"
+                  className="h-6 w-6 text-xorange border-gray-300 rounded focus:ring-xorange bg-white"
                 />
                 <label htmlFor="termsAndPrivacyOptIn" className="ml-4 block text-base text-gray-900 dark:text-gray-300">
                   I have read and agree to the 

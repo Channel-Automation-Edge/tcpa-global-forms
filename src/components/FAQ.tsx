@@ -11,7 +11,7 @@ const faqData: FAQItem[] = [
   {
     id: 1,
     question: "What areas do you serve?",
-    answer: "We serve to connect you with various service providers covering a wide range of areas, including [list specific cities, states, or regions]. If you're unsure if your area is covered, please contact us and we'll be happy to let you know.",
+    answer: "We serve to connect you with various service providers covering a wide range of areas. If you're unsure if your area is covered, please contact us and we'll be happy to let you know.",
   },
   {
     id: 2,

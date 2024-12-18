@@ -19,6 +19,8 @@ const ServiceCards: React.FC = () => {
   const [, setProjectCurrentStep, resetProjectCurrentStep] = useFormPersistence('projectFormStep', 1);
   const [, , resetDetailsCurrentStep] = useFormPersistence('detailsFormStep', 1);
   const [, , resetAppointmentCurrentStep] = useFormPersistence('appointmentFormStep', 1);
+  const params = new URLSearchParams(window.location.search);
+  const userNs = params.get('user_ns');
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -93,7 +95,7 @@ const ServiceCards: React.FC = () => {
       }
 
       if (data) {
-        // formId exists, update the updated_at column
+        // formId exists, 
         const { error: updateError } = await supabaseClient
           .from('Forms')
           .update({
@@ -105,6 +107,7 @@ const ServiceCards: React.FC = () => {
             smsAndCall_optIn: false,
             service: serviceId,
             phone: phoneFromUrl,
+            user_ns: userNs
           })
           .eq('id', formId);
 
@@ -118,7 +121,7 @@ const ServiceCards: React.FC = () => {
         // formId does not exist, insert a new row
         const { error: insertError } = await supabaseClient
           .from('Forms')
-          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phoneFromUrl, service: serviceId }]);
+          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phoneFromUrl, service: serviceId, user_ns: userNs }]);
 
         if (insertError) {
           console.error('Error inserting formId:', insertError);

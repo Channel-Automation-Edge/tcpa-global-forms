@@ -90,7 +90,7 @@ const ThankYou: React.FC = () => {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 1 }}
               transition={{ delay: 0.6 }}
-              className="text-sm sm:text-sm md:text-base lg:text-base text-white/80 max-w-lg lg:max-w-[551px] text-center mt-8 mb-5"
+              className="text-sm sm:text-sm md:text-base lg:text-base text-white/80 max-w-lg lg:max-w-[551px] text-center pb-4"
             >
               Here's an overview of your consultation details. Take a moment to review everything and make sure everything looks great
             </motion.p>

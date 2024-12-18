@@ -21,6 +21,7 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
   const stepName = 'project_step1_serviceSelect';
   const params = new URLSearchParams(window.location.search);
   const firstname = params.get('firstname');
+  const userNs = params.get('user_ns');
 
   useEffect(() => {
     // Capture the start event for this step
@@ -90,10 +91,10 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
       }
 
       if (data) {
-        // formId exists, update the updated_at column
+        // formId exists
         const { error: updateError } = await supabase
           .from('Forms')
-          .update({ updated_at: new Date().toISOString(), service: serviceId })
+          .update({ updated_at: new Date().toISOString(), service: serviceId, user_ns: userNs })
           .eq('id', formId);
 
         if (updateError) {
@@ -108,7 +109,7 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
         // formId does not exist, insert a new row
         const { error: insertError } = await supabase
           .from('Forms')
-          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phoneFromUrl, service: serviceId }]);
+          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phoneFromUrl, service: serviceId, user_ns: userNs }]);
 
         if (insertError) {
           console.error('Error inserting formId:', insertError);

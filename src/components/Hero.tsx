@@ -22,12 +22,12 @@ const Hero = () => {
 
   const heroContent: Record<HeroContentKey, { h1: string; lede: string; ctaLabel: string }> = {
     default: {
-      h1: "The Easy Way to Fix Your Home",
+      h1: "Instant Everything, Incredible Pricing",
       lede: "Connect with trusted contractors who have the skills and experience to get the job done right",
       ctaLabel: "Get Started Now",
     },
     fresh: {
-      h1: "Control Your 2025 Remodel Quotes",
+      h1: "Instant Everything, Incredible Pricing",
       lede: zipParam ? `Hi First Name, find top contractors in ${stateParam} near ${zipParam} for your upcoming remodel and control your quotes`
            : stateParam ? `Hi First Name, find top contractors in ${stateParam} for your upcoming remodel and control your quotes`
            : "Hi First Name, find top contractors in your area for your upcoming remodel and control your quotes",
@@ -160,13 +160,16 @@ const Hero = () => {
         <div className="relative z-[2] w-full overflow-hidden"> {/* Added z-index to content container */}
           <NavBar />
           <div className="z-10 pb-12 md:pb-14 lg:pb-16 flex items-center justify-center flex-col px-4 mt-0 space-y-[25px]">
-            <GradualSpacing
-              className="hidden sm:block font-display text-center text-4xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-5xl font-semibold -tracking-widest text-white dark:text-white mt-14 lg:mt-20"
-              text={adjustedHeroContent.h1}
-            />
+            {/* if segment is scheduled or past */}
+            {segment === 'scheduled' || segment === 'past' ? (  
+              <>
+                <GradualSpacing
+                className="hidden sm:block font-display text-center text-4xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-5xl font-semibold -tracking-widest text-white dark:text-white mt-14 lg:mt-20"
+                text={adjustedHeroContent.h1}
+              />
 
-            <div className="block sm:hidden">
-              <GradualSpacing
+                <div className="block sm:hidden">
+                <GradualSpacing
                 className="font-display text-center text-[32px] font-bold -tracking-widest text-white dark:text-white mt-4"
                 text={adjustedHeroContent.h1.split(' ').slice(0, 3).join(' ')}
               />
@@ -175,11 +178,34 @@ const Hero = () => {
                 text={adjustedHeroContent.h1.split(' ').slice(3).join(' ')}
               />
             </div>
+              </>   
+
+            
+            ) : ( 
+            <>
+              <GradualSpacing
+                className="hidden sm:block font-display text-center text-4xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-5xl font-semibold -tracking-widest text-white dark:text-white mt-14 lg:mt-20"
+                text='Instant Everything, Incredible Pricing'
+              />
+              <div className="block sm:hidden">
+              <GradualSpacing
+                className="font-display text-center text-[32px] font-bold -tracking-widest text-white dark:text-white mt-4"
+                text='Instant Everything'
+              />
+              <GradualSpacing
+                className="font-display text-center text-[32px] font-bold -tracking-widest text-white dark:text-white"
+                text='Incredible Pricing'
+              />
+            </div>
+            </>
+            )}
+
+            
             <motion.p
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 1 }}
               transition={{ delay: 0.6 }}
-              className="text-sm sm:text-sm md:text-base lg:text-base text-white/80 max-w-lg lg:max-w-[551px] text-center mt-8 mb-5"
+              className="text-sm sm:text-sm md:text-base lg:text-base text-white/80 max-w-lg lg:max-w-[551px] text-center pb-4"
             >
               {firstname ? `${firstname}, ${subheadingText1}` : subheadingText1}
             </motion.p>
