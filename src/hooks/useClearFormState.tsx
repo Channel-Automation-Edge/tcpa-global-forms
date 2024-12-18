@@ -9,12 +9,12 @@ const useClearFormState = () => {
   }
 
   const {
-    // setFirstname,
-    // setLastname,
-    // setEmail,
-    // setPhone,
-    // setZip,
-    // setState,
+    setFirstname,
+    setLastname,
+    setEmail,
+    setPhone,
+    setZip,
+    setState,
     setSelectedService,
     setServiceSpecifications,
     setContractorPreferences,
@@ -30,12 +30,12 @@ const useClearFormState = () => {
   } = appContext;
 
   const clearFormState = () => {
-    // setFirstname('');
-    // setLastname('');
-    // setEmail('');
-    // setPhone('');
-    // setZip('');
-    // setState('');
+    setFirstname('');
+    setLastname('');
+    setEmail('');
+    setPhone('');
+    setZip('');
+    setState('');
     setSelectedService(''); // Set to an empty string to reset the selected service
     setServiceSpecifications([]);
     setContractorPreferences([]);
@@ -51,13 +51,13 @@ const useClearFormState = () => {
 
     localStorage.removeItem('selectedService');
     localStorage.removeItem('matchingContractors');
-    // localStorage.removeItem('zip');
-    // localStorage.removeItem('state');
+    localStorage.removeItem('zip');
+    localStorage.removeItem('state');
     localStorage.removeItem('contractorPreferences');
-    // localStorage.removeItem('firstname');
-    // localStorage.removeItem('lastname');
-    // localStorage.removeItem('email');
-    // localStorage.removeItem('phone');
+    localStorage.removeItem('firstname');
+    localStorage.removeItem('lastname');
+    localStorage.removeItem('email');
+    localStorage.removeItem('phone');
     localStorage.removeItem('generalOptIn');
     localStorage.removeItem('serviceSpecifications');
     localStorage.removeItem('promo');
