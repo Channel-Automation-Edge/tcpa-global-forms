@@ -14,7 +14,8 @@ import { Dialog, DialogContent,
   DialogTrigger,
  } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { DialogClose } from '@radix-ui/react-dialog';
+import { DialogClose, DialogTitle } from '@radix-ui/react-dialog';
+import posthog from 'posthog-js';
 
 interface Step2ScheduleProps {
   onNext: () => void;
@@ -35,9 +36,41 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
   const [, setUnsavedChanges] = useState(false);
   const [initialValues, setInitialValues] = useState({ date: '', time: '' });
   const [targetIndex, setTargetIndex] = useState<number | null>(null);
+  const stepName = 'appointment_step2_schedule';
 
-
+  const handleReset = () => {
+    posthog.capture('form_reset', {
+      form_id: appContext.formId,
+      zip: appContext.zip,
+      step: stepName,
+      service_id: appContext.selectedService,
+    });
+    onReset();
+  };
   
+useEffect(() => {
+    // Capture the start event for this step
+    posthog.capture(stepName + '_start', {
+      form_id: formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+    });
+
+    // Function to capture user exit event
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      posthog.capture('page_exit', {
+        step: stepName,
+        form_id: formId,
+        service_id: appContext.selectedService,
+        zip: appContext.zip,
+      });
+      event.preventDefault();// Prevent the default action to ensure the event is captured
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload); // Add event listener for beforeunload
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload); // Cleanup function to remove the event listener
+    };
+  }, [stepName]);
 
   const formik = useFormik({
     initialValues: {
@@ -122,9 +155,13 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
           setLoading(false);
           return;
         }
-    
+        
+        posthog.capture(stepName + '_complete', {
+          form_id: formId,
+          service_id: appContext.selectedService,
+          zip: appContext.zip,
+        });
         setLoading(false); // Hide spinner
-
         onNext();
       }
     },
@@ -319,8 +356,9 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
 
       <Dialog>
         <DialogTrigger asChild>
-          <button id='modal' className='hidden'>Edit Profile</button>
+          <button id='modal' className='hidden'></button>
         </DialogTrigger>
+        <DialogTitle></DialogTitle>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
             <h4 className='text-md font-semibold'>Unsaved Changes</h4>
@@ -343,7 +381,7 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
       </Dialog>
 
       <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-end p-4">
-        <ResetButton onClick={onReset} />
+        <ResetButton onClick={handleReset} />
       </div>
       <div className="max-w-xl mx-auto">
       <div className='flex justify-center text-center mb-8'>

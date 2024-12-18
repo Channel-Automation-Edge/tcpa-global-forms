@@ -4,6 +4,7 @@ import * as Yup from 'yup'; // Import Yup for validation
 import { AppContext } from '../../../context/AppContext';
 import supabase from '../../../lib/supabaseClient';
 import ResetButton from '@/components/ui/resetButton';
+import posthog from 'posthog-js';
 
 interface Step1InfoProps {
   onNext: () => void;
@@ -19,7 +20,43 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
 
   const { zip, state, email, phone, firstname, lastname, termsAndPrivacyOptIn, setZip, setEmail, setPhone, setFirstname, setLastname, setState, setTermsAndPrivacyOptIn, formId } = appContext;
   const [loading, setLoading] = useState<boolean>(false); // State to control spinner
+  const stepName = 'details_step1_confirmInfo';
+  
 
+
+  const handleReset = () => {
+    posthog.capture('form_reset', {
+      form_id: appContext.formId,
+      zip: appContext.zip,
+      service_id: appContext.selectedService,
+      step: stepName,
+    });
+    onReset();
+  };
+
+  useEffect(() => {
+    // Capture the start event for this step
+    posthog.capture(stepName + '_start', {
+      form_id: formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+    });
+
+    // Function to capture user exit event
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      posthog.capture('page_exit', {
+        step: stepName,
+        form_id: formId,
+        service_id: appContext.selectedService,
+        zip: appContext.zip,
+      });
+      event.preventDefault();// Prevent the default action to ensure the event is captured
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload); // Add event listener for beforeunload
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload); // Cleanup function to remove the event listener
+    };
+  }, [stepName]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -84,7 +121,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
           setLoading(false);
           return;
         }
-  
+        
         if (data) {
           // formId exists, update the updated_at column
           const { error: updateError } = await supabase
@@ -121,14 +158,20 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
         setLoading(false);
         return;
       }
-  
-      setLoading(false); // Hide spinner
 
+      posthog.capture(stepName + '_complete', {
+        form_id: formId,
+        service_id: appContext.selectedService,
+        zip: appContext.zip,
+      });
+      setLoading(false); // Hide spinner
       // Move to the next step
       onNext();
     },
     
   });
+
+  
 
   // Function to send a webhook with error details
   const sendErrorWebhook = async (message: string, error: any) => {
@@ -160,9 +203,8 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
 
   return (
     <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
-
       <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-end p-4">
-        <ResetButton onClick={onReset} />
+        <ResetButton onClick={handleReset} />
       </div>
       
       <div className="max-w-xl mx-auto">

@@ -3,14 +3,16 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../../context/AppContext';
 import supabase from '../../../lib/supabaseClient';
 import ResetButton from '@/components/ui/resetButton';
+import posthog from 'posthog-js';
 
 // Define props interface
 interface Step3ContractorsProps {
   onCompleted: () => void;
   onReset: () => void;
+  onNotify: () => void;
 }
 
-const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onReset }) => {
+const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onReset, onNotify }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
@@ -46,6 +48,62 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
   const [contactDirectly, setContactDirectly] = useState<boolean>(false);
   const [matchloading, setMatchLoading] = useState<boolean>(true); // Initial Loading state
   const [loading, setLoading] = useState<boolean>(false); // Loading state
+  const stepName = 'appointment_step3_contractors';
+
+  const handleReset = () => {
+    posthog.capture('form_reset', {
+      form_id: appContext.formId,
+      zip: appContext.zip,
+      step: stepName,
+      service_id: selectedService,
+    });
+    onReset();
+  };
+
+  const handleNewService = () => {
+    posthog.capture('select_new_service', {
+      form_id: appContext.formId,
+      zip: appContext.zip,
+      service_id: selectedService,
+      step: stepName,
+    });
+    onReset();
+  }
+
+  const handleNotify = () => {
+    posthog.capture('notify_me', {
+      form_id: appContext.formId,
+      zip: appContext.zip,
+      service_id: selectedService,
+      step: stepName,
+    });
+    onNotify();
+  };
+  
+    
+  useEffect(() => {
+      // Capture the start event for this step
+      posthog.capture(stepName + '_start', {
+        form_id: formId,
+        service_id: appContext.selectedService,
+        zip: appContext.zip,
+      });
+
+      // Function to capture user exit event
+      const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+        posthog.capture('page_exit', {
+          step: stepName,
+          form_id: formId,
+          service_id: appContext.selectedService,
+          zip: appContext.zip,
+        });
+        event.preventDefault();// Prevent the default action to ensure the event is captured
+      };
+      window.addEventListener('beforeunload', handleBeforeUnload); // Add event listener for beforeunload
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload); // Cleanup function to remove the event listener
+      };
+    }, [stepName]);
 
   useEffect(() => {
     // Fetch contractors from Supabase
@@ -56,33 +114,58 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
           .select('*')
           .filter('services', 'cs', `["${selectedService}"]`)
           .filter('statesServed', 'cs', `["${state}"]`);
-
+  
         if (error) {
           console.error('Error fetching contractors:', error);
           setError('Error fetching contractors');
           return;
         }
-
+  
         const filteredContractors = data.map((contractor: any) => ({ ...contractor, optIn: false }));
         setMatchingContractors(filteredContractors);
+  
+        // Capture the result in PostHog
+        if (filteredContractors.length === 0) {
+          posthog.capture('no_contractors_found', {
+            form_id: appContext.formId,
+            zip: appContext.zip,
+            service_id: selectedService,
+            step: stepName,
+          });
+        } else {
+          posthog.capture('contractors_found', {
+            form_id: appContext.formId,
+            zip: appContext.zip,
+            service_id: selectedService,
+            step: stepName,
+          });
+        }
       } catch (err) {
         console.error('Unexpected error fetching contractors:', err);
         setError('Unexpected error fetching contractors');
       } finally {
         setMatchLoading(false);
       }
-      
     };
-
+  
     fetchContractors();
   }, [selectedService, state, setMatchingContractors]);
 
-  const handleContractorOptInChange = (contractorId: number, checked: boolean) => {
+  const handleContractorOptInChange = (contractorId: number, contractorName: string, checked: boolean) => {
     const updatedContractors = matchingContractors.map((contractor) =>
       contractor.id === contractorId ? { ...contractor, optIn: checked } : contractor
     );
     setMatchingContractors(updatedContractors);
-
+  
+    // Capture the event with PostHog
+    posthog.capture('contractor_optin_toggled', {
+      contractor_id: contractorId,
+      contractor_name: contractorName,
+      state: checked ? 'opted_in' : 'opted_out',
+      step: 'your_step_name', // Replace with the relevant step or context
+      user_id: 'your_user_id', // Replace with actual user/session ID if available
+    });
+  
     if (checked) {
       const selectedContractor = updatedContractors.find((contractor) => contractor.id === contractorId);
       if (selectedContractor) {
@@ -99,20 +182,27 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
         return updatedConsentedContractors;
       });
     }
-
-    if (consentedContractors.length === 0) {
-      setContactPreferences([]);
-    }
   };
-
+  
   const handleContactPreferencesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
     const newPreferences = checked
       ? [...contactPreferences, value]
       : contactPreferences.filter((pref) => pref !== value);
+  
     setContactPreferences(newPreferences);
+  
+    // Capture the toggled preference in PostHog
+    posthog.capture('contact_preference_toggled', {
+      preference: value,
+      state: checked ? 'selected' : 'deselected',
+      step: 'your_step_name', // Replace with the relevant step or context
+      user_id: 'your_user_id', // Replace with actual user/session ID if available
+    });
+  
     console.log('Contact Preferences:', newPreferences);
   };
+  
 
   const handleContactDirectlyChange = (checked: boolean) => {
     setContactDirectly(checked);
@@ -122,7 +212,17 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
       setMatchingContractors((prev) =>
         prev.map((contractor) => ({ ...contractor, optIn: false }))
       );
-    }
+    } 
+
+    // Capture the event with PostHog
+    posthog.capture('contractor_contact_toggled', {
+      state: checked ? 'opted_in' : 'opted_out',
+      form_id: formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+      step: stepName,
+    });
+
   };
 
   const handleSubmit = async () => {
@@ -239,8 +339,12 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
       return;
     }
 
+    posthog.capture(stepName + '_complete', {
+      form_id: appContext.formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+    });
     setLoading(false); // Hide spinner
-
     onCompleted();
   };
 
@@ -313,7 +417,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
       ) : (
         <div className="max-w-7xl mx-auto">
           <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-end p-4">
-        <ResetButton onClick={onReset} />
+        <ResetButton onClick={handleReset} />
       </div>
           <div className='flex justify-center text-center mb-8'>
             <div className="max-w-[40rem] text-center">
@@ -330,13 +434,20 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
           </div>
 
           {matchingContractors.length === 0 ? (
-            <div className="mt-6 text-center">
+            <div className="mt-6 flex flex-col sm:flex-row sm:justify-center sm:space-x-4">
+              <button
+              type="button"
+              onClick={handleNewService}
+              className="w-full sm:max-w-xs sm:flex-1 mb-4 sm:mb-0 py-5 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-600 text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
+              >
+              Select Another Service
+              </button>
               <button
                 type="button"
-                onClick={onReset}
-                className="py-2 px-4 bg-xorange text-white rounded-lg hover:bg-xorange-dark"
+                onClick={handleNotify}
+                className="w-full sm:max-w-xs sm:flex-1 py-5 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-white hover:bg-xorangeDark shadow-lg shadow-[rgba(102,89,83,0.5)]"
               >
-                Select Another Project
+                Notify Me
               </button>
             </div>
           ) : (
@@ -379,21 +490,22 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
                         Select companies below to allow them to contact you regarding your {numberOfQuotes > 1 ? 'consultations' : 'consultation'}. Please note, the selected companies will contact you <strong>only if they are assigned</strong> to your consultation.
                       </p>
                       <div className="mt-4 space-y-2">
-                        {matchingContractors.map((contractor) => (
-                          <div key={contractor.id} className="flex items-center justify-left">
-                            <input
-                              id={`contractor-${contractor.id}`}
-                              name={`contractor-${contractor.id}`}
-                              type="checkbox"
-                              checked={contractor.optIn}
-                              onChange={(e) => handleContractorOptInChange(contractor.id, e.target.checked)}
-                              className="h-6 w-6 text-xorange border-gray-300 rounded focus:ring-xorange"
-                            />
-                            <label htmlFor={`contractor-${contractor.id}`} className="ml-2 text-base text-gray-800 dark:text-gray-300">
-                              {contractor.name}
-                            </label>
-                          </div>
-                        ))}
+                      {matchingContractors.map((contractor) => (
+                        <div key={contractor.id} className="flex items-center justify-left">
+                          <input
+                            id={`contractor-${contractor.id}`}
+                            name={`contractor-${contractor.id}`}
+                            type="checkbox"
+                            checked={contractor.optIn}
+                            onChange={(e) => handleContractorOptInChange(contractor.id, contractor.name, e.target.checked)}
+                            className="h-6 w-6 text-xorange border-gray-300 rounded focus:ring-xorange"
+                          />
+                          <label htmlFor={`contractor-${contractor.id}`} className="ml-2 text-base text-gray-800 dark:text-gray-300">
+                            {contractor.name}
+                          </label>
+                        </div>
+                      ))}
+
                         <div className="mt-4">
                           <button
                             type="button"

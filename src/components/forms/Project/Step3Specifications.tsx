@@ -3,15 +3,16 @@ import { AppContext } from '../../../context/AppContext';
 import supabase from '../../../lib/supabaseClient';
 import ResetButton from '@/components/ui/resetButton';
 import BackButton from '@/components/ui/backButton';
+import posthog from 'posthog-js';
 
 // Define props interface
-interface Step2SpecificationsProps {
+interface Step3SpecificationsProps {
   onNext: () => void;
   onBack: () => void;
   onReset: () => void;
 }
 
-const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBack, onReset }) => {
+const Step3Specifications: React.FC<Step3SpecificationsProps> = ({ onNext, onBack, onReset }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
@@ -22,6 +23,7 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
   const [selectedSpecs, setSelectedSpecs] = useState<string[]>(serviceSpecifications);
   const [loading, setLoading] = useState<boolean>(false); // State to control spinner
   const [selectedServiceData, setSelectedServiceData] = useState<any>(null); // State to store service data
+  const stepName = 'project_step3_serviceSpecifications';
 
   useEffect(() => {
     const fetchServiceData = async () => {
@@ -49,15 +51,70 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
   }, [selectedService]);
 
   const handleSpecSelect = (spec: string) => {
-    setSelectedSpecs(prev =>
-      prev.includes(spec) ? prev.filter(s => s !== spec) : [...prev, spec]
-    );
+    setSelectedSpecs(prev => {
+      const isSelected = !prev.includes(spec);
+      const newSpecs = isSelected ? [...prev, spec] : prev.filter(s => s !== spec);
+  
+      // Capture the event with PostHog
+      posthog.capture('specification_toggled', {
+        specification: spec,
+        state: isSelected ? 'selected' : 'deselected',
+        step: stepName,
+        form_id: formId,
+        service_id: selectedService,
+        zip: appContext.zip,
+      });
+  
+      return newSpecs;
+    });
   };
+  
 
   const handleBack = () => { 
     setServiceSpecifications([]);
+    posthog.capture('form_back', {
+      form_id: appContext.formId,
+      zip: appContext.zip,
+      service_id: selectedService,
+      step: stepName,
+      previous_step: 'project_step2_zipCheck',
+    });
     onBack(); 
   };
+
+  const handleReset = () => {
+    posthog.capture('form_reset', {
+      form_id: appContext.formId,
+      zip: appContext.zip,
+      step: stepName,
+      service_id: appContext.selectedService,
+    });
+    onReset();
+  };
+  
+useEffect(() => {
+    // Capture the start event for this step
+    posthog.capture(stepName + '_start', {
+      form_id: formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+    });
+
+    // Function to capture user exit event
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      posthog.capture('page_exit', {
+        step: stepName,
+        form_id: formId,
+        service_id: appContext.selectedService,
+        zip: appContext.zip,
+      });
+      event.preventDefault();// Prevent the default action to ensure the event is captured
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload); // Add event listener for beforeunload
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload); // Cleanup function to remove the event listener
+    };
+  }, [stepName]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -119,6 +176,12 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
       setLoading(false);
       return;
     }
+    posthog.capture(stepName + '_complete', {
+      form_id: formId,
+      service_id: selectedService,
+      specifications: selectedSpecs,
+      zip: appContext.zip,
+    });
 
     setLoading(false); // Hide spinner
     onNext();
@@ -160,7 +223,7 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
     <div className="z-10 max-w-[100rem] px-4 md:px-14 py-10 lg:py-14 mx-auto relative">
       <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-between p-4">
         <BackButton onClick={handleBack} />
-        <ResetButton onClick={onReset} />
+        <ResetButton onClick={handleReset} />
       </div>
 
       <div className="space-y-8">
@@ -256,4 +319,4 @@ const Step2Specifications: React.FC<Step2SpecificationsProps> = ({ onNext, onBac
   );
 };
 
-export default Step2Specifications;
+export default Step3Specifications;

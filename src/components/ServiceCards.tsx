@@ -5,11 +5,13 @@ import useFormPersistence from '../hooks/useFormPersistence';
 import useClearFormState from '../hooks/useClearFormState';
 import { useNavigate, useLocation } from 'react-router-dom';
 import BlurFade from './ui/blur-fade';
+import posthog from 'posthog-js';
 
 const ServiceCards: React.FC = () => {
   const [services, setServices] = useState<any[]>([]);
   const supabaseClient = supabase;
   const appContext = useContext(AppContext);
+  const selectedService = localStorage.getItem('selectedService');
   const navigate = useNavigate();
   const location = useLocation();
   const clearFormState = useClearFormState();
@@ -129,6 +131,13 @@ const ServiceCards: React.FC = () => {
       console.error('Unexpected error:', err);
       return;
     }
+    posthog.capture('service_select', {
+      step: 'landing page',
+      form_id: formId,
+      service_id: serviceId,
+      zip: appContext.zip,
+    });
+    
   };
 
   // Function to generate a random string
@@ -151,9 +160,18 @@ const ServiceCards: React.FC = () => {
   return (
     <div className="z-10 max-w-[100rem] px-4 py-10 lg:py-14 mx-auto relative bg-white">
         <div className="text-center">
-          <BlurFade delay={3 * 0.15}  yOffset={15} className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200 mt-6">
-          Or select a <span className="text-xorange">service</span> to get started
-          </BlurFade>
+          {selectedService && JSON.parse(selectedService) !== "" ? (
+
+            <BlurFade delay={3 * 0.15}  yOffset={15} className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200 mt-6">
+            Or select another <span className="text-xorange">service</span> to reset your progress
+
+            </BlurFade>) : (
+
+            <BlurFade delay={3 * 0.15}  yOffset={15} className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200 mt-6">
+            Or select a <span className="text-xorange">service</span> to get started
+
+            </BlurFade>)
+          }
           <p className="mt-2 md:mt-4 text-gray-500 dark:text-neutral-500"></p>
         </div>
       <div className="space-y-8">

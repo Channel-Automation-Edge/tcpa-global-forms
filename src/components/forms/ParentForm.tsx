@@ -186,7 +186,7 @@ const ParentForm = () => {
       <div>
         {currentStep === 1 && <ProjectForm onNext={handleNextStep} onReset={handleReset} onNotify={handleNotify} />}
         {currentStep === 2 && <DetailsForm onNext={handleNextStep} onReset={handleReset} />}
-        {currentStep === 3 && <AppointmentForm onSubmit={handleSubmitted} onReset={handleReset} />}
+        {currentStep === 3 && <AppointmentForm onSubmit={handleSubmitted} onReset={handleReset} onNotify={handleNotify} />}
       </div>
     </div>
   );

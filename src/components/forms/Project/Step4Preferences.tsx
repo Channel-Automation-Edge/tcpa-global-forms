@@ -4,15 +4,16 @@ import { AppContext } from '../../../context/AppContext';
 import supabase from '../../../lib/supabaseClient';
 import ResetButton from '@/components/ui/resetButton';
 import BackButton from '@/components/ui/backButton';
+import posthog from 'posthog-js';
 
 // Define props interface
-interface Step3PreferencesProps {
+interface Step4PreferencesProps {
   onNext: () => void;
   onBack: () => void;
   onReset: () => void;
 }
 
-const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack, onReset }) => {
+const Step4Preferences: React.FC<Step4PreferencesProps> = ({ onNext, onBack, onReset }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
@@ -22,12 +23,72 @@ const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack, onR
   const { contractorPreferences, setContractorPreferences, formId } = appContext;
   const [selectedPreferences, setSelectedPreferences] = useState<string[]>(contractorPreferences);
   const [loading, setLoading] = useState<boolean>(false); // State to control spinner
+  const stepName = 'project_step4_contractorPreferences';
+
+  const handleBack = () => { 
+    posthog.capture('form_back', {
+      form_id: appContext.formId,
+      zip: appContext.zip,
+      service_id: appContext.selectedService,
+      step: stepName,
+      previous_step: 'project_step3_serviceSpecifications',
+    });
+    onBack(); 
+  };
+
+  const handleReset = () => {
+    posthog.capture('form_reset', {
+      form_id: appContext.formId,
+      zip: appContext.zip,
+      step: stepName,
+      service_id: appContext.selectedService,
+    });
+    onReset();
+  };
+  
+useEffect(() => {
+    // Capture the start event for this step
+    posthog.capture(stepName + '_start', {
+      form_id: formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+    });
+
+    // Function to capture user exit event
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      posthog.capture('page_exit', {
+        step: stepName,
+        form_id: formId,
+        service_id: appContext.selectedService,
+        zip: appContext.zip,
+      });
+      event.preventDefault();// Prevent the default action to ensure the event is captured
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload); // Add event listener for beforeunload
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload); // Cleanup function to remove the event listener
+    };
+  }, [stepName]);
 
   const handlePreferenceSelect = (preference: string) => {
-    setSelectedPreferences(prev =>
-      prev.includes(preference) ? prev.filter(p => p !== preference) : [...prev, preference]
-    );
+    setSelectedPreferences(prev => {
+      const isSelected = !prev.includes(preference);
+      const newPreferences = isSelected ? [...prev, preference] : prev.filter(p => p !== preference);
+  
+      // Capture the event with PostHog
+      posthog.capture('preference_toggled', {
+        step: stepName, // Adjust this to the relevant step/context
+        preference: preference,
+        state: isSelected ? 'selected' : 'deselected',
+        form_id: formId,
+        zip: appContext.zip,
+        service_id: appContext.selectedService,
+      });
+  
+      return newPreferences;
+    });
   };
+  
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -90,8 +151,13 @@ const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack, onR
       return;
     }
 
+    posthog.capture(stepName + '_complete', {
+      form_id: formId,
+      zip: appContext.zip,
+      service_id: appContext.selectedService,
+      preferences: selectedPreferences,
+    });
     setLoading(false); // Hide spinner
-
     onNext();
   };
 
@@ -130,8 +196,8 @@ const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack, onR
   return (
     <div className="z-10 max-w-[100rem] px-4 md:px-14 py-10 lg:py-14 mx-auto relative">
       <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-between p-4">
-        <BackButton onClick={onBack} />
-        <ResetButton onClick={onReset} />
+        <BackButton onClick={handleBack} />
+        <ResetButton onClick={handleReset} />
       </div>
       <div className="space-y-8">
         <div className='flex justify-center text-center mb-8'>
@@ -217,4 +283,4 @@ const Step3Preferences: React.FC<Step3PreferencesProps> = ({ onNext, onBack, onR
   );
 };
 
-export default Step3Preferences;
+export default Step4Preferences;

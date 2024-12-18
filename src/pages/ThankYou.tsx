@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import { AppContext } from '../context/AppContext';
 import Footer from '@/components/Footer';
 import BlurFade from '@/components/ui/blur-fade';
+import HeroVideoDialog from '@/components/ui/hero-video-dialog';
 
 const ThankYou: React.FC = () => {
   const appContext = useContext(AppContext);
@@ -59,6 +60,7 @@ const ThankYou: React.FC = () => {
 
   return (
     <div className='bg-white relative'>
+      {/* hero */}
       <div className="relative bg-[url('/images/hero.jpg')] bg-cover bg-center z-10">
         <div className="absolute inset-0 bg-[#12121d99] opacity-100"></div> {/* Overlay */}
 
@@ -125,14 +127,34 @@ const ThankYou: React.FC = () => {
           </div>
         </div>
       </div>
+      {/* end of hero */}
+
       <Confetti
         ref={confettiRef}
         className="absolute left-0 top-0 z-50 w-full h-full pointer-events-none"
       />
       <HowItWorks />
+
+      {/* video  */}
+      <div className="px-4 py-10 sm:px-6 md:px-8 lg:px-24 relative">
+      <HeroVideoDialog
+        className="dark:hidden block"
+        animationStyle="from-center"
+        videoSrc="https://storage.googleapis.com/channel_automation/Webassets/homeprojectpartners/What%20to%20Expect.mp4"
+        thumbnailSrc="images/howto_thumbnail.jpg"
+        thumbnailAlt="How To Video"
+      />
+      <HeroVideoDialog
+        className="hidden dark:block"
+        animationStyle="from-center"
+        videoSrc="https://storage.googleapis.com/channel_automation/Webassets/homeprojectpartners/What%20to%20Expect.mp4"
+        thumbnailSrc="images/howto_thumbnail.jpg"
+        thumbnailAlt="How To Video"
+      />
+    </div>
       
       {/* Contractors Section */}
-      <div className="px-4 pb-24">
+      <div className="px-4 pt-10 pb-20">
         <BlurFade delay={3 * 0.15} inView yOffset={15} className="text-center mb-6">
           <h2 className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200">
             Your Possible <span className="text-xorange">Contractors</span>

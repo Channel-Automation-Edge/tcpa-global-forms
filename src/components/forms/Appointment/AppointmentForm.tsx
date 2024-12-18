@@ -7,9 +7,10 @@ import useFormPersistence from '../../../hooks/useFormPersistence';
 interface AppointmentFormProps {
   onSubmit: () => void;
   onReset: () => void;
+  onNotify: () => void;
 }
 
-const AppointmentForm: React.FC<AppointmentFormProps> = ({onSubmit, onReset }) => {
+const AppointmentForm: React.FC<AppointmentFormProps> = ({onSubmit, onReset, onNotify }) => {
   const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence('appointmentFormStep', 1);
   
 
@@ -29,6 +30,11 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({onSubmit, onReset }) =
   const handleReset = () => {
     resetCurrentStep(); 
     onReset();
+  };
+
+  const handleNotify = () => {
+    resetCurrentStep(); 
+    onNotify();
   };
 
   const progress = (currentStep - 1) * 33.33339; 
@@ -52,7 +58,7 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({onSubmit, onReset }) =
       <div>
         {currentStep === 1 && <Step1Quotes onNext={handleNextStep} onReset={handleReset} />}
         {currentStep === 2 && <Step2Schedule onNext={handleNextStep} onReset={handleReset} />}
-        {currentStep === 3 && <Step3Contractors onCompleted={handleSubmitted} onReset={handleReset} />}
+        {currentStep === 3 && <Step3Contractors onCompleted={handleSubmitted} onReset={handleReset} onNotify={handleNotify} />}
       </div>
     </div>
   );

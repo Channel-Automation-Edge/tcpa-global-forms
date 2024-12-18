@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../../../context/AppContext';
 import supabase from '../../../lib/supabaseClient'; // Import your Supabase client
+import posthog from 'posthog-js';
 
 // Define props interface
 interface Step1SelectionProps {
@@ -17,6 +18,31 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
   const { setSelectedService, firstname, formId } = appContext; // Ensure formId is included in the context
   const [loading, setLoading] = useState<boolean>(false); // State to control spinner
   const [services, setServices] = useState<any[]>([]); // State to store fetched services
+  const stepName = 'project_step1_serviceSelect';
+
+  useEffect(() => {
+    // Capture the start event for this step
+    posthog.capture(stepName + '_start', {
+      form_id: formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+    });
+
+    // Function to capture user exit event
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      posthog.capture('page_exit', {
+        step: stepName,
+        form_id: formId,
+        service_id: appContext.selectedService,
+        zip: appContext.zip,
+      });
+      event.preventDefault();// Prevent the default action to ensure the event is captured
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload); // Add event listener for beforeunload
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload); // Cleanup function to remove the event listener
+    };
+  }, [stepName]);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -98,6 +124,18 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
       return;
     }
 
+    posthog.capture('service_select', {
+      step: stepName,
+      form_id: formId,
+      service_id: serviceId,
+      zip: appContext.zip,
+    });
+
+    posthog.capture(stepName + '_complete', {
+      form_id: formId,
+      service_id: serviceId,
+      zip: appContext.zip,
+    });
     setLoading(false); // Hide spinner
     onNext();
   };

@@ -21,6 +21,24 @@ const ConfirmDetailsForm = () => {
   }
 
   const {
+    selectedService,
+    matchingContractors,
+    zip,
+    state,
+    contractorPreferences,
+    firstname,
+    lastname,
+    email,
+    phone,
+    generalOptIn,
+    serviceSpecifications,
+    promo,
+    consentedContractors,
+    numberOfQuotes,
+    termsAndPrivacyOptIn,
+    newsletterOptIn,
+    scheduledAppointments,
+    contactPreferences,
     setSelectedService,
     setMatchingContractors,
     setZip,
@@ -77,7 +95,51 @@ const ConfirmDetailsForm = () => {
 
   }, []);
 
+  useEffect(() => { let formId = localStorage.getItem('formID'); setFormId(formId); }, []);
 
+  useEffect(() => {
+    localStorage.setItem('firstname', JSON.stringify(firstname));
+    localStorage.setItem('lastname', JSON.stringify(lastname));
+    localStorage.setItem('email', JSON.stringify(email));
+    localStorage.setItem('phone', JSON.stringify(phone));
+    localStorage.setItem('zip', JSON.stringify(zip));
+    localStorage.setItem('state', JSON.stringify(state));
+
+    localStorage.setItem('selectedService', JSON.stringify(selectedService));
+    localStorage.setItem('serviceSpecifications', JSON.stringify(serviceSpecifications));
+    localStorage.setItem('contractorPreferences', JSON.stringify(contractorPreferences));
+    localStorage.setItem('promo', JSON.stringify(promo));
+    localStorage.setItem('numberOfQuotes', JSON.stringify(numberOfQuotes));
+
+    localStorage.setItem('generalOptIn', JSON.stringify(generalOptIn));
+    localStorage.setItem('termsAndPrivacyOptIn', JSON.stringify(termsAndPrivacyOptIn));
+    localStorage.setItem('newsletterOptIn', JSON.stringify(newsletterOptIn));
+
+    localStorage.setItem('scheduledAppointments', JSON.stringify(scheduledAppointments));
+    localStorage.setItem('matchingContractors', JSON.stringify(matchingContractors));
+    localStorage.setItem('consentedContractors', JSON.stringify(consentedContractors));
+    localStorage.setItem('contactPreferences', JSON.stringify(contactPreferences));
+  }, [
+    firstname,
+    lastname,
+    email,
+    phone,
+    zip,
+    state,
+    selectedService,
+    serviceSpecifications,
+    contractorPreferences,
+    promo,
+    numberOfQuotes,
+    generalOptIn,
+    termsAndPrivacyOptIn,
+    newsletterOptIn,
+    scheduledAppointments,
+    matchingContractors,
+    consentedContractors,
+    contactPreferences,
+  ]);
+  
   const navigateWithParams = (path: string) => {
     const currentParams = new URLSearchParams(location.search);
     navigate(`${path}?${currentParams.toString()}`);

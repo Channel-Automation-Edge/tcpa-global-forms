@@ -5,7 +5,7 @@ import BlurFade from './ui/blur-fade';
 const HowItWorks: React.FC = () => {
   return (
     <div className='bg-white'>
-      <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
+      <div className="max-w-[85rem] px-4 pb-4 pt-14 sm:px-6 lg:px-8  mx-auto">
       <BlurFade delay={3 * 0.15} inView yOffset={15} className="text-center ">
           <h2 className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200">
           Here's What to <span className="text-xorange">Expect</span>
@@ -14,7 +14,7 @@ const HowItWorks: React.FC = () => {
 
           </p>
       </BlurFade>
-        <BlurFade delay={4 * 0.15} inView yOffset={0} className="max-w-[85rem] grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 py-10 lg:py-10 px-4 sm:px-6 lg:px-8 mx-auto">
+        <BlurFade delay={4 * 0.15} inView yOffset={0} className="max-w-[85rem] grid sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 pt-10 sm:px-6 lg:px-8 mx-auto">
 
 
         <BlurFade delay={6 * 0.15} inView yOffset={15} className="relative flex sm:pe-6">

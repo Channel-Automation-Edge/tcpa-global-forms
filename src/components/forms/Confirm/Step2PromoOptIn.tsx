@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../../context/AppContext';
 import supabase from '../../../lib/supabaseClient';
 import ResetButton from '@/components/ui/resetButton';
+import posthog from 'posthog-js';
 
 // Define props interface
 interface Step2PromoOptInProps {
@@ -23,6 +24,41 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onReset, noti
   const [isOptInRequired, setIsOptInRequired] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false); // State to control spinner
   const [serviceName, setServiceName] = useState<string>('Unknown Service'); // State to store the service name
+  const stepName = 'notify_me_step2_optIn';
+
+  const handleReset = () => {
+    posthog.capture('form_reset', {
+      form_id: appContext.formId,
+      zip: appContext.zip,
+      step: stepName,
+      service_id: appContext.selectedService,
+    });
+    onReset();
+  };
+
+  useEffect(() => {
+    // Capture the start event for this step
+    posthog.capture(stepName + '_start', {
+      form_id: formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+    });
+
+    // Function to capture user exit event
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      posthog.capture('page_exit', {
+        step: stepName,
+        form_id: formId,
+        service_id: appContext.selectedService,
+        zip: appContext.zip,
+      });
+      event.preventDefault();// Prevent the default action to ensure the event is captured
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload); // Add event listener for beforeunload
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload); // Cleanup function to remove the event listener
+    };
+  }, [stepName]);
 
   useEffect(() => {
     const fetchServiceName = async () => {
@@ -49,31 +85,69 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onReset, noti
     fetchServiceName();
   }, [selectedService]);
 
+  // prevent preselect
+  useEffect(() => {
+    setSelectedPromo('');
+    setPromo('');
+    setIsOptInRequired(false);
+  }, []);
 
-  const handlePromoSelect = (selectedPromo: string) => {
-    if (selectedPromo === promo) {
-      setPromo('');
+  const handlePromoSelect = (promoOption: string) => {
+    const isSelected = selectedPromo === promoOption;
+  
+    if (isSelected) {
       setSelectedPromo('');
       setIsOptInRequired(false);
-    } else {
-      setPromo(selectedPromo);
-      setSelectedPromo(selectedPromo);
+    } else { 
+      setSelectedPromo(promoOption);
       setIsOptInRequired(true);
     }
+  
+    // Capture the event with PostHog
+    posthog.capture('promo_toggled', {
+      promo: promoOption,
+      state: isSelected ? 'deselected' : 'selected',
+      form_id: formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+      step: stepName,
+    });
   };
 
   const handleNewsletterOptInChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNewsletterOptIn(event.target.checked);
+    const isChecked = event.target.checked;
+    setNewsletterOptIn(isChecked);
+  
+    // Capture the event with PostHog
+    posthog.capture('email_optIn_toggled', {
+      email_optIn: isChecked ? 'opted_in' : 'opted_out',
+      form_id: formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+      step: stepName,    });
   };
+  
 
   const handleGeneralOptInChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setGeneralOptIn(event.target.checked);
+    const isChecked = event.target.checked;
+    setGeneralOptIn(isChecked);
+
+    // Capture the event with PostHog
+    posthog.capture('smsAndCall_optIn_toggled', {
+      smsAndCall_optIn: isChecked ? 'opted_in' : 'opted_out',
+      form_id: formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+      step: stepName,
+    });
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
+    console.log('submitting form id:' + formId);
     if (generalOptIn && (!isOptInRequired || (isOptInRequired && newsletterOptIn))) {
       setLoading(true); // Show spinner
+      setPromo(selectedPromo);
 
       const payload = {
         lead: {
@@ -200,7 +274,14 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onReset, noti
         setLoading(false);
         return;
       }
-
+      posthog.capture(stepName + '_complete', {
+        form_id: formId,
+        service_id: appContext.selectedService,
+        zip: appContext.zip,
+        promo: selectedPromo,
+        email_optIn: newsletterOptIn,
+        smsAndCall_optIn: generalOptIn,
+      });
       setLoading(false); // Hide spinner
       onNext();
     }
@@ -234,16 +315,13 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onReset, noti
     }
   };
 
-  useEffect(() => {
-    setSelectedPromo(promo);
-    setIsOptInRequired(promo !== '' && !newsletterOptIn);
-  }, [promo, newsletterOptIn]);
+  
 
   return (
     <div className="z-10 max-w-[100rem] px-4 md:px-14 py-10 lg:py-14 mx-auto relative">
       <div className="absolute top-[-53px]  left-0 w-full flex justify-end p-4">
-        <ResetButton onClick={onReset} />
-      </div>
+      <ResetButton onClick={handleReset} />
+    </div>
       <div className="space-y-8">
         <div className='flex justify-center text-center mb-8'>
           <div className="max-w-[40rem] text-center">

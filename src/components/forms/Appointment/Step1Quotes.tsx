@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { AppContext } from '../../../context/AppContext';
 import supabase from '../../../lib/supabaseClient';
 import ResetButton from '@/components/ui/resetButton';
+import posthog from 'posthog-js';
 
 
 interface Step1QuotesProps {
@@ -20,10 +21,52 @@ const Step1Quotes: React.FC<Step1QuotesProps> = ({ onNext, onReset }) => {
   const { numberOfQuotes, setNumberOfQuotes, formId, phone } = appContext;
   const [selectedQuote, setSelectedQuote] = useState<number>(numberOfQuotes);
   const [loading, setLoading] = useState<boolean>(false); // State to control spinner
+  const stepName = 'appointment_step1_setQuotes';
+
+  const handleReset = () => {
+    posthog.capture('form_reset', {
+      form_id: appContext.formId,
+      zip: appContext.zip,
+      step: stepName,
+      service_id: appContext.selectedService,
+    });
+    onReset();
+  };
+
+  useEffect(() => {
+    // Capture the start event for this step
+    posthog.capture(stepName + '_start', {
+      form_id: formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+    });
+
+    // Function to capture user exit event
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      posthog.capture('page_exit', {
+        step: stepName,
+        form_id: formId,
+        service_id: appContext.selectedService,
+        zip: appContext.zip,
+      });
+      event.preventDefault();// Prevent the default action to ensure the event is captured
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload); // Add event listener for beforeunload
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload); // Cleanup function to remove the event listener
+    };
+  }, [stepName]);
+
 
   const handleQuoteSelect = (quote: number) => {
     setSelectedQuote(quote);
-    setNumberOfQuotes(quote);
+    posthog.capture('quote_selected', {
+      quote: quote,
+      form_id: formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+      step: stepName,
+    }); 
   };
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -83,7 +126,12 @@ const Step1Quotes: React.FC<Step1QuotesProps> = ({ onNext, onReset }) => {
       setLoading(false);
       return;
     }
-
+    posthog.capture(stepName + '_complete', {
+      form_id: formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+      quote: selectedQuote,
+    });
     setLoading(false); // Hide spinner
     onNext();
   };
@@ -136,7 +184,7 @@ const Step1Quotes: React.FC<Step1QuotesProps> = ({ onNext, onReset }) => {
   return (
     <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
       <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-end p-4">
-        <ResetButton onClick={onReset} />
+        <ResetButton onClick={handleReset} />
       </div>
       <div className="space-y-8">
         <div className='flex justify-center text-center mb-8'>

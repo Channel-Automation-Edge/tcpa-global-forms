@@ -5,6 +5,7 @@ import GradualSpacing from './ui/gradual-spacing';
 import { motion } from 'framer-motion';
 import { AppContext } from '../context/AppContext';
 import NavBar from './NavBar.tsx';
+import posthog from 'posthog-js';
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -126,8 +127,16 @@ const Hero = () => {
       formId = `${phone}-${dateTime}-${randomString}`;
       localStorage.setItem('formID', formId);
       console.log(`formId set: ${formId}`);
+      posthog.capture('cta clicked: New form created', {
+        cta_label: buttonText,
+        form_id: formId,
+      });
     } else {
       console.log(`formId already exists: ${formId}`);
+      posthog.capture('cta clicked: Form retrieved', {
+        cta_label: buttonText,
+        form_id: formId,
+      });
     }
     appContext.setFormId(formId);
     navigateWithParams('/request-quotes');

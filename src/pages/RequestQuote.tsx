@@ -1,48 +1,48 @@
-import React, { useState, useEffect, useRef } from 'react';
+// import React, { useState, useEffect, useRef } from 'react';
 import ParentForm from "@/components/forms/ParentForm";
-import { useLocation } from 'react-router-dom';
+// import { useLocation } from 'react-router-dom';
 
 const RequestQuote = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
-  const location = useLocation();
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+  // const modalRef = useRef<HTMLDivElement>(null);
+  // const location = useLocation();
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-    window.history.pushState(null, '', window.location.pathname + window.location.search); // Restore the current state with parameters
-  };
+  // const handleCancel = () => {
+  //   setIsModalOpen(false);
+  //   window.history.pushState(null, '', window.location.pathname + window.location.search); // Restore the current state with parameters
+  // };
 
-  const handleConfirm = () => {
-    setIsModalOpen(false);
-    const params = window.location.search; // Get current URL parameters
-    window.location.href = '/' + params; // Redirect to home with existing URL parameters
-  };
+  // const handleConfirm = () => {
+  //   setIsModalOpen(false);
+  //   const params = window.location.search; // Get current URL parameters
+  //   window.location.href = '/' + params; // Redirect to home with existing URL parameters
+  // };
 
-  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-      handleCancel();
-    }
-  };
+  // const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  //   if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
+  //     handleCancel();
+  //   }
+  // };
 
-  useEffect(() => {
-    const handlePopState = () => {
-      setIsModalOpen(true);
-      window.history.pushState(null, '', window.location.pathname + window.location.search); // Push state to prevent navigation
-    };
+  // useEffect(() => {
+  //   const handlePopState = () => {
+  //     setIsModalOpen(true);
+  //     window.history.pushState(null, '', window.location.pathname + window.location.search); // Push state to prevent navigation
+  //   };
 
-    window.history.pushState(null, '', window.location.pathname + window.location.search); // Initial push to track back navigation
-    window.addEventListener('popstate', handlePopState);
+  //   window.history.pushState(null, '', window.location.pathname + window.location.search); // Initial push to track back navigation
+  //   window.addEventListener('popstate', handlePopState);
 
-    return () => {
-      window.removeEventListener('popstate', handlePopState);
-    };
-  }, [location.pathname, location.search]);
+  //   return () => {
+  //     window.removeEventListener('popstate', handlePopState);
+  //   };
+  // }, [location.pathname, location.search]);
 
   return (
     <div>
       <ParentForm />
 
-      {isModalOpen && (
+      {/* {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" onClick={handleBackdropClick}>
           <div ref={modalRef} className="bg-white rounded-xl overflow-hidden shadow-md w-full max-w-md transform transition-transform duration-300 scale-95 zoom-in">
             <div className="flex justify-between items-center px-4 py-4 border-b">
@@ -65,7 +65,7 @@ const RequestQuote = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

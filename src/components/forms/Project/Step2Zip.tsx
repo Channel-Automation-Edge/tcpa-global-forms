@@ -5,6 +5,7 @@ import { AppContext } from '../../../context/AppContext';
 import supabase from '../../../lib/supabaseClient';
 import ResetButton from '@/components/ui/resetButton';
 import BackButton from '@/components/ui/backButton';
+import posthog from 'posthog-js';
 
 interface Step2ZipProps {
     onNext: () => void;
@@ -24,6 +25,31 @@ const Step2Zip: React.FC<Step2ZipProps> = ({ onNext, onBack, onReset, onNotify }
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [serviceName, setServiceName] = useState<string>(''); // Service name from Services table
+  const stepName = 'project_step2_zipCheck';
+  
+useEffect(() => {
+    // Capture the start event for this step
+    posthog.capture(stepName + '_start', {
+      form_id: appContext.formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+    });
+
+    // Function to capture user exit event
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      posthog.capture('page_exit', {
+        step: stepName,
+        form_id: appContext.formId,
+        service_id: appContext.selectedService,
+        zip: appContext.zip,
+      });
+      event.preventDefault();// Prevent the default action to ensure the event is captured
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload); // Add event listener for beforeunload
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload); // Cleanup function to remove the event listener
+    };
+  }, [stepName]);
 
   useEffect(() => {
     const fetchServiceName = async () => {
@@ -75,6 +101,12 @@ const Step2Zip: React.FC<Step2ZipProps> = ({ onNext, onBack, onReset, onNotify }
       if (zipError || !zipData || zip === 0) {
         setMessage('Please enter a valid ZIP Code');
         setLoading(false);
+        posthog.capture('invalid_zip', {
+          form_id: appContext.formId,
+          zip: values.zip,
+          service_id: selectedService,
+          step: stepName,
+        });
         return;
       }
 
@@ -100,9 +132,26 @@ const Step2Zip: React.FC<Step2ZipProps> = ({ onNext, onBack, onReset, onNotify }
         }
 
         if (contractors && contractors.length > 0) {
+          posthog.capture('contractors_found', { 
+            form_id: appContext.formId,
+            zip: values.zip,
+            service_id: selectedService,
+            step: stepName,
+          });
+          posthog.capture(stepName + '_complete', {
+            form_id: appContext.formId,
+            service_id: appContext.selectedService,
+            zip: appContext.zip,
+          });
           onNext(); // Proceed to the next step if a contractor is found
         } else {
           setMessage(`Sorry, we currently do not have any experts in your area that provide ${serviceName} services. Select another service or get notified when this service is available in your area.`);
+          posthog.capture('no_contractors_found', { 
+            form_id: appContext.formId,
+            zip: values.zip,
+            service_id: selectedService,
+            step: stepName,
+          });
         }
       } catch (err) {
         console.error('Unexpected error:', err);
@@ -113,11 +162,52 @@ const Step2Zip: React.FC<Step2ZipProps> = ({ onNext, onBack, onReset, onNotify }
     },
   });
 
+  const handleReset = () => {
+    posthog.capture('form_reset', {
+      form_id: appContext.formId,
+      zip: appContext.zip,
+      service_id: selectedService,
+      step: stepName,
+    });
+    onReset();
+  };
+
+  const handleNewService = () => {
+    posthog.capture('select_new_service', {
+      form_id: appContext.formId,
+      zip: appContext.zip,
+      service_id: selectedService,
+      step: stepName,
+    });
+    onReset();
+  }
+
+  const handleNotify = () => {
+    posthog.capture('notify_me', {
+      form_id: appContext.formId,
+      zip: appContext.zip,
+      service_id: selectedService,
+      step: stepName,
+    });
+    onNotify();
+  };
+
+  const handleBack = () => {
+    posthog.capture('form_back', {
+      form_id: appContext.formId,
+      zip: appContext.zip,
+      service_id: selectedService,
+      step: stepName,
+      previous_step: 'project_step1_serviceSelect',
+    });
+    onBack();
+  }
+
   return (
     <div className="z-10 max-w-[100rem] px-4 md:px-14 py-10 lg:py-14 mx-auto relative">
       <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-between p-4">
-        <BackButton onClick={onBack} />
-        <ResetButton onClick={onReset} />
+        <BackButton onClick={handleBack} />
+        <ResetButton onClick={handleReset} />
       </div>
       <div className="space-y-8">
         <div className='flex justify-center text-center mb-8'>
@@ -170,14 +260,14 @@ const Step2Zip: React.FC<Step2ZipProps> = ({ onNext, onBack, onReset, onNotify }
             <div className="mt-6 flex flex-col sm:flex-row sm:justify-center sm:space-x-4">
                 <button
                 type="button"
-                onClick={onReset}
+                onClick={handleNewService}
                 className="w-full sm:max-w-xs sm:flex-1 mb-4 sm:mb-0 py-5 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-600 text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
               >
                 Select Another Service
                 </button>
               <button
                 type="button"
-                onClick={onNotify}
+                onClick={handleNotify}
                 className="w-full sm:max-w-xs sm:flex-1 py-5 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-white hover:bg-xorangeDark shadow-lg shadow-[rgba(102,89,83,0.5)]"
               >
                 Notify Me

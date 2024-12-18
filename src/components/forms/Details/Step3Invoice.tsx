@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../../../context/AppContext';
 import supabase from '../../../lib/supabaseClient';
 import ResetButton from '@/components/ui/resetButton';
+import posthog from 'posthog-js';
 
 interface Step3InvoiceProps {
   onNext: () => void;
@@ -33,7 +34,42 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext, onReset }) => {
   const proposalDate = currentDate.toLocaleDateString();
   const offerValidUntil = new Date(currentDate.setDate(currentDate.getDate() + 20)).toLocaleDateString();
   const [loading, setLoading] = useState<boolean>(false); // State to control spinner
-  const [selectedServiceName, setSelectedServiceName] = useState<string>('Service'); // State to store the service name
+  const [selectedServiceName, setSelectedServiceName] = useState<string>('Service'); 
+  const stepName = 'details_step3_invoice';
+
+  const handleReset = () => {
+    posthog.capture('form_reset', {
+      form_id: appContext.formId,
+      zip: appContext.zip,
+      step: stepName,
+      service_id: appContext.selectedService,
+    });
+    onReset();
+  };
+
+  useEffect(() => {
+    // Capture the start event for this step
+    posthog.capture(stepName + '_start', {
+      form_id: formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+    });
+
+    // Function to capture user exit event
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      posthog.capture('page_exit', {
+        step: stepName,
+        form_id: formId,
+        service_id: appContext.selectedService,
+        zip: appContext.zip,
+      });
+      event.preventDefault();// Prevent the default action to ensure the event is captured
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload); // Add event listener for beforeunload
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload); // Cleanup function to remove the event listener
+    };
+  }, [stepName]);
 
   useEffect(() => {
     const fetchServiceName = async () => {
@@ -59,6 +95,15 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext, onReset }) => {
 
     fetchServiceName();
   }, [selectedService]);
+
+  const handleCall = () => {
+    posthog.capture('call_us', {
+      form_id: formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+      step: stepName,
+    });
+  }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -115,6 +160,11 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext, onReset }) => {
       return;
     }
 
+    posthog.capture(stepName + '_complete', {
+      form_id: formId,
+      service_id: appContext.selectedService,
+      zip: appContext.zip,
+    });
     setLoading(false); // Hide spinner
     onNext();
   };
@@ -146,13 +196,13 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext, onReset }) => {
       console.error('Error sending webhook:', webhookError);
     }
   };
-//#6B7280
+
   return (
     <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
       
       <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-end p-4">
         
-      <ResetButton onClick={onReset} />
+      <ResetButton onClick={handleReset} />
 
       </div>
 
@@ -243,6 +293,7 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext, onReset }) => {
           </button>
           <button
             type="button"
+            onClick={handleCall}
             className="w-full py-5 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-gray-600 text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700"
           >
             Call Us

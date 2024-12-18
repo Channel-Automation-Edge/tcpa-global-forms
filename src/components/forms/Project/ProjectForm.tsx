@@ -1,7 +1,7 @@
 import Step1Selection from './Step1Selection';
 import ProgressBar from '../../ui/ProgressBar';
-import Step2Specifications from './Step2Specifications';
-import Step3Preferences from './Step3Preferences';
+import Step3Specifications from './Step3Specifications';
+import Step4Preferences from './Step4Preferences';
 import useFormPersistence from '../../../hooks/useFormPersistence';
 import Step2Zip from './Step2Zip';
 
@@ -62,8 +62,8 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onNext, onReset, onNotify }) 
       <div>
         {currentStep === 1 && <Step1Selection onNext={handleNextStep} />}
         {currentStep === 2 && <Step2Zip onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} onNotify={handleNotify} />}
-        {currentStep === 3 && <Step2Specifications onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} />}
-        {currentStep === 4 && <Step3Preferences onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} />}
+        {currentStep === 3 && <Step3Specifications onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} />}
+        {currentStep === 4 && <Step4Preferences onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} />}
       </div>
     </div>
   );
