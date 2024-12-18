@@ -167,11 +167,11 @@ const Hero = () => {
 
             <div className="block sm:hidden">
               <GradualSpacing
-                className="font-display text-center text-4xl font-bold -tracking-widest text-white dark:text-white mt-4"
+                className="font-display text-center text-[32px] font-bold -tracking-widest text-white dark:text-white mt-4"
                 text={adjustedHeroContent.h1.split(' ').slice(0, 3).join(' ')}
               />
               <GradualSpacing
-                className="font-display text-center text-4xl font-bold -tracking-widest text-white dark:text-white"
+                className="font-display text-center text-[32px] font-bold -tracking-widest text-white dark:text-white"
                 text={adjustedHeroContent.h1.split(' ').slice(3).join(' ')}
               />
             </div>

@@ -44,20 +44,6 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onReset, noti
       zip: appContext.zip,
     });
 
-    // Function to capture user exit event
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      posthog.capture('page_exit', {
-        step: stepName,
-        form_id: formId,
-        service_id: appContext.selectedService,
-        zip: appContext.zip,
-      });
-      event.preventDefault();// Prevent the default action to ensure the event is captured
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload); // Add event listener for beforeunload
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload); // Cleanup function to remove the event listener
-    };
   }, [stepName]);
 
   useEffect(() => {
@@ -427,7 +413,7 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onReset, noti
               {loading ? (
                 <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
               ) : (
-                'Continue'
+                'Submit'
               )}
             </button>
           </div>

@@ -60,9 +60,6 @@ const ParentForm = () => {
     setFormId,
   } = appContext;
 
-
-
-
   useEffect(() => {
     const loadFromLocalStorage = (key: string, setValue: (value: any) => void, defaultValue: any) => {
       const savedValue = localStorage.getItem(key);

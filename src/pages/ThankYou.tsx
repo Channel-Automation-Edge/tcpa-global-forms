@@ -21,7 +21,6 @@ const ThankYou: React.FC = () => {
 
   const navigate = useNavigate();
   const confettiRef = useRef<ConfettiRef>(null);
-  const { firstname } = appContext;
   const [contractors, setContractors] = useState<any[]>([]); // State to hold contractors
   const [preferences, setPreferences] = useState<string[]>([]); // State to hold preferences
 
@@ -43,7 +42,8 @@ const ThankYou: React.FC = () => {
 
     // Override the back button to redirect to "/"
     const handlePopState = () => {
-      navigate('/');
+      const params = window.location.search; // Get current URL parameters
+      navigate('/' + params); // Redirect to home with existing URL parameters
     };
 
     window.addEventListener('popstate', handlePopState);
@@ -55,7 +55,10 @@ const ThankYou: React.FC = () => {
 
   const handleGoHome = () => {
     localStorage.removeItem('summaryContractors');
-    navigate('/');
+    localStorage.removeItem('summaryPreferences');
+    const params = window.location.search; // Get current URL parameters
+    navigate('/' + params); // Redirect to home with existing URL parameters
+
   };
 
   return (
@@ -68,17 +71,17 @@ const ThankYou: React.FC = () => {
           <NavBar />
           <div className="z-10 pb-12 md:pb-14 lg:pb-16 flex items-center justify-center flex-col px-4 mt-0 space-y-[25px]">
             <GradualSpacing
-              className="hidden sm:block font-display text-center text-4xl sm:text-4xl md:text-4xl lg:text-5xl xl:text-5xl font-bold -tracking-widest text-off dark:text-white mt-14 lg:mt-20"
+              className="hidden sm:block font-display text-center text-4xl  sm:text-4xl md:text-5xl lg:text-5xl xl:text-5xl font-semibold -tracking-widest text-white dark:text-white mt-14 lg:mt-20"
               text="Your Dream Project is Taking Shape!"
             />
 
             <div className="block sm:hidden">
               <GradualSpacing
-                className="font-display text-center text-4xl font-bold -tracking-widest text-off dark:text-white mt-4"
+                className="font-display text-center text-[32px] font-bold -tracking-widest text-white dark:text-white mt-4"
                 text="Your Dream Project"
               />
               <GradualSpacing
-                className="font-display text-center text-4xl font-bold -tracking-widest text-off dark:text-white"
+                className="font-display text-center text-[32px] font-bold -tracking-widest text-white dark:text-white"
                 text="is Taking Shape"
               />
             </div>
@@ -87,25 +90,26 @@ const ThankYou: React.FC = () => {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 1 }}
               transition={{ delay: 0.6 }}
-              className="text-sm sm:text-sm md:text-md lg:text-lg text-white/70 max-w-lg lg:max-w-[551px] text-center mt-8 mb-5"
+              className="text-sm sm:text-sm md:text-base lg:text-base text-white/80 max-w-lg lg:max-w-[551px] text-center mt-8 mb-5"
             >
-              {firstname ? `${firstname}, connect with trusted contractors who have the skills and experience to get the job done right` : 
-              "Here's an overview of your consultation details. Take a moment to review everything and make sure everything looks great."}
+              Here's an overview of your consultation details. Take a moment to review everything and make sure everything looks great
             </motion.p>
 
             <motion.button
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 1 }}
               transition={{ delay: 0.6 }}
-              className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-xbg transition-transform transform hover:scale-105 z-40"
+              className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-xbg transition-transform transform hover:scale-105 relative mb-10"
               onClick={handleGoHome}
-              style={{boxShadow: 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
-                transition: 'box-shadow 0.3s ease',}}
+              style={{
+                boxShadow: 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
+                transition: 'box-shadow 0.3s ease',
+              }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = 'rgba(254,139,16,0.5) 0px 10px 20px -1px';
+                e.currentTarget.style.boxShadow = 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -4px';
+                e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 10px 25px -4px';
               }}
             >
               Go to Home Page

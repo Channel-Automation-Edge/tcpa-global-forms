@@ -1,35 +1,29 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
+import { Dialog, DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+  DialogClose,
+  DialogTitle
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 interface ResetButtonProps {
   onClick: () => void;
 }
 
 const ResetButton: React.FC<ResetButtonProps> = ({ onClick }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  const handleButtonClick = () => {
-    setIsModalOpen(true);
-  };
-
   const handleConfirm = () => {
-    setIsModalOpen(false);
     onClick();
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-      setIsModalOpen(false);
-    }
-  };
-
   return (
-    <>
-      <button onClick={handleButtonClick} className="flex items-center text-[#6B7280] hover:text-xorange transition-colors duration-200">
+    <div>
+      
+
+      <Dialog>
+        <DialogTrigger className="flex items-center text-[#6B7280] hover:text-xorange transition-colors duration-200">
         <svg
           width="512"
           height="512"
@@ -48,34 +42,26 @@ const ResetButton: React.FC<ResetButtonProps> = ({ onClick }) => {
             </clipPath>
           </defs>
         </svg>
-      </button>
-
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" onClick={handleBackdropClick}>
-          <div
-            ref={modalRef}
-            className="bg-white rounded-xl overflow-hidden shadow-md w-full max-w-md transform transition-transform duration-900 scale-95 zoom-out"
-          >
-            <div className="flex justify-between items-center px-4 py-3 border-b">
-              <h3 className="font-bold text-gray-800">Confirm Reset</h3>
-              <button onClick={handleCancel} className="text-gray-500 hover:text-gray-700">
-                <svg className="shrink-0 size-5" fill="none" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
-                  <path d="M18 6 L6 18"></path>
-                  <path d="M6 6 L18 18"></path>
-                </svg>
-              </button>
-            </div>
-            <div className="p-4">
-              <p className="text-gray-800">All progress will be lost. Are you sure you want to reset?</p>
-            </div>
-            <div className="flex justify-end items-center gap-x-2 px-4 py-3 border-t">
-              <button onClick={handleCancel} className="py-2 px-3 bg-white text-gray-800 text-sm font-medium rounded-lg border border-gray-200 shadow-sm hover:bg-gray-50">Cancel</button>
-              <button onClick={handleConfirm} className="py-2 px-3 bg-xorange text-white rounded-lg text-sm font-medium hover:bg-xorangeDark">Yes, Reset</button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
+      </DialogTrigger>
+        <DialogTitle></DialogTitle>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <h4 className='text-md font-semibold'>Confirm Reset</h4>
+            <DialogDescription>
+              Are you sure you want to reset your form? All progress will be lost.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button className='bg-gray-200 hover:bg-gray-300 text-gray-800'>Cancel</Button>
+            </DialogClose>
+            <DialogClose asChild>
+              <Button className='bg-xorange hover:bg-xorangeDark' onClick={handleConfirm}>Reset Form</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 };
 

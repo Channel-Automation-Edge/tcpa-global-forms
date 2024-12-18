@@ -15,10 +15,12 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
     return null;
   }
 
-  const { setSelectedService, firstname, formId } = appContext; // Ensure formId is included in the context
+  const { setSelectedService, formId } = appContext; // Ensure formId is included in the context
   const [loading, setLoading] = useState<boolean>(false); // State to control spinner
   const [services, setServices] = useState<any[]>([]); // State to store fetched services
   const stepName = 'project_step1_serviceSelect';
+  const params = new URLSearchParams(window.location.search);
+  const firstname = params.get('firstname');
 
   useEffect(() => {
     // Capture the start event for this step

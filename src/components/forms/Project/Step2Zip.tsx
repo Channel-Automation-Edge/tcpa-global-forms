@@ -34,21 +34,6 @@ useEffect(() => {
       service_id: appContext.selectedService,
       zip: appContext.zip,
     });
-
-    // Function to capture user exit event
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      posthog.capture('page_exit', {
-        step: stepName,
-        form_id: appContext.formId,
-        service_id: appContext.selectedService,
-        zip: appContext.zip,
-      });
-      event.preventDefault();// Prevent the default action to ensure the event is captured
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload); // Add event listener for beforeunload
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload); // Cleanup function to remove the event listener
-    };
   }, [stepName]);
 
   useEffect(() => {

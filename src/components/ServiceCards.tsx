@@ -180,7 +180,7 @@ const ServiceCards: React.FC = () => {
         <BlurFade
           key={service.id}
           delay={index * 0.1} // Incremental delay for staggered effect
-                  inView
+                  
                   yOffset={8}
           className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[210px] h-[80px] sm:h-[156px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
           onClick={() => handleServiceSelect(service.id)}

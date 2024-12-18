@@ -65,10 +65,10 @@ const RequestQuote = () => {
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button className='bg-gray-200 hover:bg-gray-300 text-gray-800' onClick={handleLeave}>Leave</Button>
+              <Button className='bg-gray-200 hover:bg-gray-300 text-gray-800' onClick={handleCloseModal}>Cancel</Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button className='bg-xorange hover:bg-xorangeDark' onClick={handleCloseModal}>Stay</Button>
+              <Button className='bg-xorange hover:bg-xorangeDark' onClick={handleLeave}>Leave Page</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>

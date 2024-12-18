@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ProgressBar from '@/components/ui/ProgressBar';
 import Step1Info from '@/components/forms/Confirm/Step1Info';
@@ -7,6 +7,15 @@ import useFormPersistence from '@/hooks/useFormPersistence';
 import { AppContext } from '@/context/AppContext';
 import useClearFormState from '@/hooks/useClearFormState';
 import useResetDatabase from '@/hooks/useResetDatabase';
+import { Dialog, DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+  DialogClose,
+  DialogTitle
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 const ConfirmDetailsForm = () => {
   const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence('ConfirmDetailsFormStep', 1);
@@ -15,6 +24,7 @@ const ConfirmDetailsForm = () => {
   const location = useLocation();
   const clearFormState = useClearFormState();
   const resetDatabase = useResetDatabase();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   if (!appContext) {
     return null;
@@ -149,13 +159,20 @@ const ConfirmDetailsForm = () => {
     if (currentStep < 2) {
       setCurrentStep(currentStep + 1);
     } else {
-      navigateWithParams('/thank-you');
-      resetCurrentStep();
-      clearFormState();
-      setFormId('');
-      localStorage.removeItem('formID');
+      document.getElementById("modal")?.click();
+
+      
     }
   };
+
+  const handleHome = () => {
+    navigateWithParams('/');
+    resetCurrentStep();
+    clearFormState();
+    setFormId('');
+    localStorage.removeItem('formID');
+  }
+
 
   const handleReset = async () => {
     resetCurrentStep();
@@ -188,6 +205,25 @@ const ConfirmDetailsForm = () => {
         {currentStep === 1 && <Step1Info onNext={handleNextStep} onReset={handleReset} />}
         {currentStep === 2 && <Step2PromoOptIn onNext={handleNextStep} onReset={handleReset} notifyServiceAvailablility = {notifyServiceAvailablility}  />}
       </div>
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogTrigger asChild>
+          <button id='modal' className='hidden'></button>
+        </DialogTrigger>
+        <DialogTitle></DialogTitle>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <h4 className='text-md font-semibold'>We've Got You Covered!</h4>
+            <DialogDescription>
+            Thanks for letting us know what you're looking for! We're working hard to bring this service to your area, and we'll be sure to let you know as soon as it's available. Exciting updates are just around the corner!
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button className='bg-xorange hover:bg-xorangeDark' onClick={handleHome}>Go to Home Page</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
