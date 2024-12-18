@@ -1,73 +1,83 @@
-// import React, { useState, useEffect, useRef } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import ParentForm from "@/components/forms/ParentForm";
-// import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import { Dialog, DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTrigger,
+  DialogClose,
+  DialogTitle
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import posthog from 'posthog-js';
+import { AppContext } from '@/context/AppContext';
 
 const RequestQuote = () => {
-  // const [isModalOpen, setIsModalOpen] = useState(false);
-  // const modalRef = useRef<HTMLDivElement>(null);
-  // const location = useLocation();
+  const location = useLocation();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const appContext = useContext(AppContext);
 
-  // const handleCancel = () => {
-  //   setIsModalOpen(false);
-  //   window.history.pushState(null, '', window.location.pathname + window.location.search); // Restore the current state with parameters
-  // };
+  if (!appContext) {
+    return null;
+  }
 
-  // const handleConfirm = () => {
-  //   setIsModalOpen(false);
-  //   const params = window.location.search; // Get current URL parameters
-  //   window.location.href = '/' + params; // Redirect to home with existing URL parameters
-  // };
+  useEffect(() => {
+    const handlePopState = () => {
+      if (!isModalOpen) {
+        setIsModalOpen(true);
+        document.getElementById("modal")?.click();
+      }
+    };
 
-  // const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-  //   if (modalRef.current && !modalRef.current.contains(e.target as Node)) {
-  //     handleCancel();
-  //   }
-  // };
+    window.history.pushState(null, '', window.location.pathname + window.location.search);
+    window.addEventListener('popstate', handlePopState);
 
-  // useEffect(() => {
-  //   const handlePopState = () => {
-  //     setIsModalOpen(true);
-  //     window.history.pushState(null, '', window.location.pathname + window.location.search); // Push state to prevent navigation
-  //   };
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [location.pathname, location.search, isModalOpen]);
 
-  //   window.history.pushState(null, '', window.location.pathname + window.location.search); // Initial push to track back navigation
-  //   window.addEventListener('popstate', handlePopState);
+  const handleLeave = () => {
+    posthog.capture('page_exit test in requesttt',);
+    const params = window.location.search;
+    window.location.href = '/' + params;
+  };
 
-  //   return () => {
-  //     window.removeEventListener('popstate', handlePopState);
-  //   };
-  // }, [location.pathname, location.search]);
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <div>
       <ParentForm />
-
-      {/* {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50" onClick={handleBackdropClick}>
-          <div ref={modalRef} className="bg-white rounded-xl overflow-hidden shadow-md w-full max-w-md transform transition-transform duration-300 scale-95 zoom-in">
-            <div className="flex justify-between items-center px-4 py-4 border-b">
-              <h3 className="font-bold text-gray-800">Wait!</h3>
-              <button onClick={handleCancel} className="text-gray-500 hover:text-gray-700">
-                <svg className="shrink-0 size-5" fill="none" width="24" height="24" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
-                  <path d="M18 6 L6 18"></path>
-                  <path d="M6 6 L18 18"></path>
-                </svg>
-              </button>
-            </div>
-            <div className="p-4">
-              <p className="text-gray-800">
-                You're only a few steps away from receiving your free consultation. Don't worry, your progress will be saved.
-              </p>
-            </div>
-            <div className="flex justify-end items-center gap-x-2 px-4 py-3 border-t">
-              <button onClick={handleCancel} className="py-2 px-3 bg-white text-gray-800 text-sm font-medium rounded-lg border border-gray-200 shadow-sm hover:bg-gray-50">Cancel</button>
-              <button onClick={handleConfirm} className="py-2 px-3 bg-xorange text-white rounded-lg text-sm font-medium hover:bg-xorangeDark">Proceed</button>
-            </div>
-          </div>
-        </div>
-      )} */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogTrigger asChild>
+          <button id='modal' className='hidden'></button>
+        </DialogTrigger>
+        <DialogTitle></DialogTitle>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <h4 className='text-md font-semibold'>Wait!</h4>
+            <DialogDescription>
+              Are you sure you want to leave this page? Don't worry, your changes will be saved.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button className='bg-gray-200 hover:bg-gray-300 text-gray-800' onClick={handleLeave}>Leave</Button>
+            </DialogClose>
+            <DialogClose asChild>
+              <Button className='bg-xorange hover:bg-xorangeDark' onClick={handleCloseModal}>Stay</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
 
 export default RequestQuote;
+
+
+

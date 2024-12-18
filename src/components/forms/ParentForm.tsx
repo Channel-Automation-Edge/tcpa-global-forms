@@ -9,6 +9,7 @@ import useFormPersistence from '../../hooks/useFormPersistence';
 import useClearFormState from '../../hooks/useClearFormState';
 import useResetDatabase from '@/hooks/useResetDatabase';
 
+
 const ParentForm = () => {
   const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence('parentFormStep', 1);
   const appContext = useContext(AppContext);
@@ -59,7 +60,9 @@ const ParentForm = () => {
     setFormId,
   } = appContext;
 
-  // Load values from local storage on component mount
+
+
+
   useEffect(() => {
     const loadFromLocalStorage = (key: string, setValue: (value: any) => void, defaultValue: any) => {
       const savedValue = localStorage.getItem(key);

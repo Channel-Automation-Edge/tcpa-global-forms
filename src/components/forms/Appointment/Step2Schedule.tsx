@@ -12,9 +12,10 @@ import { Dialog, DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTrigger,
+  DialogClose,
+  DialogTitle
  } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { DialogClose, DialogTitle } from '@radix-ui/react-dialog';
 import posthog from 'posthog-js';
 
 interface Step2ScheduleProps {
