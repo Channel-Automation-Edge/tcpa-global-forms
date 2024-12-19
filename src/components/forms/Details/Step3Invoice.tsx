@@ -89,6 +89,7 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext, onReset }) => {
       zip: appContext.zip,
       step: stepName,
     });
+    window.location.href = 'tel:+18594075999'; //added by izzy
   }
 
   const handleSubmit = async (event: React.FormEvent) => {
