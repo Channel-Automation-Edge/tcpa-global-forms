@@ -29,7 +29,7 @@ const NavBar = () => {
             <div className="sm:flex sm:gap-4">
               <a
                 className="rounded-md bg-transparent px-5 py-2.5 text-sm font-medium text-white inline-flex items-center"
-                href="#"
+                href="tel:+18594075999"
               >
                 <img
                   src="/images/phone.svg" // Replace with your image path
