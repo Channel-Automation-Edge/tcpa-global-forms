@@ -234,7 +234,11 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
       matchingContractors,
       appointment: appContext.scheduledAppointments,
       consent: {
-        general: {
+        sms: {
+          description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Project Quotes to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
+          value: generalOptIn,
+        },
+        call: {
           description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Project Quotes to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
           value: generalOptIn,
         },

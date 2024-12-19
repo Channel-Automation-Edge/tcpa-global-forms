@@ -386,7 +386,7 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
               )}
               {isOptInRequired && !newsletterOptIn && (
                 <div className="text-sm text-red-500 mt-2">
-                  Please opt-in to receive the selected promo.
+                  To claim the special offer, you must opt-in to email.
                 </div>
               )}
               <div className="flex items-start mt-4">
