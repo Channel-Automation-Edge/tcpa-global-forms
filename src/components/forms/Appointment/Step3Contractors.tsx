@@ -225,15 +225,29 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
 
   };
 
+  const formatPhoneNumber = (phone:string) => {
+    if (!phone || phone.length !== 10) {
+      return phone; // Return the original value if it's not a 10-digit number
+    }
+  
+    const areaCode = phone.slice(0, 3);
+    const centralOfficeCode = phone.slice(3, 6);
+    const lineNumber = phone.slice(6);
+  
+    return `+1 (${areaCode}) ${centralOfficeCode}-${lineNumber}`;
+  };
+  
+
   const handleSubmit = async () => {
-    const serviceName = selectedService; // Use selectedService directly as name
+    const serviceName = selectedService; 
+    const formattedPhone = appContext.phone ? formatPhoneNumber(appContext.phone) : '';
 
     const payload = {
       lead: {
         firstname,
         lastname,
         email,
-        phone,
+        phone: formattedPhone,
         generalOptIn,
         zip,
         state,

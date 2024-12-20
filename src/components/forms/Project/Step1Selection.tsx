@@ -54,14 +54,28 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
     fetchServices();
   }, []);
 
+  const formatPhoneNumber = (phone:string) => {
+    if (!phone || phone.length !== 10) {
+      return phone; // Return the original value if it's not a 10-digit number
+    }
+  
+    const areaCode = phone.slice(0, 3);
+    const centralOfficeCode = phone.slice(3, 6);
+    const lineNumber = phone.slice(6);
+  
+    return `+1 (${areaCode}) ${centralOfficeCode}-${lineNumber}`;
+  };
+
   const handleServiceSelect = async (serviceId: string) => { // Assuming serviceId is a string
     setLoading(true); // Show spinner
     setSelectedService(serviceId);
     console.log(`Selected service updated to: ${serviceId}`);
+    const urlParams = new URLSearchParams(window.location.search);
+    const phoneFromUrl = urlParams.get('phone') || null;
+    const formattedPhone = phoneFromUrl ? formatPhoneNumber(phoneFromUrl) : '';
 
     try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const phoneFromUrl = urlParams.get('phone') || null;
+      
       // Check if formId exists in the database
       const { data, error } = await supabase
         .from('Forms')
@@ -95,7 +109,7 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
         // formId does not exist, insert a new row
         const { error: insertError } = await supabase
           .from('Forms')
-          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phoneFromUrl, service: serviceId, user_ns: userNs }]);
+          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: formattedPhone, service: serviceId, user_ns: userNs }]);
 
         if (insertError) {
           console.error('Error inserting formId:', insertError);
@@ -104,7 +118,7 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
           return;
         }
 
-        console.log(`FormId ${formId} inserted with phone: ${phoneFromUrl}`);
+        console.log(`FormId ${formId} inserted with phone: ${formattedPhone}`);
       }
     } catch (err) {
       console.error('Unexpected error:', err);

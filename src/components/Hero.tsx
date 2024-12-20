@@ -23,7 +23,9 @@ const Hero = () => {
   const heroContent: Record<HeroContentKey, { h1: string; lede: string; ctaLabel: string }> = {
     default: {
       h1: "Instant Everything, Incredible Pricing",
-      lede: "Connect with trusted contractors who have the skills and experience to get the job done right",
+      lede: zipParam ? `Hi First Name, find top contractors in ${stateParam} near ${zipParam} for your upcoming remodel and control your quotes`
+           : stateParam ? `Hi First Name, find top contractors in ${stateParam} for your upcoming remodel and control your quotes`
+           : "Hi First Name, find top contractors in your area for your upcoming remodel and control your quotes",
       ctaLabel: "Get Started Now",
     },
     fresh: {
@@ -54,8 +56,6 @@ const Hero = () => {
   if (!appContext) {
     return null; // Handle the case where appContext is not available
   }
-
-  const { firstname } = appContext;
 
   const [buttonText, setButtonText] = useState("Get a Free Consultation Now");
   const [, setSubheadingText] = useState("Or select a service to get started");
@@ -200,14 +200,13 @@ const Hero = () => {
             </>
             )}
 
-            
             <motion.p
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 1 }}
               transition={{ delay: 0.6 }}
               className="text-sm sm:text-sm md:text-base lg:text-base text-white/80 max-w-lg lg:max-w-[551px] text-center pb-4"
             >
-              {firstname ? `${firstname}, ${subheadingText1}` : subheadingText1}
+              {subheadingText1}
             </motion.p>
 
             <style>{`

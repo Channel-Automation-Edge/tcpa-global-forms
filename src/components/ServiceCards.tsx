@@ -43,23 +43,41 @@ const ServiceCards: React.FC = () => {
     fetchServices();
   }, [supabaseClient]);
 
+  const formatPhoneNumber = (phone:string) => {
+    if (!phone || phone.length !== 10) {
+      return phone; // Return the original value if it's not a 10-digit number
+    }
+  
+    const areaCode = phone.slice(0, 3);
+    const centralOfficeCode = phone.slice(3, 6);
+    const lineNumber = phone.slice(6);
+  
+    return `+1 (${areaCode}) ${centralOfficeCode}-${lineNumber}`;
+  };
+  
+  
+
   const handleServiceSelect = async (serviceId: string) => {
     if (!appContext) {
       return;
     }
   
     const { setSelectedService, setFormId } = appContext;
+    const urlParams = new URLSearchParams(location.search);
+    const phoneParam = urlParams.get('phone') || ''
+    const formattedPhone = formatPhoneNumber(phoneParam);
+    console.log(formattedPhone);
+
     resetParentCurrentStep();
     resetProjectCurrentStep();
     resetDetailsCurrentStep();
     resetAppointmentCurrentStep();
-  
-    clearFormState(); // Clear form state
-  
+    clearFormState(); 
+
     let formId = localStorage.getItem('formID');
     if (!formId) {
-      const urlParams = new URLSearchParams(location.search);
-      const phone = urlParams.get('phone') || generateRandomString(9);
+      // Generate a new formId if it doesn't exist
+      const phone = phoneParam || generateRandomString(9);
   
       const dateTime = new Date().toISOString().replace(/[-:.T]/g, '').slice(0, 14); // YYYYMMDDHHMMSS format
       const randomString = generateRandomString(4);
@@ -77,11 +95,11 @@ const ServiceCards: React.FC = () => {
     localStorage.setItem('selectedService', JSON.stringify(serviceId));
     console.log('Reset form and setting Initial Service:', serviceId);
     setProjectCurrentStep(2);
-    navigateWithParams('/request-quotes');  
+    navigateWithParams('/request-quotes'); 
+    
+    
 
     try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const phoneFromUrl = urlParams.get('phone') || null;
       // Check if formId exists in the database
       const { data, error } = await supabaseClient
         .from('Forms')
@@ -106,7 +124,7 @@ const ServiceCards: React.FC = () => {
             termsAndPrivacy_optIn: false,
             smsAndCall_optIn: false,
             service: serviceId,
-            phone: phoneFromUrl,
+            phone: formattedPhone,
             user_ns: userNs
           })
           .eq('id', formId);
@@ -121,14 +139,14 @@ const ServiceCards: React.FC = () => {
         // formId does not exist, insert a new row
         const { error: insertError } = await supabaseClient
           .from('Forms')
-          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phoneFromUrl, service: serviceId, user_ns: userNs }]);
+          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: formattedPhone, service: serviceId, user_ns: userNs }]);
 
         if (insertError) {
           console.error('Error inserting formId:', insertError);
           return;
         }
 
-        console.log(`FormId ${formId} inserted with phone: ${phoneFromUrl}`);
+        console.log(`FormId ${formId} inserted with phone: ${formattedPhone}`);
       }
     } catch (err) {
       console.error('Unexpected error:', err);
