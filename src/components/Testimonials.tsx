@@ -46,7 +46,7 @@ const ReviewCard: React.FC<Review> = ({ img, name, body }) => {
         </div>
         <div className="flex items-center mt-2">
           {Array.from({ length: 5 }).map((_, index) => (
-            <svg key={index} className="w-4 h-4 text-yellow-500" fill="currentColor" viewBox="0 0 20 20">
+            <svg key={index} className="w-4 h-4 text-xorange" fill="currentColor" viewBox="0 0 20 20">
               <path d="M10 15l-5.878 3.09L5.5 10.18 1 6.18l5.932-.862L10 1l3.068 4.318L19 6.18l-4.5 4L15.878 18z" />
             </svg>
           ))}
