@@ -488,7 +488,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
                 </div> */}
                 <div className="w-full max-w-[45rem] text-left mt-4">
                   <div className="flex items-start">
-                  <p className='text-gray-600'>Would you like your assigned {numberOfQuotes > 1 ? 'contractors' : 'contractor'} to contact you directly?</p>
+                  <p className='text-gray-600'><span className='text-red-500'> {contactDirectly == 'Yes' || contactDirectly == 'No' ? '' : '*' } </span>Would you like your assigned {numberOfQuotes > 1 ? 'contractors' : 'contractor'} to contact you directly?</p>
                   </div>
                   <div className='mt-4'>
                     <Button onClick={() => handleContactDirectlyChange('Yes')} className={`py-3 px-4 w-20 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-100 mr-4 ${
@@ -579,11 +579,11 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
               <button
                 type="button"
                 onClick={handleSubmit}
-                className={`w-full max-w-xs px-0 py-5 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-8px] ${
+                className={`w-full max-w-xs px-24 py-5 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
                   (contactDirectly === null || 
                   (contactDirectly === 'Yes' && (consentedContractors.length === 0 || contactPreferences.length === 0)))
-                  ? 'bg-gray-300 cursor-not-allowed' // Disabled styles
-                  : 'bg-xorange hover:bg-xorangeDark' // Enabled styles
+                  ? 'bg-gray-200 text-white cursor-not-allowed' // Disabled styles
+                  : 'bg-xorange text-white hover:bg-xorangeDark shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-8px]' // Enabled styles
                 }`}
                 disabled={
                   contactDirectly === null || 
