@@ -254,7 +254,7 @@ useEffect(() => {
   const renderAppointmentForm = () => (
     <form onSubmit={formik.handleSubmit}>
       <div className="mt-4 rounded-lg px-4 py-4 shadow-lg sm:px-6 sm:py-4 lg:px-8 bg-white">
-        <BlurFade key={currentAppointmentIndex} delay={0.1} duration={0.4} blur='none' inView yOffset={0} className="flex-grow">
+        <BlurFade key={currentAppointmentIndex} delay={0.1} duration={0.4} blur='0px' inView yOffset={0} className="flex-grow">
           <h2 className="text-center mt-2 mb-4 text-xl font-semibold text-gray-800 dark:text-neutral-200">
             Select a date
           </h2>

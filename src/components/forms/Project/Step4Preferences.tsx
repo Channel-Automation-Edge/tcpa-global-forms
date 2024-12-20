@@ -31,7 +31,7 @@ const Step4Preferences: React.FC<Step4PreferencesProps> = ({ onNext, onBack, onR
       zip: appContext.zip,
       service_id: appContext.selectedService,
       step: stepName,
-      previous_step: 'project_step3_serviceSpecifications',
+      previous_step: 'project_step3_serviceSpecification',
     });
     onBack(); 
   };
@@ -188,7 +188,7 @@ useEffect(() => {
         <div className='flex justify-center text-center mb-8'>
           <div className="max-w-[40rem] text-center">
             <h1 className="block text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl font-bold sm:font-bold md:font-semibold lg:font-semibold text-gray-800 dark:text-white">
-            What <span className="text-xorange">kind of expert</span> are you looking for? Don't worry, choosing won't cost you a thing!
+            What <span className="text-xorange">type of expert</span> do you need? Select as many as you like—it's completely free!
             </h1>
           </div>
         </div>

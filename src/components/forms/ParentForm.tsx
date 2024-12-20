@@ -12,6 +12,9 @@ import useResetDatabase from '@/hooks/useResetDatabase';
 
 const ParentForm = () => {
   const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence('parentFormStep', 1);
+  const [, , resetProjectCurrentStep] = useFormPersistence('projectFormStep', 1);
+  const [, , resetDetailsCurrentStep] = useFormPersistence('detailsFormStep', 1);
+  const [, , resetAppointmentCurrentStep] = useFormPersistence('appointmentFormStep', 1);
   const appContext = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
@@ -31,7 +34,7 @@ const ParentForm = () => {
     email,
     phone,
     generalOptIn,
-    serviceSpecifications,
+    serviceSpecification,
     promo,
     consentedContractors,
     numberOfQuotes,
@@ -49,7 +52,7 @@ const ParentForm = () => {
     setEmail,
     setPhone,
     setGeneralOptIn,
-    setServiceSpecifications,
+    setServiceSpecification,
     setPromo,
     setConsentedContractors,
     setNumberOfQuotes,
@@ -78,7 +81,7 @@ const ParentForm = () => {
     loadFromLocalStorage('state', setState, '');
 
     loadFromLocalStorage('selectedService', setSelectedService, '');
-    loadFromLocalStorage('serviceSpecifications', setServiceSpecifications, []);
+    loadFromLocalStorage('serviceSpecification', setServiceSpecification, []);
     loadFromLocalStorage('contractorPreferences', setContractorPreferences, []);
     loadFromLocalStorage('promo', setPromo, false);
     loadFromLocalStorage('numberOfQuotes', setNumberOfQuotes, 0);
@@ -107,7 +110,7 @@ const ParentForm = () => {
     localStorage.setItem('state', JSON.stringify(state));
 
     localStorage.setItem('selectedService', JSON.stringify(selectedService));
-    localStorage.setItem('serviceSpecifications', JSON.stringify(serviceSpecifications));
+    localStorage.setItem('serviceSpecification', JSON.stringify(serviceSpecification));
     localStorage.setItem('contractorPreferences', JSON.stringify(contractorPreferences));
     localStorage.setItem('promo', JSON.stringify(promo));
     localStorage.setItem('numberOfQuotes', JSON.stringify(numberOfQuotes));
@@ -128,7 +131,7 @@ const ParentForm = () => {
     zip,
     state,
     selectedService,
-    serviceSpecifications,
+    serviceSpecification,
     contractorPreferences,
     promo,
     numberOfQuotes,
@@ -156,9 +159,16 @@ const ParentForm = () => {
 
   const handleReset = async () => {
     resetCurrentStep();
+    resetProjectCurrentStep();
+    resetDetailsCurrentStep();
+    resetAppointmentCurrentStep();
     clearFormState();
     await resetDatabase();
   };
+
+  const handleBackStep = () => {
+    setCurrentStep(currentStep - 1);
+  }
   
 
   const handleSubmitted = () => {
@@ -166,6 +176,9 @@ const ParentForm = () => {
     localStorage.setItem('summaryContractors', JSON.stringify(matchingContractors));
     localStorage.setItem('summaryPreferences', JSON.stringify(contractorPreferences));
     resetCurrentStep();
+    resetProjectCurrentStep();
+    resetDetailsCurrentStep();
+    resetAppointmentCurrentStep();
     clearFormState();
     setFormId('');
     localStorage.removeItem('formID');
@@ -185,7 +198,7 @@ const ParentForm = () => {
       </div>
       <div>
         {currentStep === 1 && <ProjectForm onNext={handleNextStep} onReset={handleReset} onNotify={handleNotify} />}
-        {currentStep === 2 && <DetailsForm onNext={handleNextStep} onReset={handleReset} />}
+        {currentStep === 2 && <DetailsForm onNext={handleNextStep} onReset={handleReset} onBack={handleBackStep} />}
         {currentStep === 3 && <AppointmentForm onSubmit={handleSubmitted} onReset={handleReset} onNotify={handleNotify} />}
       </div>
     </div>

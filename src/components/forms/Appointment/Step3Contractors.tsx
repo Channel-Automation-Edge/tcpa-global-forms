@@ -4,6 +4,7 @@ import { AppContext } from '../../../context/AppContext';
 import supabase from '../../../lib/supabaseClient';
 import ResetButton from '@/components/ui/resetButton';
 import posthog from 'posthog-js';
+import { Button } from '@/components/ui/button';
 
 // Define props interface
 interface Step3ContractorsProps {
@@ -31,7 +32,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
     email,
     phone,
     generalOptIn,
-    serviceSpecifications,
+    serviceSpecification,
     promo,
     consentedContractors,
     setConsentedContractors,
@@ -45,7 +46,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
   } = appContext;
 
   const [error, setError] = useState<string | null>(null);
-  const [contactDirectly, setContactDirectly] = useState<boolean>(false);
+  const [contactDirectly, setContactDirectly] = useState<string | null>(null);
   const [matchloading, setMatchLoading] = useState<boolean>(true); // Initial Loading state
   const [loading, setLoading] = useState<boolean>(false); // Loading state
   const stepName = 'appointment_step3_contractors';
@@ -80,7 +81,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
     onNotify();
   };
   
-    
+  // Capture the start event for this step
   useEffect(() => {
       // Capture the start event for this step
       posthog.capture(stepName + '_start', {
@@ -91,50 +92,65 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
     }, [stepName]);
 
   useEffect(() => {
-    // Fetch contractors from Supabase
+      // Fetch contractors from Supabase
     const fetchContractors = async () => {
       try {
-        const { data, error } = await supabase
-          .from('Contractors')
-          .select('*')
-          .filter('services', 'cs', `["${selectedService}"]`)
-          .filter('statesServed', 'cs', `["${state}"]`);
-  
-        if (error) {
-          console.error('Error fetching contractors:', error);
-          setError('Error fetching contractors');
-          return;
-        }
-  
-        const filteredContractors = data.map((contractor: any) => ({ ...contractor, optIn: false }));
-        setMatchingContractors(filteredContractors);
-  
-        // Capture the result in PostHog
-        if (filteredContractors.length === 0) {
-          posthog.capture('no_contractors_found', {
-            form_id: appContext.formId,
-            zip: appContext.zip,
-            service_id: selectedService,
-            step: stepName,
-          });
-        } else {
-          posthog.capture('contractors_found', {
-            form_id: appContext.formId,
-            zip: appContext.zip,
-            service_id: selectedService,
-            step: stepName,
-          });
-        }
-      } catch (err) {
-        console.error('Unexpected error fetching contractors:', err);
-        setError('Unexpected error fetching contractors');
-      } finally {
-        setMatchLoading(false);
+      console.log('Fetching contractors...');
+      const { data, error } = await supabase
+        .from('Contractors')
+        .select('*')
+        .filter('services', 'cs', `["${selectedService}"]`)
+        .filter('statesServed', 'cs', `["${state}"]`);
+
+      if (error) {
+        console.error('Error fetching contractors:', error);
+        setError('Error fetching contractors');
+        return;
       }
-    };
+
+      const filteredContractors = data.map((contractor: any) => ({ ...contractor, optIn: false }));
+      setMatchingContractors(filteredContractors);
+      console.log('Filtered Contractors:', filteredContractors);
+
+      // Capture the result in PostHog
+      if (filteredContractors.length === 0) {
+        posthog.capture('no_contractors_found', {
+          form_id: appContext.formId,
+          zip: appContext.zip,
+          service_id: selectedService,
+          step: stepName,
+        });
+      } else {
+        posthog.capture('contractors_found', {
+          form_id: appContext.formId,
+          zip: appContext.zip,
+          service_id: selectedService,
+          step: stepName,
+        });
+      }
+    } catch (err) {
+      console.error('Unexpected error fetching contractors:', err);
+      setError('Unexpected error fetching contractors');
+    } finally {
+      setMatchLoading(false);
+    } 
+  };
+      appContext.selectedService = localStorage.getItem('selectedService');
+      appContext.state = localStorage.getItem('state');
+      appContext.matchingContractors = JSON.parse(localStorage.getItem('matchingContractors') || '[]');
+      appContext.consentedContractors = [];
   
-    fetchContractors();
-  }, [selectedService, state, setMatchingContractors]);
+      if (appContext.matchingContractors.length > 0) { 
+        setMatchLoading(false);
+        console.log('Contractors loaded:', appContext.matchingContractors);
+        return;
+      } else {
+        fetchContractors();
+      }
+    
+  }, []);
+
+  
 
   const handleContractorOptInChange = (contractorId: number, contractorName: string, checked: boolean) => {
     const updatedContractors = matchingContractors.map((contractor) =>
@@ -189,19 +205,18 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
   };
   
 
-  const handleContactDirectlyChange = (checked: boolean) => {
-    setContactDirectly(checked);
-    if (!checked) {
-      setContactPreferences([]);
-      setConsentedContractors([]);
-      setMatchingContractors((prev) =>
-        prev.map((contractor) => ({ ...contractor, optIn: false }))
-      );
-    } 
+  const handleContactDirectlyChange = (contact: string) => {
+    setContactDirectly(contact);
+
+    setContactPreferences([]);
+    setConsentedContractors([]);
+    setMatchingContractors((prev) =>
+      prev.map((contractor) => ({ ...contractor, optIn: false }))
+    );
 
     // Capture the event with PostHog
     posthog.capture('contractor_contact_toggled', {
-      state: checked ? 'opted_in' : 'opted_out',
+      state: contactDirectly == 'Yes' ? 'opted_in' : 'opted_out',
       form_id: formId,
       service_id: appContext.selectedService,
       zip: appContext.zip,
@@ -223,7 +238,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
         zip,
         state,
         service: serviceName,
-        serviceSpecifications,
+        serviceSpecification,
         contractorPreferences,
         promo,
       },
@@ -235,11 +250,11 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
       appointment: appContext.scheduledAppointments,
       consent: {
         sms: {
-          description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Project Quotes to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
+          description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Home Project Partners to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
           value: generalOptIn,
         },
         call: {
-          description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Project Quotes to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
+          description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Home Project Partners to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
           value: generalOptIn,
         },
         email: {
@@ -451,12 +466,12 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
 
               <div className="mt-10 mb-10 text-center">
                 <p className="text-base text-gray-600  dark:text-neutral-400">
-                  You will receive an update from us regarding your scheduled <strong>FREE  {numberOfQuotes > 1 ? 'consultations' : 'consultation'}</strong>.
+                  We will assign your <strong>FREE {numberOfQuotes > 1 ? 'consultations' : 'consultation'}</strong> to {numberOfQuotes > 1 ? 'contractors' : 'a contractor'} from the list above. Expect updates from us soon!
                 </p>
               </div>
 
               <div className="relative flex flex-col justify-center items-center space-y-4">
-                <div className="w-full max-w-[45rem] text-left mt-4">
+                {/* <div className="w-full max-w-[45rem] text-left mt-4">
                   <div className="flex items-start">
                     <input
                       id="contactDirectly"
@@ -470,10 +485,27 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
                       Optional: By checking this box, I authorize the assigned contractor(s) to contact me directly.
                     </label>
                   </div>
+                </div> */}
+                <div className="w-full max-w-[45rem] text-left mt-4">
+                  <div className="flex items-start">
+                  <p className='text-gray-600'>Would you like your assigned {numberOfQuotes > 1 ? 'contractors' : 'contractor'} to contact you directly?</p>
+                  </div>
+                  <div className='mt-4'>
+                    <Button onClick={() => handleContactDirectlyChange('Yes')} className={`py-3 px-4 w-20 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-100 mr-4 ${
+                  contactDirectly === 'Yes' ? 'bg-orange-200 text-xorange border-xorange hover:bg-orange-200' : 'bg-white text-gray-800 '
+                }`}>
+                      Yes
+                    </Button>
+                    <Button onClick={() => handleContactDirectlyChange('No')} className={`py-3 px-4 w-20 text-sm font-medium rounded-lg border border-gray-300 hover:bg-gray-100 ${
+                  contactDirectly === 'No' ? 'bg-orange-200 text-xorange border-xorange hover:bg-orange-200' : 'bg-white text-gray-800'
+                }`}>
+                      No
+                    </Button>
+                  </div> 
                 </div>
 
                 <div className="w-full max-w-[45rem]">
-                  {contactDirectly && (
+                  {contactDirectly == 'Yes' && (
                     <div className="mt-1 text-left">
                       <p className="text-base text-gray-600 dark:text-neutral-400">
                         Select companies below to allow them to contact you regarding your {numberOfQuotes > 1 ? 'consultations' : 'consultation'}. Please note, the selected companies will contact you <strong>only if they are assigned</strong> to your consultation.
@@ -517,7 +549,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
 
                       {consentedContractors.length > 0 && (
                         <div className="mt-6 text-left">
-                          <p className="text-base text-gray-800 dark:text-neutral-400">I consent to be contacted through:</p>
+                          <p className="text-base text-gray-600 dark:text-neutral-400">I consent to be contacted through:</p>
                           <div className="mt-4 space-y-2">
                             {['phone', 'sms', 'email'].map((method) => (
                               <div key={method} className="flex items-left justify-left">
@@ -544,17 +576,27 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
                 </div>
               </div>
               <div className="mt-20 flex justify-center">
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  className="w-full max-w-xs px-0 py-5 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-white hover:bg-xorangeDark shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-8px]"
-                  >
-                  {loading ? (
-                    <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
-                  ) : (
-                    'Confirm Consultation(s)'
-                  )}
-                </button>
+              <button
+                type="button"
+                onClick={handleSubmit}
+                className={`w-full max-w-xs px-0 py-5 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent text-white shadow-lg shadow-[rgba(254,139,16,0.5)] transform transition-transform translate-y-[-8px] ${
+                  (contactDirectly === null || 
+                  (contactDirectly === 'Yes' && (consentedContractors.length === 0 || contactPreferences.length === 0)))
+                  ? 'bg-gray-300 cursor-not-allowed' // Disabled styles
+                  : 'bg-xorange hover:bg-xorangeDark' // Enabled styles
+                }`}
+                disabled={
+                  contactDirectly === null || 
+                  (contactDirectly === 'Yes' && (consentedContractors.length === 0 || contactPreferences.length === 0))
+                }
+              >
+                {loading ? (
+                  <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+                ) : (
+                  'Confirm Consultation(s)'
+                )}
+              </button>
+
               </div>
             </>
           )}

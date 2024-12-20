@@ -41,7 +41,7 @@ const ConfirmDetailsForm = () => {
     email,
     phone,
     generalOptIn,
-    serviceSpecifications,
+    serviceSpecification,
     promo,
     consentedContractors,
     numberOfQuotes,
@@ -59,7 +59,7 @@ const ConfirmDetailsForm = () => {
     setEmail,
     setPhone,
     setGeneralOptIn,
-    setServiceSpecifications,
+    setServiceSpecification,
     setPromo,
     setConsentedContractors,
     setNumberOfQuotes,
@@ -89,7 +89,7 @@ const ConfirmDetailsForm = () => {
     loadFromLocalStorage('state', setState, '');
 
     loadFromLocalStorage('selectedService', setSelectedService, '');
-    loadFromLocalStorage('serviceSpecifications', setServiceSpecifications, []);
+    loadFromLocalStorage('serviceSpecification', setServiceSpecification, []);
     loadFromLocalStorage('contractorPreferences', setContractorPreferences, []);
     loadFromLocalStorage('promo', setPromo, false);
     loadFromLocalStorage('numberOfQuotes', setNumberOfQuotes, 0);
@@ -116,7 +116,7 @@ const ConfirmDetailsForm = () => {
     localStorage.setItem('state', JSON.stringify(state));
 
     localStorage.setItem('selectedService', JSON.stringify(selectedService));
-    localStorage.setItem('serviceSpecifications', JSON.stringify(serviceSpecifications));
+    localStorage.setItem('serviceSpecification', JSON.stringify(serviceSpecification));
     localStorage.setItem('contractorPreferences', JSON.stringify(contractorPreferences));
     localStorage.setItem('promo', JSON.stringify(promo));
     localStorage.setItem('numberOfQuotes', JSON.stringify(numberOfQuotes));
@@ -137,7 +137,7 @@ const ConfirmDetailsForm = () => {
     zip,
     state,
     selectedService,
-    serviceSpecifications,
+    serviceSpecification,
     contractorPreferences,
     promo,
     numberOfQuotes,

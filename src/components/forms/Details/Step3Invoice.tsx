@@ -24,7 +24,7 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext, onReset }) => {
     zip,
     state,
     selectedService,
-    serviceSpecifications,
+    serviceSpecification,
     promo,
     numberOfQuotes,
     formId,
@@ -236,12 +236,10 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext, onReset }) => {
                 <td className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">Project Manager</td>
                 <td className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm text-green-600">Included</td>
               </tr>
-              {serviceSpecifications.map((spec, index) => (
-                <tr key={index}>
-                  <td className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">{spec}</td>
-                  <td className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm text-red-600">Pending</td>
-                </tr>
-              ))}
+              <tr>
+                <td className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">{serviceSpecification}</td>
+                <td className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm text-red-600">Pending</td>
+              </tr>
               <tr>
                 <td className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-900">Professional Contractors</td>
                 <td className="px-0 custom-350:px-2 custom-400:px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm text-green-600">Included</td>

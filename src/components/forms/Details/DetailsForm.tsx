@@ -7,16 +7,16 @@ import useFormPersistence from '../../../hooks/useFormPersistence';
 interface DetailsFormProps {
   onNext: () => void;
   onReset: () => void;
+  onBack: () => void;
 }
 
-const DetailsForm: React.FC<DetailsFormProps> = ({ onNext, onReset }) => {
+const DetailsForm: React.FC<DetailsFormProps> = ({ onNext, onReset, onBack }) => {
   const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence('detailsFormStep', 1);
 
   const handleNextStep = () => {
     if (currentStep < 3) {
       setCurrentStep(currentStep + 1);
     } else {
-      resetCurrentStep(); 
       onNext(); 
     }
   };
@@ -24,6 +24,8 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext, onReset }) => {
   const handleBackStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
+    } else {
+      onBack();
     }
   };
 
@@ -52,7 +54,7 @@ const DetailsForm: React.FC<DetailsFormProps> = ({ onNext, onReset }) => {
         </div>
       </div>
       <div>
-        {currentStep === 1 && <Step1Info onNext={handleNextStep} onReset={handleReset} />}
+        {currentStep === 1 && <Step1Info onNext={handleNextStep} onReset={handleReset} onBack={handleBackStep}/>}
         {currentStep === 2 && <Step2PromoOptIn onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} notifyServiceAvailablility = {notifyServiceAvailablility} />}
         {currentStep === 3 && <Step3Invoice onNext={handleNextStep} onReset={handleReset} />}
       </div>

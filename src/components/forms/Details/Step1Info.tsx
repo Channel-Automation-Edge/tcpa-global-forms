@@ -5,13 +5,15 @@ import { AppContext } from '../../../context/AppContext';
 import supabase from '../../../lib/supabaseClient';
 import ResetButton from '@/components/ui/resetButton';
 import posthog from 'posthog-js';
+import BackButton from '@/components/ui/backButton';
 
 interface Step1InfoProps {
   onNext: () => void;
   onReset: () => void;
+  onBack: () => void;
 }
 
-const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
+const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
@@ -43,6 +45,16 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
       step: stepName,
     });
     onReset();
+  };
+
+  const handleBack = () => {
+    posthog.capture('form_back', {
+      form_id: formId,
+      zip: appContext.zip,
+      service_id: appContext.selectedService,
+      step: stepName,
+    });
+    onBack();
   };
 
   useEffect(() => {
@@ -223,7 +235,8 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
 
   return (
     <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
-      <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-end p-4">
+      <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-between p-4">
+        <BackButton onClick={handleBack} />
         <ResetButton onClick={handleReset} />
       </div>
       

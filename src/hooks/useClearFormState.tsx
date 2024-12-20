@@ -16,7 +16,7 @@ const useClearFormState = () => {
     setZip,
     setState,
     setSelectedService,
-    setServiceSpecifications,
+    setServiceSpecification,
     setContractorPreferences,
     setPromo,
     setNumberOfQuotes,
@@ -37,7 +37,7 @@ const useClearFormState = () => {
     setZip('');
     setState('');
     setSelectedService(''); // Set to an empty string to reset the selected service
-    setServiceSpecifications([]);
+    setServiceSpecification('');
     setContractorPreferences([]);
     setPromo('');
     setNumberOfQuotes(0);
@@ -59,7 +59,7 @@ const useClearFormState = () => {
     localStorage.removeItem('email');
     localStorage.removeItem('phone');
     localStorage.removeItem('generalOptIn');
-    localStorage.removeItem('serviceSpecifications');
+    localStorage.removeItem('serviceSpecification');
     localStorage.removeItem('promo');
     localStorage.removeItem('consentedContractors');
     localStorage.removeItem('numberOfQuotes');

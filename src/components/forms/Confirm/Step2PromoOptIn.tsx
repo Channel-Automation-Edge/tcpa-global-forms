@@ -19,7 +19,7 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onReset, noti
     return null;
   }
 
-  const { promo, setPromo, newsletterOptIn, setNewsletterOptIn, generalOptIn, setGeneralOptIn, phone, firstname, lastname, email, zip, state, selectedService, serviceSpecifications, contractorPreferences, termsAndPrivacyOptIn, userNs, teamId, formId } = appContext;
+  const { promo, setPromo, newsletterOptIn, setNewsletterOptIn, generalOptIn, setGeneralOptIn, phone, firstname, lastname, email, zip, state, selectedService, serviceSpecification, contractorPreferences, termsAndPrivacyOptIn, userNs, teamId, formId } = appContext;
   const [selectedPromo, setSelectedPromo] = useState<string>(promo);
   const [isOptInRequired, setIsOptInRequired] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false); // State to control spinner
@@ -144,7 +144,7 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onReset, noti
           zip,
           state,
           service: serviceName, // Use the fetched service name
-          serviceSpecifications,
+          serviceSpecification,
           contractorPreferences,
           promo: selectedPromo,
         },
@@ -155,11 +155,11 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onReset, noti
         team_id: teamId,
         consent: {
           sms: {
-            description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Project Quotes to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
+            description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Home Project Partners to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
             value: generalOptIn,
           },
           call: {
-            description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Project Quotes to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
+            description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Home Project Partners to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
             value: generalOptIn,
           },
           email: {
@@ -363,17 +363,17 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onReset, noti
                   className="h-6 w-6 mt text-xorange border-gray-300 rounded focus:ring-xorange"
                 />
                 <label htmlFor="newsletterOptIn" className="ml-4 block text-base text-gray-900 dark:text-gray-300">
-                  I would like to receive marketing emails from Project Quotes. I understand that I can unsubscribe at any time.
+                  I would like to receive marketing emails from Home Project Partners. I understand that I can unsubscribe at any time.
                 </label>
               </div>
               {newsletterOptIn && (
                 <div className="mt-2 text-sm text-gray-600 dark:text-neutral-400 ml-10">
-                  By agreeing, I consent to receive marketing emails from Project Quotes. I can unsubscribe at any time by clicking the "unsubscribe" link at the bottom of our emails or by contacting us at projectquotes@email.com. We will process your information in accordance with our Privacy Policy.
+                  By agreeing, I consent to receive marketing emails from Home Project Partners. I can unsubscribe at any time by clicking the "unsubscribe" link at the bottom of our emails or by contacting us at projectquotes@email.com. We will process your information in accordance with our Privacy Policy.
                 </div>
               )}
               {isOptInRequired && !newsletterOptIn && (
                 <div className="text-sm text-red-500 mt-2">
-                  Please opt-in to receive the selected promo.
+                  To claim the special offer, you must opt-in to email.
                 </div>
               )}
               <div className="flex items-start mt-4">
@@ -392,9 +392,9 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onReset, noti
               </div>
               {generalOptIn && (
                 <div className="mt-2 text-sm text-gray-600 dark:text-neutral-400 ml-10">
-                  By agreeing, I am providing my ESIGN signature and express written consent for Project Quotes to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, AI generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and I can reach out to them directly at (888) 508-3081.
+                  By agreeing, I am providing my ESIGN signature and express written consent for Home Project Partners to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, AI generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and I can reach out to them directly at (888) 508-3081.
                   <br />
-                  My phone number where Project Quotes may contact me is: {phone}
+                  My phone number where Home Project Partners may contact me is: {phone}
                 </div>
               )}
             </div>

@@ -18,7 +18,6 @@ const ProjectForm: React.FC<ProjectFormProps> = ({ onNext, onReset, onNotify }) 
     if (currentStep < 4) {
       setCurrentStep(currentStep + 1);
     } else {
-      resetCurrentStep(); 
       onNext(); // Notify ParentForm to move to the next step
       
     }

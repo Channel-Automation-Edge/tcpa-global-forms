@@ -7,8 +7,8 @@ interface BackButtonProps {
 
 const BackButton: React.FC<BackButtonProps> = ({ onClick }) => {
   return (
-    <button onClick={onClick} className="flex items-center text-[#6B7280] hover:text-xorange transition-colors duration-200">
-      <svg
+    <button onClick={onClick} className="flex items-center text-gray-600 hover:text-xorange transition-colors duration-200 lg:ml-20 ">
+      {/* <svg
         width="512"
         height="512"
         viewBox="0 0 512 512"
@@ -24,7 +24,13 @@ const BackButton: React.FC<BackButtonProps> = ({ onClick }) => {
             <rect width="512" height="512" fill="white"/>
             </clipPath>
         </defs>
-      </svg>
+      </svg> */}
+      {/* <svg className="w-4 md:w-6 h-4 md:h-6" height="512" viewBox="0 0 24 24" width="512" xmlns="http://www.w3.org/2000/svg" id="fi_3416141"><g id="Layer_2" data-name="Layer 2"><path d="m21 10h-13.172l3.586-3.586a2 2 0 0 0 -2.828-2.828l-7 7a2 2 0 0 0 0 2.828l7 7a2 2 0 1 0 2.828-2.828l-3.586-3.586h13.172a2 2 0 0 0 0-4z" fill="currentColor"></path></g></svg> */}
+
+      <svg className="w-4 md:w-6 h-4 md:h-6" id="fi_5343109" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg" data-name="Layer 1"><path d="m390.627 54.627-201.372 201.373 201.372 201.373a32 32 0 1 1 -45.254 45.254l-224-224a32 32 0 0 1 0-45.254l224-224a32 32 0 0 1 45.254 45.254z" fill="currentColor"></path></svg>
+
+      
+      
     </button>
   );
 };

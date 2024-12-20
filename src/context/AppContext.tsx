@@ -31,7 +31,7 @@ interface AppContextType {
   phone: string | null;
   state: string | null;
   selectedService: string | null;
-  serviceSpecifications: string[];
+  serviceSpecification: string | null;
   contractorPreferences: string[];
   numberOfQuotes: number;
   promo: string;
@@ -55,7 +55,7 @@ interface AppContextType {
   setPhone: Dispatch<SetStateAction<string | null>>;
   setState: Dispatch<SetStateAction<string | null>>;
   setSelectedService: Dispatch<SetStateAction<string | null>>;
-  setServiceSpecifications: Dispatch<SetStateAction<string[]>>;
+  setServiceSpecification: Dispatch<SetStateAction<string | null>>;
   setContractorPreferences: Dispatch<SetStateAction<string[]>>;
   setNumberOfQuotes: Dispatch<SetStateAction<number>>;
   setPromo: Dispatch<SetStateAction<string>>;
@@ -92,7 +92,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
   const [phone, setPhone] = useState<string | null>(null);
   const [state, setState] = useState<string | null>(null);
   const [selectedService, setSelectedService] = useState<string | null>(null);
-  const [serviceSpecifications, setServiceSpecifications] = useState<string[]>([]);
+  const [serviceSpecification, setServiceSpecification] = useState<string | null>(null);
   const [contractorPreferences, setContractorPreferences] = useState<string[]>([]);
   const [numberOfQuotes, setNumberOfQuotes] = useState<number>(0);
   const [promo, setPromo] = useState<string>('');
@@ -127,7 +127,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         phone,
         state,
         selectedService,
-        serviceSpecifications,
+        serviceSpecification,
         contractorPreferences,
         numberOfQuotes,
         promo,
@@ -151,7 +151,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         setPhone,
         setState,
         setSelectedService,
-        setServiceSpecifications,
+        setServiceSpecification,
         setContractorPreferences,
         setNumberOfQuotes,
         setPromo,
