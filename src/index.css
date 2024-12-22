@@ -64,3 +64,23 @@
     @apply bg-background text-foreground;
   }
 }
+
+.list-description {
+  @apply text-base font-normal text-gray-800 mb-4;
+}
+
+.list-label {
+  @apply text-xl font-bold text-gray-800 mt-4;
+}
+
+.paragraph {
+  @apply mt-2 text-base text-gray-800;
+}
+
+.heading-secondary {
+  @apply text-2xl md:text-3xl font-normal text-xorange mt-8;
+}
+
+.heading-primary {
+  @apply text-3xl md:text-4xl font-bold text-gray-800 dark:text-white;
+}

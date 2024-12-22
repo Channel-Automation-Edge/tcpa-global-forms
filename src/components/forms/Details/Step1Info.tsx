@@ -6,6 +6,7 @@ import supabase from '../../../lib/supabaseClient';
 import ResetButton from '@/components/ui/resetButton';
 import posthog from 'posthog-js';
 import BackButton from '@/components/ui/backButton';
+import PhoneInput from 'react-phone-number-input/input';
 
 interface Step1InfoProps {
   onNext: () => void;
@@ -26,16 +27,14 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
   const [stateValue, setStateValue] = useState<string>(() => {
     const params = new URLSearchParams(window.location.search);
     let localState = localStorage.getItem('state') || '';
-  
-    // Remove quotation marks if they exist
-    localState = localState.replace(/^"|"$/g, ''); // Remove leading and trailing quotes
-  
+    localState = localState.replace(/^"|"$/g, '');
     const initialState = state || localState || params.get('state') || '';
-    console.log(`State initialized to: ${initialState}`);
+    console.log(`State initialized to: ${initialState}`); 
     return initialState;
   });
   const [zipError, setZipError] = useState<string | null>(null);
   const stepName = 'details_step1_confirmInfo';
+
 
   const handleReset = () => {
     posthog.capture('form_reset', {
@@ -57,6 +56,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
     onBack();
   };
 
+
   useEffect(() => {
     posthog.capture(stepName + '_start', {
       form_id: formId,
@@ -67,17 +67,23 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
+    const initialPhone = phone || params.get('phone');
     formik.setValues({
       firstname: firstname || params.get('firstname') || '',
       lastname: lastname || params.get('lastname') || '',
       zip: zip || params.get('zip') || '',
       state: state || params.get('state') || '',
       email: email || params.get('email') || '',
-      phone: phone || params.get('phone') || '',
+      phone: initialPhone ? `+1${initialPhone}` : '',
       termsAndPrivacyOptIn: termsAndPrivacyOptIn || false,
     });
     formik.setFieldTouched('termsAndPrivacyOptIn', true, true);
   }, [firstname, lastname, zip, state, email, phone, termsAndPrivacyOptIn]);
+  
+  
+  useEffect(() => {
+      setZipStatus('valid');
+    }, []);
 
   const validationSchema = Yup.object({
     firstname: Yup.string().required('First name is required'),
@@ -86,10 +92,11 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
     state: Yup.string().required('State is required'),
     email: Yup.string().email('Invalid email address').required('Email is required'),
     phone: Yup.string()
-      .matches(/^\d{10}$/, 'Phone number must be 10 digits')
-      .required('Phone number is required'),
+    .matches(/^\+1\d{10}$/, 'Phone number must be 10 digits')
+    .required('Phone number is required'),
     termsAndPrivacyOptIn: Yup.boolean().oneOf([true], 'You must opt-in to continue'),
   });
+
 
   const formik = useFormik({
     initialValues: {
@@ -104,11 +111,12 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
     validationSchema,
     onSubmit: async (values) => {
       console.log("Form submitted with values:", values);
+      const rawPhone = values.phone.startsWith('+1') ? values.phone.slice(2) : values.phone;
       setLoading(true);
       setZip(values.zip);
       setState(stateValue);
       setEmail(values.email);
-      setPhone(values.phone);
+      setPhone(rawPhone);
       setFirstname(values.firstname);
       setLastname(values.lastname);
       setTermsAndPrivacyOptIn(values.termsAndPrivacyOptIn);
@@ -130,7 +138,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
         if (data) {
           const { error: updateError } = await supabase
             .from('Forms')
-            .update({ updated_at: new Date().toISOString(), phone: values.phone })
+            .update({ updated_at: new Date().toISOString(), phone: rawPhone })
             .eq('id', formId);
   
           if (updateError) {
@@ -144,7 +152,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
         } else {
           const { error: insertError } = await supabase
             .from('Forms')
-            .insert({ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: values.phone });
+            .insert({ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: rawPhone });
 
           if (insertError) {
             console.error('Error inserting formId:', insertError);
@@ -205,6 +213,16 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
 
     setLoading(false);
   };
+  
+  useEffect(() => {
+      // Trigger validation on initial mount and when form values change
+      const validateFields = async () => {
+        await formik.validateForm();  // Trigger validation
+      };
+    
+      validateFields();
+    }, [formik.values]); // Run effect on form values change
+
 
   const sendErrorWebhook = async (message: string, error: any) => {
     try {
@@ -232,6 +250,8 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
       console.error('Error sending webhook:', webhookError);
     }
   };
+  
+  
 
   return (
     <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
@@ -260,13 +280,19 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
                   onChange={formik.handleChange}
                   value={formik.values.firstname}
                   onBlur={formik.handleBlur}
-                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange bg-white"
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
                 />
-                {formik.touched.firstname && (
+                {formik.errors.firstname ? (
                   <img
-                    src={formik.errors.firstname ? '/images/warning.svg' : '/images/tick.svg'}
-                    alt={formik.errors.firstname ? 'Invalid' : 'Valid'}
-                    className={formik.errors.firstname ? 'absolute right-3 top-10 w-6' : 'absolute right-6 top-11 w-4'}
+                    src="/images/warning.svg"
+                    alt="Invalid"
+                    className="absolute right-3 top-10 w-6"
+                  />
+                ) : (
+                  <img
+                    src="/images/tick.svg"
+                    alt="Valid"
+                    className="absolute right-6 top-11 w-4"
                   />
                 )}
                 {formik.touched.firstname && formik.errors.firstname && (
@@ -275,7 +301,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
               </div>
 
               <div className="relative">
-                <label htmlFor="lastname" className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">Last Name</label>
+                <label htmlFor="lastname" className="block mb-2 text-base text-gray-700 font-medium dark:text-white">Last Name</label>
                 <input
                   id="lastname"
                   name="lastname"
@@ -283,13 +309,19 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
                   onChange={formik.handleChange}
                   value={formik.values.lastname}
                   onBlur={formik.handleBlur}
-                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange bg-white"
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
                 />
-                {formik.touched.lastname && (
+                {formik.errors.lastname ? (
                   <img
-                    src={formik.errors.lastname ? '/images/warning.svg' : '/images/tick.svg'}
-                    alt={formik.errors.lastname ? 'Invalid' : 'Valid'}
-                    className={formik.errors.firstname ? 'absolute right-3 top-10 w-6' : 'absolute right-6 top-11 w-4'}
+                    src="/images/warning.svg"
+                    alt="Invalid"
+                    className="absolute right-3 top-10 w-6"
+                  />
+                ) : (
+                  <img
+                    src="/images/tick.svg"
+                    alt="Valid"
+                    className="absolute right-6 top-11 w-4"
                   />
                 )}
                 {formik.touched.lastname && formik.errors.lastname && (
@@ -328,7 +360,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
                   )}
                 </div>
 
-                <div>
+                <div className="relative">
                   <label htmlFor="state" className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">State</label>
                   <input
                     id="state"
@@ -338,6 +370,11 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
                     value={stateValue}
                     className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base bg-gray-100 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 focus:border-gray-200 focus:ring-transparent cursor-default"
                   />
+                  {stateValue ? (
+                    <img src="/images/tick.svg" alt="Valid" className="absolute right-6 top-11 w-4" />
+                  ) : (
+                    <img src="/images/warning.svg" alt="Invalid" className="absolute right-3 top-10 w-6" />
+                  )}
                 </div>
               </div>
 
@@ -350,13 +387,19 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
                   onChange={formik.handleChange}
                   value={formik.values.email}
                   onBlur={formik.handleBlur}
-                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange bg-white"
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
                 />
-                {formik.touched.email && (
+                {formik.errors.email ? (
                   <img
-                    src={formik.errors.email ? '/images/warning.svg' : '/images/tick.svg'}
-                    alt={formik.errors.email ? 'Invalid' : 'Valid'}
-                    className={formik.errors.firstname ? 'absolute right-3 top-10 w-6' : 'absolute right-6 top-11 w-4'}
+                    src="/images/warning.svg"
+                    alt="Invalid"
+                    className="absolute right-3 top-10 w-6"
+                  />
+                ) : (
+                  <img
+                    src="/images/tick.svg"
+                    alt="Valid"
+                    className="absolute right-6 top-11 w-4"
                   />
                 )}
                 {formik.touched.email && formik.errors.email && (
@@ -366,20 +409,32 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
 
               <div className="relative">
                 <label htmlFor="phone" className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">Phone</label>
-                <input
-                  id="phone"
-                  name="phone"
-                  type="text"
-                  onChange={formik.handleChange}
-                  value={formik.values.phone}
-                  onBlur={formik.handleBlur}
-                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange bg-white"
-                />
-                {formik.touched.phone && (
+                <div className='flex items-start'>
+                  <input className="py-3 px-4 block w-12 bg-gray-100 border-gray-200 border-r-transparent rounded-l-lg text-base focus:border-gray-200 focus:border-r-transparent focus:ring-transparent cursor-default" readOnly placeholder='+1'>
+                  </input>
+                  <PhoneInput
+                    country="US"
+                    id="phone"
+                    name="phone"
+                    maxLength={14}
+                    value={formik.values.phone}
+                    onChange={value => formik.setFieldValue('phone', value || '')}
+                    onBlur={formik.handleBlur}
+                    className="py-3 px-4 block w-full border-gray-200 rounded-r-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
+                  />
+                </div>
+                
+                {formik.errors.phone ? (
                   <img
-                    src={formik.errors.phone ? '/images/warning.svg' : '/images/tick.svg'}
-                    alt={formik.errors.phone ? 'Invalid' : 'Valid'}
-                    className={formik.errors.firstname ? 'absolute right-3 top-10 w-6' : 'absolute right-6 top-11 w-4'}
+                    src="/images/warning.svg"
+                    alt="Invalid"
+                    className="absolute right-3 top-10 w-6"
+                  />
+                ) : (
+                  <img
+                    src="/images/tick.svg"
+                    alt="Valid"
+                    className="absolute right-6 top-11 w-4"
                   />
                 )}
                 {formik.touched.phone && formik.errors.phone && (
@@ -402,7 +457,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
                     Terms & Conditions
                   </a> 
                   {" "}and 
-                  <a href="https://projectquote.com/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-xorange underline ml-1">
+                  <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-xorange underline ml-1">
                     Privacy Policy
                   </a>.
                 </label>

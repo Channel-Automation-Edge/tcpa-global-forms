@@ -6,6 +6,8 @@ import "preline/preline";
 import { IStaticMethods } from "preline/preline";
 import { useEffect } from 'react';
 import ConfirmDetails from './pages/ConfirmDetails';
+import CookiePolicy from './pages/CookiePolicy';
+import PrivacyPolicy from './pages/PrivacyPolicy';
 declare global {
   interface Window {
     HSStaticMethods: IStaticMethods;
@@ -26,6 +28,8 @@ function App() {
         <Route path='/request-quotes' element={<RequestQuote />} />
         <Route path='/thank-you' element={<ThankYou />} />
         <Route path='/confirm-details' element={<ConfirmDetails />} />
+        <Route path='/cookie-policy' element={<CookiePolicy />} />
+        <Route path='/privacy-policy' element={<PrivacyPolicy />} />
         <Route path="*" element={<Home />} />
       </Routes>
     </>

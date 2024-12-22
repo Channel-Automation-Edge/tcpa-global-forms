@@ -128,9 +128,23 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onReset, noti
     });
   };
 
+  const formatPhoneNumber = (phone:string) => {
+    if (!phone || phone.length !== 10) {
+      return phone; // Return the original value if it's not a 10-digit number
+    }
+  
+    const areaCode = phone.slice(0, 3);
+    const centralOfficeCode = phone.slice(3, 6);
+    const lineNumber = phone.slice(6);
+  
+    return `+1 (${areaCode}) ${centralOfficeCode}-${lineNumber}`;
+  };
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     console.log('submitting form id:' + formId);
+    const formattedPhone = appContext.phone ? formatPhoneNumber(appContext.phone) : '';
+
     if (generalOptIn && (!isOptInRequired || (isOptInRequired && newsletterOptIn))) {
       setLoading(true); // Show spinner
       setPromo(selectedPromo);
@@ -140,7 +154,7 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onReset, noti
           firstname,
           lastname,
           email,
-          phone,
+          phone: formattedPhone,
           zip,
           state,
           service: serviceName, // Use the fetched service name
@@ -217,7 +231,7 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onReset, noti
               smsAndCall_optIn: generalOptIn,
               email_optIn: newsletterOptIn,
               termsAndPrivacy_optIn: termsAndPrivacyOptIn,
-              phone: phone,
+              phone: formattedPhone,
               notify_service_availability: notifyServiceAvailablility,
             })        
             .eq('id', formId);
@@ -242,7 +256,7 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onReset, noti
               smsAndCall_optIn: generalOptIn,
               email_optIn: newsletterOptIn,
               termsAndPrivacy_optIn: termsAndPrivacyOptIn,
-              phone: phone,
+              phone: formattedPhone,
               notify_service_availability: notifyServiceAvailablility,
             }]);
           if (insertError) {

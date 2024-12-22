@@ -30,7 +30,6 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
     firstname,
     lastname,
     email,
-    phone,
     generalOptIn,
     serviceSpecification,
     promo,
@@ -339,7 +338,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
         // formId does not exist, insert a new row
         const { error: insertError } = await supabase
           .from('Forms')
-          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), appointment_completion: true, phone: phone }]);
+          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), appointment_completion: true, phone: formattedPhone }]);
 
         if (insertError) {
           console.error('Error inserting formId:', insertError);
