@@ -189,7 +189,7 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
             value: generalOptIn,
           },
           email: {
-            description: 'By checking this box, you consent to receive marketing emails from us. You can unsubscribe at any time by clicking the "unsubscribe" link at the bottom of our emails or by contacting us at [your email address]. We will process your information in accordance with our Privacy Policy',
+            description: 'By checking this box, you consent to receive marketing emails from us. You can unsubscribe at any time by clicking the "unsubscribe" link at the bottom of our emails or by contacting us at hello@homeprojectpartners.com. We will process your information in accordance with our Privacy Policy',
             value: newsletterOptIn,
           },
           termsAndPrivacy: {
@@ -391,7 +391,7 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
               </div>
               {newsletterOptIn && (
                 <div className="mt-2 text-sm text-gray-600 dark:text-neutral-400 ml-10">
-                  By agreeing, I consent to receive marketing emails from Home Project Partners. I can unsubscribe at any time by clicking the "unsubscribe" link at the bottom of our emails or by contacting us at projectquotes@email.com. We will process your information in accordance with our Privacy Policy.
+                  By agreeing, I consent to receive marketing emails from Home Project Partners. I can unsubscribe at any time by clicking the "unsubscribe" link at the bottom of our emails or by contacting us at hello@homeprojectpartners.com. We will process your information in accordance with our Privacy Policy.
                 </div>
               )}
               {isOptInRequired && !newsletterOptIn && (
