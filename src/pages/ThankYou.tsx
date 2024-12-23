@@ -157,7 +157,8 @@ const ThankYou: React.FC = () => {
       />
     </div>
       
-      {/* Contractors Section */}
+       {/* Contractors Section */}
+    {contractors.length > 0 && (
       <div className="px-4 pt-10 pb-20">
         <BlurFade delay={3 * 0.15} inView yOffset={15} className="text-center mb-6">
           <h2 className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200">
@@ -196,8 +197,8 @@ const ThankYou: React.FC = () => {
           ))}
         </div>
       </div>
-
-      {/* End of Contractors Section */}
+    )}
+    {/* End of Contractors Section */}
       
       <Footer />
     </div>
