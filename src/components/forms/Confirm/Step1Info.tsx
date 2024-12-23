@@ -56,13 +56,14 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const initialPhone = phone || params.get('phone');
+    const numericPhone = initialPhone ? initialPhone.replace(/\D/g, '') : '';
     formik.setValues({
       firstname: firstname || params.get('firstname') || '',
       lastname: lastname || params.get('lastname') || '',
       zip: zip || params.get('zip') || '',
       state: state || params.get('state') || '',
       email: email || params.get('email') || '',
-      phone: initialPhone ? `+1${initialPhone}` : '',
+      phone: initialPhone ? `+1${numericPhone}` : '',
       termsAndPrivacyOptIn: termsAndPrivacyOptIn || false,
     });
     formik.setFieldTouched('termsAndPrivacyOptIn', true, true);
