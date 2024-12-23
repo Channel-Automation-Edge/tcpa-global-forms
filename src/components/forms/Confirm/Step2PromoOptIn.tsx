@@ -376,7 +376,7 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onReset, noti
               </div>
               {newsletterOptIn && (
                 <div className="mt-2 text-sm text-gray-600 dark:text-neutral-400 ml-10">
-                  By agreeing, I consent to receive marketing emails from Home Project Partners. I can unsubscribe at any time by clicking the "unsubscribe" link at the bottom of our emails or by contacting us at projectquotes@email.com. We will process your information in accordance with our Privacy Policy.
+                  By agreeing, I consent to receive marketing emails from Home Project Partners. I can unsubscribe at any time by clicking the "unsubscribe" link at the bottom of our emails or by contacting us at hello@projectpartners.com. We will process your information in accordance with our Privacy Policy.
                 </div>
               )}
               {isOptInRequired && !newsletterOptIn && (
