@@ -181,6 +181,9 @@ function App() {
   });  
 }, []);
 
+  const showCookieConsent = () => {
+  CookieConsent.show();
+};
 
   return (
     <>
@@ -193,6 +196,24 @@ function App() {
         <Route path='/privacy-policy' element={<PrivacyPolicy />} />
         <Route path="*" element={<Home />} />
       </Routes>
+      <button
+        onClick={showCookieConsent}
+        style={{
+          position: 'fixed',
+          bottom: '20px',
+          right: '20px',
+          padding: '10px 20px',
+          backgroundColor: '#030303',
+          color: '#fff',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+          zIndex: 1000, // Ensure the button is above other elements
+          display: 'block !important',
+        }}
+      >
+        Cookie Preferences
+      </button>
     </>
   );
 }
