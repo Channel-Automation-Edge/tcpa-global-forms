@@ -117,6 +117,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
           service_id: selectedService,
           step: stepName,
         });
+        onCompleted();
       } else {
         posthog.capture('contractors_found', {
           form_id: appContext.formId,
