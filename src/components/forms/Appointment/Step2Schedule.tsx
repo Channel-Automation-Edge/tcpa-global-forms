@@ -261,10 +261,11 @@ useEffect(() => {
                   
                   disabled: [
                     { before: new Date() },
-                    { from: new Date(), to: new Date(new Date().setDate(new Date().getDate() + 2)) },
+                    // Disable today and next 3 days (total of 4 days from today)
+                    { from: new Date(), to: new Date(new Date().setDate(new Date().getDate() + 3)) },
                     { after: new Date(new Date().setDate(new Date().getDate() + 20)) },
                     ...scheduledAppointments.map(appt => new Date(appt.date)).filter(apptDate => !date || apptDate.getTime() !== date.getTime()),
-                  ],
+                  ]
                 }}
                 className=""
               />
