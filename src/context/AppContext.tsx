@@ -22,6 +22,8 @@ interface Appointment {
 
 // Define the shape of your context data
 interface AppContextType {
+  cookiesAccepted: string[];
+  cookieConsentId: string;
   resetForm: boolean;
   formId: string | null;
   firstname: string | null;
@@ -57,6 +59,8 @@ interface AppContextType {
   setSelectedService: Dispatch<SetStateAction<string | null>>;
   setServiceSpecification: Dispatch<SetStateAction<string | null>>;
   setContractorPreferences: Dispatch<SetStateAction<string[]>>;
+  setCookiesAccepted: Dispatch<SetStateAction<string[]>>;
+  setCookieConsentId: Dispatch<SetStateAction<string>>;
   setNumberOfQuotes: Dispatch<SetStateAction<number>>;
   setPromo: Dispatch<SetStateAction<string>>;
   setMatchingContractors: Dispatch<SetStateAction<Contractor[]>>;
@@ -83,6 +87,8 @@ interface AppContextProviderProps {
 const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => {
   const location = useLocation();
   
+  const [cookiesAccepted, setCookiesAccepted] = useState<string[]>([]);
+  const [cookieConsentId, setCookieConsentId] = useState<string>('');
   const [resetForm, setResetForm] = useState<boolean>(false);
   const [formId, setFormId] = useState<string | null>(null);
   const [firstname, setFirstname] = useState<string | null>(null);
@@ -115,9 +121,24 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
     setTeamId(params.get('team_id'));
   }, [location.search]);
 
+  // initialize cookiesAccepted from local storage
+  useEffect(() => {
+    const storedCookies = localStorage.getItem('cookiesAccepted');
+    const storedCookieConsentId = localStorage.getItem('cookieConsentId');
+    if (storedCookies) {
+      setCookiesAccepted(JSON.parse(storedCookies));
+    }
+    if (storedCookieConsentId) {
+      setCookieConsentId(storedCookieConsentId);
+    }
+  }, []);
+  
+
   return (
     <AppContext.Provider
       value={{
+        cookiesAccepted,
+        cookieConsentId,
         resetForm,
         formId,
         firstname,
@@ -142,6 +163,8 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         contactPreferences,
         userNs,
         teamId,
+        setCookiesAccepted,
+        setCookieConsentId,
         setResetForm,
         setFormId,
         setFirstname,

@@ -80,7 +80,6 @@ useEffect(() => {
     setLoading(true);
     setContractorPreferences(selectedPreferences);
     localStorage.setItem('contractorPreferences', JSON.stringify(contractorPreferences));
-    console.log('Contractor Preferences:', selectedPreferences);
 
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -113,12 +112,11 @@ useEffect(() => {
           return;
         }
 
-        console.log(`FormId ${formId} updated.`);
       } else {
         // formId does not exist, insert a new row
         const { error: insertError } = await supabase
           .from('Forms')
-          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phoneFromUrl }]);
+          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phoneFromUrl, service: appContext.selectedService, state: appContext.state }]);
 
         if (insertError) {
           console.error('Error inserting formId:', insertError);
@@ -127,7 +125,6 @@ useEffect(() => {
           return;
         }
 
-        console.log(`FormId ${formId} inserted with phone: ${phoneFromUrl}`);
       }
     } catch (err) {
       console.error('Unexpected error:', err);
@@ -166,9 +163,7 @@ useEffect(() => {
 
       if (!response.ok) {
         console.error('Failed to send error webhook');
-      } else {
-        console.log('Error webhook sent successfully');
-      }
+      } 
     } catch (webhookError) {
       console.error('Error sending webhook:', webhookError);
     }

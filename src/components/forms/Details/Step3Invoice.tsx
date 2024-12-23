@@ -124,12 +124,11 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext, onReset }) => {
           return;
         }
 
-        console.log(`FormId ${formId} updated.`);
       } else {
         // formId does not exist, insert a new row
         const { error: insertError } = await supabase
           .from('Forms')
-          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phone }]);
+          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phone, service: appContext.selectedService, state: appContext.state }]);
 
         if (insertError) {
           console.error('Error inserting formId:', insertError);
@@ -138,7 +137,6 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext, onReset }) => {
           return;
         }
 
-        console.log(`FormId ${formId} inserted with phone: ${phone}`);
       }
     } catch (err) {
       console.error('Unexpected error:', err);
@@ -176,8 +174,6 @@ const Step3Invoice: React.FC<Step3InvoiceProps> = ({ onNext, onReset }) => {
 
       if (!response.ok) {
         console.error('Failed to send error webhook');
-      } else {
-        console.log('Error webhook sent successfully');
       }
     } catch (webhookError) {
       console.error('Error sending webhook:', webhookError);

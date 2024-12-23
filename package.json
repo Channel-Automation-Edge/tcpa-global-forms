@@ -33,6 +33,7 @@
     "react-time-picker": "^7.0.0",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
+    "vanilla-cookieconsent": "^3.0.1",
     "yup": "^1.4.0"
   },
   "devDependencies": {

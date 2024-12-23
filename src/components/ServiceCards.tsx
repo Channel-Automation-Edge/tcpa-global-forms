@@ -6,7 +6,6 @@ import useClearFormState from '../hooks/useClearFormState';
 import { useNavigate, useLocation } from 'react-router-dom';
 import BlurFade from './ui/blur-fade';
 import posthog from 'posthog-js';
-
 const ServiceCards: React.FC = () => {
   const [services, setServices] = useState<any[]>([]);
   const supabaseClient = supabase;
@@ -65,8 +64,8 @@ const ServiceCards: React.FC = () => {
     const { setSelectedService, setFormId } = appContext;
     const urlParams = new URLSearchParams(location.search);
     const phoneParam = urlParams.get('phone') || ''
+    const state = urlParams.get('state') || ''
     const formattedPhone = formatPhoneNumber(phoneParam);
-    console.log(formattedPhone);
 
     resetParentCurrentStep();
     resetProjectCurrentStep();
@@ -84,16 +83,12 @@ const ServiceCards: React.FC = () => {
   
       formId = `${phone}-${dateTime}-${randomString}`;
       localStorage.setItem('formID', formId);
-      console.log(`formId set: ${formId}`);
-    } else {
-      console.log(`formId already exists: ${formId}`);
-    }
+    } 
     setFormId(formId);
   
     // Set new service and update local storage
     setSelectedService(serviceId); // Use serviceId here
     localStorage.setItem('selectedService', JSON.stringify(serviceId));
-    console.log('Reset form and setting Initial Service:', serviceId);
     setProjectCurrentStep(2);
     navigateWithParams('/request-quotes'); 
     
@@ -125,7 +120,8 @@ const ServiceCards: React.FC = () => {
             smsAndCall_optIn: false,
             service: serviceId,
             phone: formattedPhone,
-            user_ns: userNs
+            user_ns: userNs,
+            state: state
           })
           .eq('id', formId);
 
@@ -134,19 +130,16 @@ const ServiceCards: React.FC = () => {
           return;
         }
 
-        console.log(`FormId ${formId} updated.`);
       } else {
         // formId does not exist, insert a new row
         const { error: insertError } = await supabaseClient
           .from('Forms')
-          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: formattedPhone, service: serviceId, user_ns: userNs }]);
+          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: formattedPhone, service: serviceId, user_ns: userNs, state: state, accepted_cookies: appContext.cookiesAccepted, cookie_consent_id: appContext.cookieConsentId, cookie_updated_at: new Date().toISOString() }]);
 
         if (insertError) {
           console.error('Error inserting formId:', insertError);
           return;
         }
-
-        console.log(`FormId ${formId} inserted with phone: ${formattedPhone}`);
       }
     } catch (err) {
       console.error('Unexpected error:', err);

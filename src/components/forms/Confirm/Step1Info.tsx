@@ -28,7 +28,6 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
     let localState = localStorage.getItem('state') || '';
     localState = localState.replace(/^"|"$/g, '');
     const initialState = state || localState || params.get('state') || '';
-    console.log(`State initialized to: ${initialState}`);
     return initialState;
   });
   const [zipError, setZipError] = useState<string | null>(null);
@@ -99,7 +98,6 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
     },
     validationSchema,
     onSubmit: async (values) => {
-      console.log("Form submitted with values:", values);
       const rawPhone = values.phone.startsWith('+1') ? values.phone.slice(2) : values.phone;
       setLoading(true);
       setZip(values.zip);
@@ -127,7 +125,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
         if (data) {
           const { error: updateError } = await supabase
             .from('Forms')
-            .update({ updated_at: new Date().toISOString(), phone: rawPhone })
+            .update({ updated_at: new Date().toISOString(), phone: rawPhone, state: stateValue })
             .eq('id', formId);
   
           if (updateError) {
@@ -137,11 +135,10 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
             return;
           }
   
-          console.log(`FormId ${formId} updated.`);
         } else {
           const { error: insertError } = await supabase
             .from('Forms')
-            .insert({ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: rawPhone });
+            .insert({ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: rawPhone, service: appContext.selectedService, state: stateValue });
 
           if (insertError) {
             console.error('Error inserting formId:', insertError);
@@ -150,7 +147,6 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
             return;
           }
 
-          console.log(`FormId ${formId} inserted with phone: ${phone}`);
         }
       } catch (err) {
         console.error('Unexpected error:', err);
@@ -175,7 +171,6 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
       setZipError('Invalid ZIP Code');
       setZipStatus('invalid');
       setStateValue('');
-      console.log('State cleared due to invalid ZIP');
       return;
     }
     setLoading(true);
@@ -193,10 +188,8 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
       setZipError('Invalid ZIP Code');
       setZipStatus('invalid');
       setStateValue('');
-      console.log('State cleared due to invalid ZIP');
     } else {
       setStateValue(zipData.stateCode);
-      console.log(`State set to: ${zipData.stateCode}`);
       setZipStatus('valid');
     }
 
@@ -232,8 +225,6 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
 
       if (!response.ok) {
         console.error('Failed to send error webhook');
-      } else {
-        console.log('Error webhook sent successfully');
       }
     } catch (webhookError) {
       console.error('Error sending webhook:', webhookError);
@@ -326,7 +317,6 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset }) => {
                     onChange={(e) => {
                       formik.handleChange(e);
                       setStateValue('');
-                      console.log('State cleared on ZIP change');
                       setZipStatus(null);
                       setZipError(null);
                     }}

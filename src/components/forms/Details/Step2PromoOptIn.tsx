@@ -212,7 +212,6 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
           throw new Error('Failed to send lead information');
         }
 
-        console.log('Lead information sent successfully');
       } catch (err) {
         console.error('Error sending lead information:', err);
       }
@@ -255,7 +254,6 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
             return;
           }
   
-          console.log(`FormId ${formId} updated.`);
         } else {
           // formId does not exist, insert a new row
           const { error: insertError } = await supabase
@@ -270,6 +268,7 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
               termsAndPrivacy_optIn: termsAndPrivacyOptIn,
               phone: formattedPhone,
               notify_service_availability: notifyServiceAvailablility,
+              service: appContext.selectedService, state: appContext.state,
             }]);
           if (insertError) {
             console.error('Error inserting formId:', insertError);
@@ -278,7 +277,6 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
             return;
           }
   
-          console.log(`FormId ${formId} inserted.`);
         }
       } catch (err) {
         console.error('Unexpected error:', err);
@@ -319,8 +317,6 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
 
       if (!response.ok) {
         console.error('Failed to send error webhook');
-      } else {
-        console.log('Error webhook sent successfully');
       }
     } catch (webhookError) {
       console.error('Error sending webhook:', webhookError);

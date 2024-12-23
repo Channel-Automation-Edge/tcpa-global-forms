@@ -58,7 +58,6 @@ const Step1Quotes: React.FC<Step1QuotesProps> = ({ onNext, onReset }) => {
     event.preventDefault();
     setLoading(true);
     setNumberOfQuotes(selectedQuote);
-    console.log('Number of Quotes:', selectedQuote);
 
     try {
       // Check if formId exists in the database
@@ -89,12 +88,11 @@ const Step1Quotes: React.FC<Step1QuotesProps> = ({ onNext, onReset }) => {
           return;
         }
 
-        console.log(`FormId ${formId} updated.`);
       } else {
         // formId does not exist, insert a new row
         const { error: insertError } = await supabase
           .from('Forms')
-          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phone }]);
+          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phone, service: appContext.selectedService, state: appContext.state }]);
 
           if (insertError) {
             console.error('Error inserting formId:', insertError);
@@ -103,7 +101,6 @@ const Step1Quotes: React.FC<Step1QuotesProps> = ({ onNext, onReset }) => {
             return;
           }
   
-          console.log(`FormId ${formId} inserted with phone: ${phone}`);
         }
     } catch (err) {
       console.error('Unexpected error:', err);
@@ -141,9 +138,7 @@ const Step1Quotes: React.FC<Step1QuotesProps> = ({ onNext, onReset }) => {
 
       if (!response.ok) {
         console.error('Failed to send error webhook');
-      } else {
-        console.log('Error webhook sent successfully');
-      }
+      } 
     } catch (webhookError) {
       console.error('Error sending webhook:', webhookError);
     }

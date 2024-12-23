@@ -69,7 +69,6 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
   const handleServiceSelect = async (serviceId: string) => { // Assuming serviceId is a string
     setLoading(true); // Show spinner
     setSelectedService(serviceId);
-    console.log(`Selected service updated to: ${serviceId}`);
     const urlParams = new URLSearchParams(window.location.search);
     const phoneFromUrl = urlParams.get('phone') || null;
     const formattedPhone = phoneFromUrl ? formatPhoneNumber(phoneFromUrl) : '';
@@ -104,12 +103,11 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
           return;
         }
 
-        console.log(`FormId ${formId} updated.`);
       } else {
         // formId does not exist, insert a new row
         const { error: insertError } = await supabase
           .from('Forms')
-          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: formattedPhone, service: serviceId, user_ns: userNs }]);
+          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: formattedPhone, service: serviceId, user_ns: userNs, state: appContext.state, accepted_cookies: appContext.cookiesAccepted, cookie_consent_id: appContext.cookieConsentId, cookie_updated_at: new Date().toISOString() }]);
 
         if (insertError) {
           console.error('Error inserting formId:', insertError);
@@ -118,7 +116,6 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
           return;
         }
 
-        console.log(`FormId ${formId} inserted with phone: ${formattedPhone}`);
       }
     } catch (err) {
       console.error('Unexpected error:', err);
@@ -163,8 +160,6 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
 
       if (!response.ok) {
         console.error('Failed to send error webhook');
-      } else {
-        console.log('Error webhook sent successfully');
       }
     } catch (webhookError) {
       console.error('Error sending webhook:', webhookError);

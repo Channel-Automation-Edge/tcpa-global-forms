@@ -43,8 +43,6 @@ const useResetDatabase = () => {
           console.error('Error clearing form fields:', updateError);
           return;
         }
-
-        console.log(`FormId ${formId} fields cleared.`);
       }
     } catch (err) {
       console.error('Unexpected error during reset:', err);

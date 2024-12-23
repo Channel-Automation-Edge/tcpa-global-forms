@@ -73,7 +73,6 @@ const Step3Specifications: React.FC<Step3SpecificationsProps> = ({ onNext, onBac
     setLoading(true); // Show spinner
     setServiceSpecification(spec);
     localStorage.setItem('serviceSpecification', JSON.stringify(spec));
-    console.log('Service Specifications:', spec);
 
     try {
       const urlParams = new URLSearchParams(window.location.search);
@@ -106,12 +105,11 @@ const Step3Specifications: React.FC<Step3SpecificationsProps> = ({ onNext, onBac
           return;
         }
 
-        console.log(`FormId ${formId} updated.`);
       } else {
         // formId does not exist, insert a new row
         const { error: insertError } = await supabase
           .from('Forms')
-          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phoneFromUrl }]);
+          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phoneFromUrl, service: appContext.selectedService, state: appContext.state }]);
 
         if (insertError) {
           console.error('Error inserting formId:', insertError);
@@ -120,7 +118,6 @@ const Step3Specifications: React.FC<Step3SpecificationsProps> = ({ onNext, onBac
           return;
         }
 
-        console.log(`FormId ${formId} inserted with phone: ${phoneFromUrl}`);
       }
     } catch (err) {
       console.error('Unexpected error:', err);
@@ -167,8 +164,6 @@ const Step3Specifications: React.FC<Step3SpecificationsProps> = ({ onNext, onBac
 
       if (!response.ok) {
         console.error('Failed to send error webhook');
-      } else {
-        console.log('Error webhook sent successfully');
       }
     } catch (webhookError) {
       console.error('Error sending webhook:', webhookError);

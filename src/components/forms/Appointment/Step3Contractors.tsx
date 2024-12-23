@@ -94,7 +94,6 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
       // Fetch contractors from Supabase
     const fetchContractors = async () => {
       try {
-      console.log('Fetching contractors...');
       const { data, error } = await supabase
         .from('Contractors')
         .select('*')
@@ -109,7 +108,6 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
 
       const filteredContractors = data.map((contractor: any) => ({ ...contractor, optIn: false }));
       setMatchingContractors(filteredContractors);
-      console.log('Filtered Contractors:', filteredContractors);
 
       // Capture the result in PostHog
       if (filteredContractors.length === 0) {
@@ -141,7 +139,6 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
   
       if (appContext.matchingContractors.length > 0) { 
         setMatchLoading(false);
-        console.log('Contractors loaded:', appContext.matchingContractors);
         return;
       } else {
         fetchContractors();
@@ -171,14 +168,12 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
       if (selectedContractor) {
         setConsentedContractors((prev) => {
           const updatedConsentedContractors = [...prev, selectedContractor];
-          console.log('Consented Contractors:', updatedConsentedContractors);
           return updatedConsentedContractors;
         });
       }
     } else {
       setConsentedContractors((prev) => {
         const updatedConsentedContractors = prev.filter((contractor) => contractor.id !== contractorId);
-        console.log('Consented Contractors:', updatedConsentedContractors);
         return updatedConsentedContractors;
       });
     }
@@ -199,9 +194,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
       step: 'your_step_name', // Replace with the relevant step or context
       user_id: 'your_user_id', // Replace with actual user/session ID if available
     });
-  
-    console.log('Contact Preferences:', newPreferences);
-  };
+    };
   
 
   const handleContactDirectlyChange = (contact: string) => {
@@ -283,9 +276,11 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
           description: "I have read and accept the Terms & Conditions and Privacy Policy",
           value: termsAndPrivacyOptIn,
         },
+        
       },
     };
     setLoading(true); // Show spinner
+
     try {
       const response = await fetch('https://hkdk.events/09d0txnpbpzmvq', {
         method: 'POST',
@@ -299,7 +294,6 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
         throw new Error('Failed to send appointments');
       }
 
-      console.log('Appointments sent successfully');
     } catch (err) {
       console.error('Error sending appointments:', err);
       setError((err as Error).message);
@@ -332,13 +326,11 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
           setLoading(false);
           return;
         }
-
-        console.log(`FormId ${formId} updated.`);
       } else {
         // formId does not exist, insert a new row
         const { error: insertError } = await supabase
           .from('Forms')
-          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), appointment_completion: true, phone: formattedPhone }]);
+          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), appointment_completion: true, phone: formattedPhone, service: appContext.selectedService, state: appContext.state }]);
 
         if (insertError) {
           console.error('Error inserting formId:', insertError);
@@ -346,8 +338,6 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
           setLoading(false);
           return;
         }
-
-        console.log(`FormId ${formId} inserted.`);
       }
     } catch (err) {
       console.error('Unexpected error:', err);
@@ -385,8 +375,6 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
 
       if (!response.ok) {
         console.error('Failed to send error webhook');
-      } else {
-        console.log('Error webhook sent successfully');
       }
     } catch (webhookError) {
       console.error('Error sending webhook:', webhookError);
@@ -551,7 +539,6 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
                               }));
                               setMatchingContractors(updatedContractors);
                               setConsentedContractors(!allSelected ? updatedContractors : []);
-                              console.log('Select All Contractors:', updatedContractors);
                             }}
                             className=" text-xorange text-sm hover:bg-xorange-dark"
                           >

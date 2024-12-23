@@ -126,13 +126,11 @@ const Hero = () => {
 
       formId = `${phone}-${dateTime}-${randomString}`;
       localStorage.setItem('formID', formId);
-      console.log(`formId set: ${formId}`);
       posthog.capture('cta clicked: New form created', {
         cta_label: buttonText,
         form_id: formId,
       });
     } else {
-      console.log(`formId already exists: ${formId}`);
       posthog.capture('cta clicked: Form retrieved', {
         cta_label: buttonText,
         form_id: formId,

@@ -82,12 +82,10 @@ useEffect(() => {
       const updatedAppointments = [...scheduledAppointments];
       updatedAppointments[currentAppointmentIndex] = newAppointment;
       setScheduledAppointments(updatedAppointments);
-      console.log('Scheduled Appointments:', updatedAppointments);
 
       if (currentAppointmentIndex < numberOfQuotes - 1) {
         setCurrentAppointmentIndex(currentAppointmentIndex + 1);
       } else {
-        console.log('Final Scheduled Appointments:', updatedAppointments);
         setLoading(true); // Show spinner
 
         try {
@@ -119,12 +117,11 @@ useEffect(() => {
               return;
             }
     
-            console.log(`FormId ${formId} updated.`);
           } else {
             // formId does not exist, insert a new row
             const { error: insertError } = await supabase
               .from('Forms')
-              .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phone }]);
+              .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: phone, service: appContext.selectedService, state: appContext.state }]);
 
               if (insertError) {
                 console.error('Error inserting formId:', insertError);
@@ -133,7 +130,6 @@ useEffect(() => {
                 return;
               }
       
-              console.log(`FormId ${formId} inserted with phone: ${phone}`);
             }
         } catch (err) {
           console.error('Unexpected error:', err);
@@ -194,9 +190,7 @@ useEffect(() => {
 
       if (!response.ok) {
         console.error('Failed to send error webhook');
-      } else {
-        console.log('Error webhook sent successfully');
-      }
+      } else {      }
     } catch (webhookError) {
       console.error('Error sending webhook:', webhookError);
     }
@@ -209,14 +203,12 @@ useEffect(() => {
       const formattedDate = format(date, 'yyyy-MM-dd');
       formik.setFieldValue('date', formattedDate);
       setUnsavedChanges(true); // Mark changes as unsaved
-      console.log('Selected Date:', formattedDate);
     }
   };
 
   const handleTimeSelect = (time: string) => {
     formik.setFieldValue('time', time);
     setUnsavedChanges(true); // Mark changes as unsaved
-    console.log('Selected Time:', time);
   };
 
   // Updated handleNavigation to check for unsaved changes more accurately
@@ -269,6 +261,7 @@ useEffect(() => {
                   
                   disabled: [
                     { before: new Date() },
+                    { from: new Date(), to: new Date(new Date().setDate(new Date().getDate() + 2)) },
                     { after: new Date(new Date().setDate(new Date().getDate() + 20)) },
                     ...scheduledAppointments.map(appt => new Date(appt.date)).filter(apptDate => !date || apptDate.getTime() !== date.getTime()),
                   ],
