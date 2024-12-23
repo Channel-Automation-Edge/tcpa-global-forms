@@ -123,14 +123,9 @@ useEffect(() => {
             service_id: selectedService,
             step: stepName,
           });
-          posthog.capture(stepName + '_complete', {
-            form_id: appContext.formId,
-            service_id: appContext.selectedService,
-            zip: appContext.zip,
-          });
-          onNext(); // Proceed to the next step if a contractor is found
+            
         } else {
-          setMessage(`Sorry, we currently do not have any experts in your area that provide ${serviceName} services. Select another service or get notified when this service is available in your area.`);
+          
           posthog.capture('no_contractors_found', { 
             form_id: appContext.formId,
             zip: values.zip,
@@ -138,6 +133,13 @@ useEffect(() => {
             step: stepName,
           });
         }
+      // Always capture completion and proceed to next step
+      posthog.capture(stepName + '_complete', {
+        form_id: appContext.formId,
+        service_id: appContext.selectedService,
+        zip: appContext.zip,
+      });
+      onNext();
       } catch (err) {
         console.error('Unexpected error:', err);
         setMessage('Unexpected error checking for contractors');
