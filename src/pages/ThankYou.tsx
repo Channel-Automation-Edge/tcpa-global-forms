@@ -306,22 +306,21 @@
         <div className="flex justify-center mt-10"> 
           <div className="flex flex-wrap gap-4 max-w-screen-lg w-full px-4 sm:px-8">
             <div className="flex flex-col gap-4 flex-grow min-w-[250px] max-w-[100%] sm:w-[calc(50%-1rem)]">
-              <div className="border border-gray-200 rounded-md">
-                <div className='text-left mx-4 my-4'>
-                  <p className='text-lg font-semibold text-gray-800 mb-4'>Project Specification</p>
-                  <p className='text-base font-normal text-gray-600 mb-4'>Your future project details</p>
-                  <div className="flex items-center mb-4 ml-8 min-w-52">
-                    <img src={servicePhoto} className="w-14 h-14" />
-                    <div className="px-8 flex items-center">
-                      <h3 className="text-lg font-semibold text-gray-800 dark:text-white flex-grow mr-8">{serviceName}</h3>
-                      <span className="max-w-40 truncate whitespace-nowrap inline-block py-1.5 px-3 rounded-lg text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-800/30 dark:text-blue-500">
-                        {serviceSpecification}
-                      </span>
-                    </div>
+            <div className="border border-gray-200 rounded-md">
+              <div className="text-left mx-4 my-4">
+                <p className="text-lg font-semibold text-gray-800 mb-4">Project Specification</p>
+                <p className="text-base font-normal text-gray-600 mb-4">Your future project details</p>
+                <div className="flex items-center mb-4 ml-8 min-w-52">
+                  <img src={servicePhoto} className="w-14 h-14" />
+                  <div className="px-8 flex items-center flex-grow justify-between">
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white">{serviceName} Service</h3>
+                    <span className="max-w-40 truncate whitespace-nowrap inline-block py-1.5 px-3 rounded-lg text-xs font-medium bg-orange-100 text-xorange ml-auto">
+                      {serviceSpecification}
+                    </span>
                   </div>
                 </div>
               </div>
-
+            </div>
               <div className="border border-gray-200 rounded-md h-auto">
                 <div className='text-left mx-4 my-4'>
                   <p className='text-lg font-semibold text-gray-800 mb-4'>Consultation Details</p>
