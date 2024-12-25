@@ -24,13 +24,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
   const { zip, state, email, phone, firstname, lastname, termsAndPrivacyOptIn, setZip, setEmail, setPhone, setFirstname, setLastname, setState, setTermsAndPrivacyOptIn, formId } = appContext;
   const [loading, setLoading] = useState<boolean>(false);
   const [zipStatus, setZipStatus] = useState<'valid' | 'invalid' | null>(null);
-  const [stateValue, setStateValue] = useState<string>(() => {
-    const params = new URLSearchParams(window.location.search);
-    let localState = localStorage.getItem('state') || '';
-    localState = localState.replace(/^"|"$/g, '');
-    const initialState = state || localState || params.get('state') || '';
-    return initialState;
-  });
+  const [stateValue, setStateValue] = useState<string>('');
   const [zipError, setZipError] = useState<string | null>(null);
   const stepName = 'details_step1_confirmInfo';
 
@@ -214,6 +208,37 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
     
       validateFields();
     }, [formik.values]); // Run effect on form values change
+
+    useEffect(() => {
+      const fetchStateCode = async () => {
+        const zip = formik.values.zip;
+        if (formik.values.zip && formik.values.zip.length >= 5) {
+          try {
+            const { data: zipData, error: zipError } = await supabase
+              .from('Zips')
+              .select('stateCode')
+              .lte('zipMin', parseInt(zip, 10))
+              .gte('zipMax', parseInt(zip, 10))
+              .single();
+    
+            if (zipError || !zipData) {
+              console.error('Error fetching state code:', zipError);
+              setStateValue('');
+            } else {
+              setStateValue(zipData.stateCode);
+            }
+          } catch (error) {
+            console.error('Unexpected error fetching state code:', error);
+            setStateValue('');
+          }
+        } else {
+          setStateValue('');
+        }
+      };
+    
+      fetchStateCode();
+    }, [formik.values.zip]);
+    
 
 
   const sendErrorWebhook = async (message: string, error: any) => {

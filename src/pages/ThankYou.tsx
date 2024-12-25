@@ -309,7 +309,7 @@
             <div className="border border-gray-200 rounded-md">
               <div className="text-left mx-4 my-4">
                 <p className="text-lg font-semibold text-gray-800 mb-4">Project Specification</p>
-                <p className="text-base font-normal text-gray-600 mb-4">Your future project details</p>
+                {/* <p className="text-base font-normal text-gray-600 mb-4">Your future project details</p> */}
                 <div className="flex items-center mb-4 ml-8 min-w-52">
                   <img src={servicePhoto} className="w-14 h-14" />
                   <div className="px-8 flex items-center flex-grow justify-between">
@@ -329,11 +329,11 @@
                     <div key={index} className="flex flex-wrap justify-between mt-4 w-auto bg-gray-100 rounded-md py-4">
                       <div className="flex items-center px-8 min-w-[200px]">
                         <img src="/images/calendar.svg" alt="Calendar" className="inline mr-2 h-5" />
-                        <p className="text-base text-gray-600">{formatDate(appointment.date)}</p>
+                        <p className="text-base text-gray-800">{formatDate(appointment.date)}</p>
                       </div>
                       <div className="flex items-center px-8">
                         <img src="/images/clock.svg" alt="Clock" className="inline mr-2 h-5" />
-                        <p className="text-base text-gray-600">{formatTime(appointment.time)}</p>
+                        <p className="text-base text-gray-800">{formatTime(appointment.time)}</p>
                       </div>
                     </div>
                   ))}
@@ -350,7 +350,7 @@
                   {firstname} {lastname}
                 </p>
                 <p className='text-base text-gray-600 mb-3'>
-                  <img src="/images/email.svg" alt="Email" className="inline mr-2 h-5 " />
+                  <img src="/images/mail.svg" alt="Email" className="inline mr-2 h-5 " />
                   {email}
                 </p>
                 <p className='text-base text-gray-600 item-center mb-3'>
@@ -358,7 +358,7 @@
                   {foramttedPhone}
                 </p>
                 <p className='text-base text-gray-600 mb-3'>
-                  <img src="/images/location.svg" alt="Location" className="inline mr-2 h-5 mb-3" />
+                  <img src="/images/location.svg" alt="Location" className="inline mr-2 h-5" />
                   {zip}, {state}
                 </p>
               </div>
