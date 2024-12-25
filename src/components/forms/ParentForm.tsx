@@ -173,21 +173,18 @@ const ParentForm = () => {
 
   const handleSubmitted = () => {
     navigateWithParams('/thank-you');
-    localStorage.setItem('summaryContractors', JSON.stringify(matchingContractors));
-    localStorage.setItem('summaryPreferences', JSON.stringify(contractorPreferences));
     resetCurrentStep();
     resetProjectCurrentStep();
     resetDetailsCurrentStep();
     resetAppointmentCurrentStep();
-    clearFormState();
     setFormId('');
     localStorage.removeItem('formID');
   };
 
-  const handleNotify = () => {
-    resetCurrentStep();
-    navigateWithParams('/confirm-details');
-  }
+  // const handleNotify = () => {
+  //   resetCurrentStep();
+  //   navigateWithParams('/confirm-details');
+  // }
 
   return (
     <div className='bg-xbg min-h-screen'>
@@ -197,9 +194,9 @@ const ParentForm = () => {
         </div>
       </div>
       <div>
-        {currentStep === 1 && <ProjectForm onNext={handleNextStep} onReset={handleReset} onNotify={handleNotify} />}
+        {currentStep === 1 && <ProjectForm onNext={handleNextStep} onReset={handleReset} />}
         {currentStep === 2 && <DetailsForm onNext={handleNextStep} onReset={handleReset} onBack={handleBackStep} />}
-        {currentStep === 3 && <AppointmentForm onSubmit={handleSubmitted} onReset={handleReset} onNotify={handleNotify} />}
+        {currentStep === 3 && <AppointmentForm onSubmit={handleSubmitted} onReset={handleReset} onBack={handleBackStep} />}
       </div>
     </div>
   );

@@ -190,14 +190,14 @@ useEffect(() => {
 
         <form onSubmit={handleSubmit} className="mt-12 flex flex-col h-full">
           <div className="flex flex-wrap justify-center gap-4 sm:gap-[20px]" style={{ marginTop: '15px', width: '100%' }}>
-            {['Licensed', 'Insured', 'Bonded', 'Top Rated'].map((preference, index) => {
+            {['Offers Financing', 'Fast Install', 'Extensive Warranties', 'Credit Cards Payments', 'Offers Price Matching'].map((preference, index) => {
               // Determine the correct icon based on the preference
-              const iconSrc = {
-                Licensed: '/images/license.svg',
-                Insured: '/images/insured.svg',
-                Bonded: '/images/bond.svg',
-                'Top Rated': '/images/rated.svg',
-              }[preference];
+              // const iconSrc = {
+              //   Licensed: '/images/license.svg',
+              //   Insured: '/images/insured.svg',
+              //   Bonded: '/images/bond.svg',
+              //   'Top Rated': '/images/rated.svg',
+              // }[preference];
 
               return (
                 <button
@@ -227,12 +227,12 @@ useEffect(() => {
                     }
                   }}
                 >
-                  <img
+                  {/* <img
                     src={iconSrc}
                     alt={`${preference} icon`}
                     className="w-12 h-12 sm:w-14 sm:h-14 sm:mb-4 ml-2 mr-4 sm:ml-0 sm:mr-0"
-                  />
-                  <span className="text-gray-800 text-base font-medium text-center sm:text-left">{preference}</span>
+                  /> */}
+                  <span className="text-gray-800 text-base font-medium text-left sm:text-center">{preference}</span>
                 </button>
               );
             })}

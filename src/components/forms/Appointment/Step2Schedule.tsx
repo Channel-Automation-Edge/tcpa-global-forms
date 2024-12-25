@@ -17,13 +17,15 @@ import { Dialog, DialogContent,
  } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import posthog from 'posthog-js';
+import BackButton from '@/components/ui/backButton';
 
 interface Step2ScheduleProps {
   onNext: () => void;
   onReset: () => void;
+  onBack: () => void;
 }
 
-const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
+const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset, onBack }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
@@ -47,6 +49,17 @@ const Step2Schedule: React.FC<Step2ScheduleProps> = ({ onNext, onReset }) => {
       service_id: appContext.selectedService,
     });
     onReset();
+  };
+
+  const handleBack = () => { 
+    posthog.capture('form_back', {
+      form_id: appContext.formId,
+      zip: appContext.zip,
+      service_id: appContext.selectedService,
+      step: stepName,
+      previous_step: 'appointment_step1_selectQuotes',
+    });
+    onBack(); 
   };
   
 useEffect(() => {
@@ -246,6 +259,10 @@ useEffect(() => {
   const renderAppointmentForm = () => (
     <form onSubmit={formik.handleSubmit}>
       <div className="mt-4 rounded-lg px-4 py-4 shadow-lg sm:px-6 sm:py-4 lg:px-8 bg-white">
+      <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-between p-4">
+        <BackButton onClick={handleBack} />
+        <ResetButton onClick={handleReset} />
+      </div>
         <BlurFade key={currentAppointmentIndex} delay={0.1} duration={0.4} blur='0px' inView yOffset={0} className="flex-grow">
           <h2 className="text-center mt-2 mb-4 text-xl font-semibold text-gray-800 dark:text-neutral-200">
             Select a date

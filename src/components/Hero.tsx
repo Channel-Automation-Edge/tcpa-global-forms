@@ -6,11 +6,13 @@ import { motion } from 'framer-motion';
 import { AppContext } from '../context/AppContext';
 import NavBar from './NavBar.tsx';
 import posthog from 'posthog-js';
+import useClearFormState from '@/hooks/useClearFormState.tsx';
 
 const Hero = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const appContext = useContext(AppContext);
+  const clearFormState = useClearFormState();;
 
   type HeroContentKey = 'default' | 'fresh' | 'scheduled' | 'past';
 
@@ -82,10 +84,11 @@ const Hero = () => {
   }
 
   useEffect(() => {
-    const selectedService = localStorage.getItem('selectedService');
+    const formId = localStorage.getItem('formID');
     const dynamicSubheading = adjustedHeroContent.lede || `Hi ${firstnameParam}! Connect with trusted contractors who have the skills and experience to get the job done right`;
 
-    if (selectedService && JSON.parse(selectedService) !== "") {
+    if (formId !== null && formId !== "") {
+      console.log('form id is not empty: ', formId);
       setButtonText("Finish your Previous Quote");
       setSubheadingText("Or reset your progress and select another service");
     } else {
@@ -118,6 +121,7 @@ const Hero = () => {
     let formId = localStorage.getItem('formID');
 
     if (!formId) {
+      clearFormState();
       const urlParams = new URLSearchParams(location.search);
       const phone = urlParams.get('phone') || generateRandomString(9);
 

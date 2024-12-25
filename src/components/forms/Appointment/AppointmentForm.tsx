@@ -7,10 +7,10 @@ import useFormPersistence from '../../../hooks/useFormPersistence';
 interface AppointmentFormProps {
   onSubmit: () => void;
   onReset: () => void;
-  onNotify: () => void;
+  onBack: () => void;
 }
 
-const AppointmentForm: React.FC<AppointmentFormProps> = ({onSubmit, onReset, onNotify }) => {
+const AppointmentForm: React.FC<AppointmentFormProps> = ({onSubmit, onReset, onBack }) => {
   const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence('appointmentFormStep', 1);
   
 
@@ -32,9 +32,17 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({onSubmit, onReset, onN
     onReset();
   };
 
-  const handleNotify = () => {
-    resetCurrentStep(); 
-    onNotify();
+  // const handleNotify = () => {
+  //   resetCurrentStep(); 
+  //   onNotify();
+  // };
+
+  const handleBackStep = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    } else {
+      onBack();
+    }
   };
 
   const progress = (currentStep - 1) * 33.33339; 
@@ -56,9 +64,9 @@ const AppointmentForm: React.FC<AppointmentFormProps> = ({onSubmit, onReset, onN
         </div>
       </div>
       <div>
-        {currentStep === 1 && <Step1Quotes onNext={handleNextStep} onReset={handleReset} />}
-        {currentStep === 2 && <Step2Schedule onNext={handleNextStep} onReset={handleReset} />}
-        {currentStep === 3 && <Step3Contractors onCompleted={handleSubmitted} onReset={handleReset} onNotify={handleNotify} />}
+        {currentStep === 1 && <Step1Quotes onNext={handleNextStep} onReset={handleReset} onBack={handleBackStep} />}
+        {currentStep === 2 && <Step2Schedule onNext={handleNextStep} onReset={handleReset} onBack={handleBackStep} />}
+        {currentStep === 3 && <Step3Contractors onCompleted={handleSubmitted} onReset={handleReset}/>}
       </div>
     </div>
   );

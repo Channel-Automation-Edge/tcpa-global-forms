@@ -43,11 +43,11 @@ const useClearFormState = () => {
     setNumberOfQuotes(0);
     setGeneralOptIn(false);
     setTermsAndPrivacyOptIn(false);
-    setNewsletterOptIn(false);
-    setScheduledAppointments([]);
+    setNewsletterOptIn(false); 
+    setScheduledAppointments([]); 
     setMatchingContractors([]);
     setConsentedContractors([]);
-    setContactPreferences([]);
+    setContactPreferences([]); 
 
     localStorage.removeItem('selectedService');
     localStorage.removeItem('matchingContractors');
@@ -64,6 +64,9 @@ const useClearFormState = () => {
     localStorage.removeItem('consentedContractors');
     localStorage.removeItem('numberOfQuotes');
     localStorage.removeItem('termsAndPrivacyOptIn');
+    localStorage.removeItem('newsletterOptIn');
+    localStorage.removeItem('scheduledAppointments');
+    localStorage.removeItem('contactPreferences');
   };
 
   return clearFormState;

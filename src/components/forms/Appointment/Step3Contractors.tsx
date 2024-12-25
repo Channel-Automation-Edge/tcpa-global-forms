@@ -10,10 +10,9 @@ import { Button } from '@/components/ui/button';
 interface Step3ContractorsProps {
   onCompleted: () => void;
   onReset: () => void;
-  onNotify: () => void;
 }
 
-const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onReset, onNotify }) => {
+const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onReset }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
@@ -70,15 +69,15 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
     onReset();
   }
 
-  const handleNotify = () => {
-    posthog.capture('notify_me', {
-      form_id: appContext.formId,
-      zip: appContext.zip,
-      service_id: selectedService,
-      step: stepName,
-    });
-    onNotify();
-  };
+  // const handleNotify = () => {
+  //   posthog.capture('notify_me', {
+  //     form_id: appContext.formId,
+  //     zip: appContext.zip,
+  //     service_id: selectedService,
+  //     step: stepName,
+  //   });
+  //   onNotify();
+  // };
   
   // Capture the start event for this step
   useEffect(() => {
@@ -385,19 +384,36 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
   const renderContractorCards = () => (
     <div className="mt-6 space-y-4">
       {matchingContractors.map((contractor) => (
-        <div key={contractor.id} className="p-4 border rounded-lg shadow-sm bg-white dark:bg-neutral-800 dark:border-neutral-700 flex flex-row items-center max-w-[720px] mx-auto">
-          <div className="flex items-center mb-0 mr-4" style={{ minWidth: '150px' }}>
+        <div
+          key={contractor.id}
+          className="p-4 border rounded-lg shadow-sm bg-white dark:bg-neutral-800 dark:border-neutral-700 flex flex-col md:flex-row items-left max-w-[45rem] mx-auto"
+        >
+          <div className="flex items-center mb-4 md:mb-0 md:mr-4 min-w-52">
             <img src={contractor.logo} alt={contractor.name} className="w-16 h-16 rounded-full" />
-            <div className="ml-4">
+            <div className="px-8">
               <h3 className="text-lg font-bold text-gray-800 dark:text-white">{contractor.name}</h3>
               <p className="text-sm text-gray-600 dark:text-neutral-400">{contractor.zip}, {contractor.state}</p>
             </div>
           </div>
-          <div className="flex-grow text-center mb-0 mx-3" >
+          <div className="flex-grow text-center ml-0 md:ml-3 flex md:items-center">
             <div className="flex flex-wrap gap-2 justify-start">
               {contractorPreferences.map((pref, idx) => (
-                <span key={idx} className="py-1 px-2 inline-flex items-center gap-x-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500">
-                  <svg className="shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <span
+                  key={idx}
+                  className="py-1 px-2 inline-flex items-center gap-x-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full dark:bg-teal-500/10 dark:text-teal-500"
+                >
+                  <svg
+                    className="shrink-0"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
                     <path d="m9 12 2 2 4-4"></path>
                   </svg>
@@ -410,6 +426,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
       ))}
     </div>
   );
+  
 
   return (
     <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
@@ -450,7 +467,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
               </button>
               <button
                 type="button"
-                onClick={handleNotify}
+                // onClick={handleNotify}
                 className="w-full sm:max-w-xs sm:flex-1 py-5 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-white hover:bg-xorangeDark shadow-lg shadow-[rgba(102,89,83,0.5)]"
               >
                 Notify Me
@@ -552,7 +569,7 @@ const Step3Contractors: React.FC<Step3ContractorsProps> = ({ onCompleted, onRese
                         <div className="mt-6 text-left">
                           <p className="text-base text-gray-600 dark:text-neutral-400">I consent to be contacted through:</p>
                           <div className="mt-4 space-y-2">
-                            {['phone', 'sms', 'email'].map((method) => (
+                            {['phone', 'SMS', 'email'].map((method) => (
                               <div key={method} className="flex items-left justify-left">
                                 <input
                                   id={`contact-${method}`}

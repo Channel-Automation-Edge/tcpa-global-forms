@@ -126,7 +126,7 @@ function App() {
     onChange: () => {
         logConsent();
     },
-      revision: 1,
+      revision: 0,
       categories: {
           // necessary: {
           //     enabled: true,  // this category is enabled by default
@@ -181,9 +181,9 @@ function App() {
   });  
 }, []);
 
-  const showCookieConsent = () => {
-  CookieConsent.show();
-};
+//   const showCookieConsent = () => {
+//   CookieConsent.show();
+// };
 
   return (
     <>
@@ -197,7 +197,7 @@ function App() {
         <Route path="*" element={<Home />} />
       </Routes>
       <button
-        onClick={showCookieConsent}
+        data-cc="show-preferencesModal"
         style={{
           position: 'fixed',
           bottom: '20px',
