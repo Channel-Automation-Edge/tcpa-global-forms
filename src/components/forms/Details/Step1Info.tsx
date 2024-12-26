@@ -49,7 +49,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
     onBack();
   };
 
-
+  
   useEffect(() => {
     posthog.capture(stepName + '_start', {
       form_id: formId,
@@ -103,7 +103,9 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
       termsAndPrivacyOptIn: false,
     },
     validationSchema,
+    validateOnMount: true,
     onSubmit: async (values) => {
+      console.log('submitting')
       const rawPhone = values.phone.startsWith('+1') ? values.phone.slice(2) : values.phone;
       setLoading(true);
       setZip(values.zip);
@@ -265,6 +267,13 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
       console.error('Error sending webhook:', webhookError);
     }
   };
+
+  useEffect(() => {
+    if (stateValue) {
+      formik.setFieldValue('state', stateValue);
+    }
+  }, [stateValue]);
+  
   
   
 
