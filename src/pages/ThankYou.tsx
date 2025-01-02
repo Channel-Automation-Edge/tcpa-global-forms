@@ -298,13 +298,13 @@
           className="absolute left-0 top-0 z-50 w-full h-full pointer-events-none"
         />
         <HowItWorks />
-        <div className='text-center'>
+        <BlurFade delay={3 * 0.15} inView yOffset={15} className='text-center'>
           <h2 className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200">
           Please Review Your <span className="text-xorange">Details</span>
           </h2>
-        </div>
+        </BlurFade>
         <div className="flex justify-center mt-10"> 
-          <div className="flex flex-wrap gap-4 max-w-screen-lg w-full px-4 sm:px-8">
+          <BlurFade delay={4 * 0.15} inView yOffset={15} className="flex flex-wrap gap-4 max-w-screen-lg w-full px-4 sm:px-8">
             <div className="flex flex-col gap-4 flex-grow min-w-[250px] max-w-[100%] sm:w-[calc(50%-1rem)]">
             <div className="border border-gray-200 rounded-md">
               <div className="text-left mx-4 my-4">
@@ -363,12 +363,12 @@
                 </p>
               </div>
             </div>
-          </div>
+          </BlurFade>
         </div>
         
 
         {/* video  */}
-        <div className="px-4 py-10 sm:px-6 md:px-8 lg:px-24 relative">
+        <BlurFade delay={3 * 0.15} inView yOffset={15} className="px-4 py-10 sm:px-6 md:px-8 lg:px-24 relative">
         <HeroVideoDialog
           className="dark:hidden block"
           animationStyle="from-center"
@@ -383,22 +383,25 @@
           thumbnailSrc="images/howto_thumbnail.jpg"
           thumbnailAlt="How To Video"
         />
-        </div>
+        </BlurFade>
         
-        {/* Contractors Section */}
         <div className="px-4 pt-10 pb-20">
           <BlurFade delay={3 * 0.15} inView yOffset={15} className="text-center mb-6">
-            <h2 className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200">
-              Your Possible <span className="text-xorange">Contractors</span>
-            </h2>
-            <p className="mt-2 md:mt-4 text-gray-600 dark:text-neutral-500">
-              These are the possible contractors that will show up to your scheduled consultation/s
-            </p>
-            {matchingContractors.length > 0 && (
-          <div>{renderContractorCards()}</div>
           
-        )}
-        {/* End of Contractors Section */}
+
+          {matchingContractors.length > 0 && (
+          <div>
+          <h2 className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200">
+          Your Possible <span className="text-xorange">Contractors</span>
+          </h2>
+          <p className="mt-2 md:mt-4 text-gray-600 dark:text-neutral-500">
+            These are the possible contractors that will show up to your scheduled consultation/s
+          </p>
+          {renderContractorCards()}
+          </div>
+          
+          )}
+        
             
           </BlurFade>
 

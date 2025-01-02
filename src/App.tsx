@@ -12,6 +12,7 @@ import "vanilla-cookieconsent/dist/cookieconsent.css";
 import * as CookieConsent from "vanilla-cookieconsent";
 import supabase from '@/lib/supabaseClient';
 import { AppContext } from '@/context/AppContext';
+import ContractorSignUp from './pages/ContractorSignUp';
 
 
 declare global {
@@ -194,9 +195,10 @@ function App() {
         <Route path='/confirm-details' element={<ConfirmDetails />} />
         <Route path='/cookie-policy' element={<CookiePolicy />} />
         <Route path='/privacy-policy' element={<PrivacyPolicy />} />
+        <Route path='/contractor-signup' element={<ContractorSignUp />} />
         <Route path="*" element={<Home />} />
       </Routes>
-      <button
+      <button className='hidden sm:block'
         data-cc="show-preferencesModal"
         style={{
           position: 'fixed',

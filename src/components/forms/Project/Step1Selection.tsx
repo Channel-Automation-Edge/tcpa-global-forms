@@ -72,6 +72,13 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
     const urlParams = new URLSearchParams(window.location.search);
     const phoneFromUrl = urlParams.get('phone') || null;
     const formattedPhone = phoneFromUrl ? formatPhoneNumber(phoneFromUrl) : '';
+    const storedCookies = JSON.parse(localStorage.getItem('acceptedCookies') || 'null');
+
+    const storedCookieConsentId = JSON.parse(localStorage.getItem('consentId') || 'null');
+
+    console.log('storedCookies:', storedCookies);
+    console.log('storedCookieConsentId:', storedCookieConsentId);
+    console.log('test');
 
     try {
       
@@ -93,7 +100,7 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
         // formId exists
         const { error: updateError } = await supabase
           .from('Forms')
-          .update({ updated_at: new Date().toISOString(), service: serviceId, user_ns: userNs })
+          .update({ updated_at: new Date().toISOString(), service: serviceId, user_ns: userNs, accepted_cookies: storedCookies, cookie_consent_id: storedCookieConsentId, cookie_updated_at: new Date().toISOString() })
           .eq('id', formId);
 
         if (updateError) {
@@ -107,7 +114,7 @@ const Step1Selection: React.FC<Step1SelectionProps> = ({ onNext }) => {
         // formId does not exist, insert a new row
         const { error: insertError } = await supabase
           .from('Forms')
-          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: formattedPhone, service: serviceId, user_ns: userNs, state: appContext.state, accepted_cookies: appContext.cookiesAccepted, cookie_consent_id: appContext.cookieConsentId, cookie_updated_at: new Date().toISOString() }]);
+          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: formattedPhone, service: serviceId, user_ns: userNs, state: appContext.state, accepted_cookies: storedCookies, cookie_consent_id: storedCookieConsentId, cookie_updated_at: new Date().toISOString() }]);
 
         if (insertError) {
           console.error('Error inserting formId:', insertError);

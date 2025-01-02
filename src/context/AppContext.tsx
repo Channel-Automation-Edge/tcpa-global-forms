@@ -26,6 +26,7 @@ interface AppContextType {
   cookieConsentId: string;
   resetForm: boolean;
   formId: string | null;
+  businessName: string | null;
   firstname: string | null;
   lastname: string | null;
   zip: string | null;
@@ -33,6 +34,7 @@ interface AppContextType {
   phone: string | null;
   state: string | null;
   selectedService: string | null;
+  contractorServices: string[];
   serviceSpecification: string | null;
   contractorPreferences: string[];
   numberOfQuotes: number;
@@ -49,6 +51,7 @@ interface AppContextType {
   userNs: string | null;
   teamId: string | null;
   setResetForm: Dispatch<SetStateAction<boolean>>;
+  setBusinessName: Dispatch<SetStateAction<string | null>>;
   setFirstname: Dispatch<SetStateAction<string | null>>;
   setFormId: Dispatch<SetStateAction<string | null>>;
   setLastname: Dispatch<SetStateAction<string | null>>;
@@ -57,6 +60,7 @@ interface AppContextType {
   setPhone: Dispatch<SetStateAction<string | null>>;
   setState: Dispatch<SetStateAction<string | null>>;
   setSelectedService: Dispatch<SetStateAction<string | null>>;
+  setContractorServices: Dispatch<SetStateAction<string[]>>;
   setServiceSpecification: Dispatch<SetStateAction<string | null>>;
   setContractorPreferences: Dispatch<SetStateAction<string[]>>;
   setCookiesAccepted: Dispatch<SetStateAction<string[]>>;
@@ -91,6 +95,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
   const [cookieConsentId, setCookieConsentId] = useState<string>('');
   const [resetForm, setResetForm] = useState<boolean>(false);
   const [formId, setFormId] = useState<string | null>(null);
+  const [businessName, setBusinessName] = useState<string | null>(null);
   const [firstname, setFirstname] = useState<string | null>(null);
   const [lastname, setLastname] = useState<string | null>(null);
   const [zip, setZip] = useState<string | null>(null);
@@ -98,6 +103,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
   const [phone, setPhone] = useState<string | null>(null);
   const [state, setState] = useState<string | null>(null);
   const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [contractorServices, setContractorServices] = useState<string[]>([]);
   const [serviceSpecification, setServiceSpecification] = useState<string | null>(null);
   const [contractorPreferences, setContractorPreferences] = useState<string[]>([]);
   const [numberOfQuotes, setNumberOfQuotes] = useState<number>(0);
@@ -141,6 +147,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         cookieConsentId,
         resetForm,
         formId,
+        businessName,
         firstname,
         lastname,
         zip,
@@ -148,6 +155,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         phone,
         state,
         selectedService,
+        contractorServices,
         serviceSpecification,
         contractorPreferences,
         numberOfQuotes,
@@ -167,6 +175,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         setCookieConsentId,
         setResetForm,
         setFormId,
+        setBusinessName,
         setFirstname,
         setLastname,
         setZip,
@@ -174,6 +183,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         setPhone,
         setState,
         setSelectedService,
+        setContractorServices,
         setServiceSpecification,
         setContractorPreferences,
         setNumberOfQuotes,

@@ -325,7 +325,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
               </div>
 
               <div className="relative">
-                <label htmlFor="lastname" className="block mb-2 text-base text-gray-700 font-medium dark:text-white">Last Name</label>
+                <label htmlFor="lastname" className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">Last Name</label>
                 <input
                   id="lastname"
                   name="lastname"
