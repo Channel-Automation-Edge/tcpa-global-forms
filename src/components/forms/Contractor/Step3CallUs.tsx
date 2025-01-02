@@ -19,7 +19,7 @@ const Step3CallUs: React.FC<Step3CallUsProps> = ({ onNext }) => {
   const [loading] = useState<boolean>(false); // State to control spinner
 
   const handleCall = () => {
-    window.location.href = 'tel:+18594075999'; //added by izzy
+    window.location.href = 'https://calendly.com/channelautomation/meet_vic_sun?month=2023-12'; //added by izzy
   }
 
   return (
@@ -49,7 +49,7 @@ const Step3CallUs: React.FC<Step3CallUsProps> = ({ onNext }) => {
             {loading ? (
               <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
             ) : (
-              'Call Us'
+              'Schedule a Call'
             )}
           </button>
           <button
