@@ -61,6 +61,12 @@ const ParentForm = () => {
     setScheduledAppointments,
     setContactPreferences,
     setFormId,
+    address1,
+    address2,
+    city,
+    setAddress1,
+    setAddress2,
+    setCity,
   } = appContext;
 
   useEffect(() => {
@@ -79,6 +85,9 @@ const ParentForm = () => {
     loadFromLocalStorage('phone', setPhone, '');
     loadFromLocalStorage('zip', setZip, '');
     loadFromLocalStorage('state', setState, '');
+    loadFromLocalStorage('address1', setAddress1, '');
+    loadFromLocalStorage('address2', setAddress2, '');
+    loadFromLocalStorage('city', setCity, '');
 
     loadFromLocalStorage('selectedService', setSelectedService, '');
     loadFromLocalStorage('serviceSpecification', setServiceSpecification, []);
@@ -108,6 +117,9 @@ const ParentForm = () => {
     localStorage.setItem('phone', JSON.stringify(phone));
     localStorage.setItem('zip', JSON.stringify(zip));
     localStorage.setItem('state', JSON.stringify(state));
+    localStorage.setItem('address1', JSON.stringify(address1));
+    localStorage.setItem('address2', JSON.stringify(address2));
+    localStorage.setItem('city', JSON.stringify(city));
 
     localStorage.setItem('selectedService', JSON.stringify(selectedService));
     localStorage.setItem('serviceSpecification', JSON.stringify(serviceSpecification));
@@ -142,6 +154,9 @@ const ParentForm = () => {
     matchingContractors,
     consentedContractors,
     contactPreferences,
+    address1,
+    address2,
+    city,
   ]);
 
   const clearFormState = useClearFormState();

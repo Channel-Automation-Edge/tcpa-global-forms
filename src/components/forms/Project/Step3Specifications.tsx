@@ -191,7 +191,7 @@ const Step3Specifications: React.FC<Step3SpecificationsProps> = ({ onNext, onBac
           <div className="flex flex-wrap justify-center gap-4 sm:gap-[20px]" style={{ marginTop: '15px', width: '100%' }}>
             <button
               type="button"
-              className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[200px] h-[80px] sm:h-[120px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
+              className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[200px] h-[80px] sm:h-[156px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
               onClick={() => handleSelect("Repair")}
               style={{
                 boxShadow: serviceSpecification === "Repair" 
@@ -214,11 +214,16 @@ const Step3Specifications: React.FC<Step3SpecificationsProps> = ({ onNext, onBac
                   e.currentTarget.style.borderColor = 'rgba(157, 176, 197, 0.25)';
               }}}
             >
-              <span className="text-gray-800 text-base font-medium sm:text-center text-left">Repair</span>
+              <img
+                    src={'/images/repair.svg'}
+                    alt={`repair icon`}
+                    className="w-12 h-12 sm:w-14 sm:h-14 sm:mb-4 ml-2 mr-4 sm:ml-0 sm:mr-0"
+                  />
+              <span className="text-gray-800 text-base font-medium text-left sm:text-center ">Repair</span>
             </button>
             <button
               type="button"
-              className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[200px] h-[80px] sm:h-[120px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
+              className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[200px] h-[80px] sm:h-[156px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
               onClick={() => handleSelect("Remodel")}
               style={{
                 boxShadow: serviceSpecification === "Remodel"
@@ -241,11 +246,16 @@ const Step3Specifications: React.FC<Step3SpecificationsProps> = ({ onNext, onBac
                   e.currentTarget.style.borderColor = 'rgba(157, 176, 197, 0.25)';
               }}}
             >
-              <span className="text-gray-800 text-base font-medium sm:text-center text-left">Remodel</span>
+              <img
+                    src={'/images/remodel.svg'}
+                    alt={`remodel icon`}
+                    className="w-12 h-12 sm:w-14 sm:h-14 sm:mb-4 ml-2 mr-4 sm:ml-0 sm:mr-0"
+                  />
+              <span className="text-gray-800 text-base font-medium text-left sm:text-center ">Remodel</span>
             </button>
             <button
               type="button"
-              className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[200px] h-[80px] sm:h-[120px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
+              className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[200px] h-[80px] sm:h-[156px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
               onClick={() => handleSelect("Installation")}
               style={{
                 boxShadow: serviceSpecification === "Installation"
@@ -268,7 +278,12 @@ const Step3Specifications: React.FC<Step3SpecificationsProps> = ({ onNext, onBac
                   e.currentTarget.style.borderColor = 'rgba(157, 176, 197, 0.25)';
               }}}
             >
-              <span className="text-gray-800 text-base font-medium sm:text-center text-left">Installation</span>
+              <img
+                    src={'/images/install.svg'}
+                    alt={`installation icon`}
+                    className="w-12 h-12 sm:w-14 sm:h-14 sm:mb-4 ml-2 mr-4 sm:ml-0 sm:mr-0"
+                  />
+              <span className="text-gray-800 text-base font-medium text-left sm:text-center ">Installation</span>
             </button>
           </div>
           {/* <div className="mt-20 flex justify-center">

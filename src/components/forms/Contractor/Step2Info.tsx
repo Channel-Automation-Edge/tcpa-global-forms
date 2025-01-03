@@ -18,13 +18,14 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
       return null;
     }
 
-    const { zip, state, email, phone, firstname, lastname, address1, address2, city, businessName, setZip, setEmail, setPhone, setFirstname, setLastname, setState, setAddress1, setAddress2, setCity, setBusinessName } = appContext;
+    const { zip, state, email, phone, firstname, lastname, address1, address2, city, businessName, setZip, setEmail, setPhone, setFirstname, setLastname, setState, setAddress1, setAddress2, setCity, setBusinessName, generalOptIn, setGeneralOptIn } = appContext;
     const [loading, setLoading] = useState<boolean>(false);
     const [zipStatus, setZipStatus] = useState<'valid' | 'invalid' | null>(null);
     const [stateValue, setStateValue] = useState<string>('');
     const [zipError, setZipError] = useState<string | null>(null);
 
     useEffect(() => {
+      const numericPhone = phone ? phone.replace(/\D/g, '') : '';
       formik.setValues({
         businessName: businessName || '',
         address1: address1 || '',
@@ -35,9 +36,11 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
         zip: zip || '',
         state: state || '',
         email: email || '',
-        phone: phone || '',
+        phone: phone ? `+1${numericPhone}` : '',
+        generalOptIn: generalOptIn || false,
       });
-    }, [businessName, firstname, lastname, zip, state, email, phone]);
+    }, [businessName, firstname, lastname, zip, state, email, phone, address1, address2, city, generalOptIn]);
+    
 
     const validationSchema = Yup.object({
       businessName: Yup.string().required('Business name is required'),
@@ -51,7 +54,20 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
       phone: Yup.string()
       .matches(/^\+1\d{10}$/, 'Phone number must be 10 digits')
       .required('Phone number is required'),
+      generalOptIn: Yup.boolean().oneOf([true], 'You must opt-in to continue'),
     });
+
+    const formatPhoneNumber = (phone:string) => {
+      if (!phone || phone.length !== 10) {
+        return phone; // Return the original value if it's not a 10-digit number
+      }
+    
+      const areaCode = phone.slice(0, 3);
+      const centralOfficeCode = phone.slice(3, 6);
+      const lineNumber = phone.slice(6);
+    
+      return `+1 (${areaCode}) ${centralOfficeCode}-${lineNumber}`;
+    };
 
     const formik = useFormik({
       initialValues: {
@@ -65,12 +81,14 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
         address1: '',
         address2: '',
         city: '',
+        generalOptIn: false,
       },
       validationSchema,
       validateOnMount: true,
       onSubmit: async (values) => {
         console.log('submitting');
         const rawPhone = values.phone.startsWith('+1') ? values.phone.slice(2) : values.phone;
+        const formattedPhone = rawPhone ? formatPhoneNumber(rawPhone) : '';
         setLoading(true);
       
         // Save values to AppContext
@@ -84,13 +102,15 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
         setAddress1(values.address1);
         setAddress2(values.address2);
         setCity(values.city);
+        setGeneralOptIn(values.generalOptIn);
+
       
         // Insert into Supabase
         try {
           const { data, error } = await supabase.from('ContractorApplications').insert([
             {
               business_name: values.businessName,
-              phone: rawPhone,
+              phone: formattedPhone,
               zip: values.zip,
               state: stateValue,
               address1: values.address1,
@@ -115,7 +135,7 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
               type: 'contractor',
               applicationData: {
                 business_name: values.businessName,
-                phone: rawPhone,
+                phone: formattedPhone,
                 zip: values.zip,
                 state: stateValue,
                 address1: values.address1,
@@ -191,22 +211,6 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
     
       setLoading(false);
     };
-
-    useEffect(() => {
-      const formattedPhone = phone ? `+1${phone.replace(/\D/g, '')}` : '';
-      formik.setValues({
-        businessName: businessName || '',
-        firstname: firstname || '',
-        lastname: lastname || '',
-        zip: zip || '',
-        state: state || '',
-        address1: address1 || '',
-        address2: address2 || '',
-        city: city || '',
-        email: email || '',
-        phone: formattedPhone, // Ensure phone is in E.164 format
-      });
-    }, [businessName, firstname, lastname, zip, state, email, phone, address1, address2, city]);
     
 
   useEffect(() => {
@@ -239,15 +243,7 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
     fetchStateCode();
   }, [formik.values.zip]);
 
-  // useEffect(() => {
 
-  //   console.log('Firstname:', formik.values.firstname, formik.errors.firstname ? 'Invalid' : 'Valid');
-  //   console.log('Lastname:', formik.values.lastname, formik.errors.lastname ? 'Invalid' : 'Valid');
-  //   console.log('ZIP:', formik.values.zip, formik.errors.zip ? 'Invalid' : 'Valid');
-  //   console.log('State:', formik.values.state, formik.errors.state ? 'Invalid' : 'Valid');
-  //   console.log('Email:', formik.values.email, formik.errors.email ? 'Invalid' : 'Valid');
-  //   console.log('Phone:', formik.values.phone, formik.errors.phone ? 'Invalid' : 'Valid');
-  // }, [formik.values, formik.errors]);
   
   
     
@@ -559,6 +555,33 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
                   <div className="error text-sm text-red-500">{formik.errors.email}</div>
                 )}
               </div> 
+              <div className="flex items-start mt-4">
+                <input
+                  id="generalOptIn"
+                  name="generalOptIn"
+                  type="checkbox"
+                  checked={formik.values.generalOptIn}
+                  onChange={formik.handleChange}
+                  className="h-6 w-6 mt-0 text-xorange border-gray-300 rounded focus:ring-xorange"
+                />
+                <label htmlFor="generalOptIn" className="ml-4 block text-base text-gray-900 dark:text-gray-300">
+                  {!formik.values.generalOptIn && <span className="text-red-500">* </span>}
+                  I agree to receiving updates about my application through SMS messages. I understand that I can opt-out anytime.
+                </label>
+              </div>
+              {formik.touched.generalOptIn && formik.errors.generalOptIn && (
+                <div className="text-sm text-red-500 mt-2 ml-10">
+                  {formik.errors.generalOptIn}
+                </div>
+              )}
+              {formik.values.generalOptIn && (
+                <div className="mt-2 text-sm text-gray-600 dark:text-neutral-400 ml-10">
+                  By agreeing, I am providing my ESIGN signature and express written consent for Home Project Partners to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, AI generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and I can reach out to them directly at (888) 508-3081.
+                  <br />
+                  My phone number where Home Project Partners may contact me is: {formik.values.phone}
+                </div>
+              )}
+
                 
 
 

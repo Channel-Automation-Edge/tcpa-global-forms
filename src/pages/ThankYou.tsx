@@ -56,6 +56,12 @@
       setNewsletterOptIn,
       setScheduledAppointments,
       setContactPreferences,
+      address1,
+      address2,
+      city,
+      setAddress1,
+      setAddress2,
+      setCity,
     } = appContext;
 
     useEffect(() => {
@@ -74,6 +80,9 @@
       loadFromLocalStorage('phone', setPhone, '');
       loadFromLocalStorage('zip', setZip, '');
       loadFromLocalStorage('state', setState, '');
+      loadFromLocalStorage('address1', setAddress1, '');
+      loadFromLocalStorage('address2', setAddress2, '');
+      loadFromLocalStorage('city', setCity, '');
   
       loadFromLocalStorage('selectedService', setSelectedService, '');
       loadFromLocalStorage('serviceSpecification', setServiceSpecification, []);
@@ -299,7 +308,7 @@
         />
         <HowItWorks />
         <BlurFade delay={3 * 0.15} inView yOffset={15} className='text-center'>
-          <h2 className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200">
+          <h2 className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200 mt-8">
           Please Review Your <span className="text-xorange">Details</span>
           </h2>
         </BlurFade>
@@ -356,6 +365,14 @@
                 <p className='text-base text-gray-600 item-center mb-3'>
                   <img src="/images/telephone.svg" alt="Phone" className="inline mr-2 h-5" />
                   {foramttedPhone}
+                </p>
+                <p className='text-base text-gray-600 mb-3'>
+                  <img src="/images/home.svg" alt="Location" className="inline mr-2 h-5" />
+                  {address2 ? `${address1}, ${address2}` : `${address1}`}
+                </p>
+                <p className='text-base text-gray-600 mb-3'>
+                  <img src="/images/city.svg" alt="Location" className="inline mr-2 h-5" />
+                  {city}
                 </p>
                 <p className='text-base text-gray-600 mb-3'>
                   <img src="/images/location.svg" alt="Location" className="inline mr-2 h-5" />

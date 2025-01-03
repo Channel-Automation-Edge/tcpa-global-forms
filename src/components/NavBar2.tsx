@@ -15,6 +15,14 @@ const NavBar2 = () => {
           </div>
 
           <div className="flex items-center gap-4">
+          <div className="sm:flex sm:gap-4">
+              <a
+                className="rounded-md bg-transparent px-5 py-2.5 text-sm font-medium text-gray-800 inline-flex items-center"
+                href="/contractor-signup"
+              >
+                I'm a contractor
+              </a>
+            </div>
             <div className="sm:flex sm:gap-4">
               <a
                 className="rounded-md bg-transparent px-5 py-2.5 text-sm font-medium text-gray-800 inline-flex items-center"
@@ -22,7 +30,7 @@ const NavBar2 = () => {
               >
                 <img
                   src="/images/phone.svg" // Replace with your image path
-                  alt="Call"
+                  alt="+1 (859) 407-5999"
                   className="w-6 h-6 mr-2" // Adjust width and height as needed
                 />
                 Call Us
