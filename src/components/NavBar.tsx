@@ -44,7 +44,7 @@ const NavBar = () => {
                   alt="Call"
                   className="w-6 h-6 mr-2" // Adjust width and height as needed
                 />
-                Call Us
+                +1 (859) 407-5999
               </a>
             </div>
             
