@@ -30,6 +30,9 @@ interface AppContextType {
   firstname: string | null;
   lastname: string | null;
   zip: string | null;
+  address1: string | null;
+  address2: string | null;
+  city: string | null;
   email: string | null;
   phone: string | null;
   state: string | null;
@@ -56,6 +59,9 @@ interface AppContextType {
   setFormId: Dispatch<SetStateAction<string | null>>;
   setLastname: Dispatch<SetStateAction<string | null>>;
   setZip: Dispatch<SetStateAction<string | null>>;
+  setAddress1: Dispatch<SetStateAction<string | null>>;
+  setAddress2: Dispatch<SetStateAction<string | null>>;
+  setCity: Dispatch<SetStateAction<string | null>>;
   setEmail: Dispatch<SetStateAction<string | null>>;
   setPhone: Dispatch<SetStateAction<string | null>>;
   setState: Dispatch<SetStateAction<string | null>>;
@@ -99,6 +105,9 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
   const [firstname, setFirstname] = useState<string | null>(null);
   const [lastname, setLastname] = useState<string | null>(null);
   const [zip, setZip] = useState<string | null>(null);
+  const [address1, setAddress1] = useState<string | null>(null);
+  const [address2, setAddress2] = useState<string | null>(null);
+  const [city, setCity] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   const [phone, setPhone] = useState<string | null>(null);
   const [state, setState] = useState<string | null>(null);
@@ -151,6 +160,9 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         firstname,
         lastname,
         zip,
+        address1,
+        address2,
+        city,
         email,
         phone,
         state,
@@ -179,6 +191,9 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
         setFirstname,
         setLastname,
         setZip,
+        setAddress1,
+        setAddress2,
+        setCity,
         setEmail,
         setPhone,
         setState,

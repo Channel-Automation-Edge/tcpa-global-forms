@@ -18,7 +18,7 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
       return null;
     }
 
-    const { businessName ,zip, state, email, phone, firstname, lastname, setZip, setEmail, setPhone, setFirstname, setLastname, setState, setBusinessName } = appContext;
+    const { zip, state, email, phone, firstname, lastname, address1, address2, city, businessName, setZip, setEmail, setPhone, setFirstname, setLastname, setState, setAddress1, setAddress2, setCity, setBusinessName } = appContext;
     const [loading, setLoading] = useState<boolean>(false);
     const [zipStatus, setZipStatus] = useState<'valid' | 'invalid' | null>(null);
     const [stateValue, setStateValue] = useState<string>('');
@@ -27,6 +27,9 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
     useEffect(() => {
       formik.setValues({
         businessName: businessName || '',
+        address1: address1 || '',
+        address2: address2 || '',
+        city: city || '',
         firstname: firstname || '',
         lastname: lastname || '',
         zip: zip || '',
@@ -38,6 +41,8 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
 
     const validationSchema = Yup.object({
       businessName: Yup.string().required('Business name is required'),
+      address1: Yup.string().required('Address is required'),
+      city: Yup.string().required('City is required'),
       firstname: Yup.string().required('First name is required'),
       lastname: Yup.string().required('Last name is required'),
       zip: Yup.string().required('Zip code is required'),
@@ -57,6 +62,9 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
         firstname: '',
         lastname: '',
         businessName: '',
+        address1: '',
+        address2: '',
+        city: '',
       },
       validationSchema,
       validateOnMount: true,
@@ -73,6 +81,9 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
         setFirstname(values.firstname);
         setLastname(values.lastname);
         setBusinessName(values.businessName);
+        setAddress1(values.address1);
+        setAddress2(values.address2);
+        setCity(values.city);
       
         // Insert into Supabase
         try {
@@ -82,6 +93,9 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
               phone: rawPhone,
               zip: values.zip,
               state: stateValue,
+              address1: values.address1,
+              address2: values.address2,
+              city: values.city,
               email: values.email,
               firstname: values.firstname,
               lastname: values.lastname,
@@ -98,11 +112,15 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
             },
             body: JSON.stringify({
               message: 'New application submitted',
+              type: 'contractor',
               applicationData: {
                 business_name: values.businessName,
                 phone: rawPhone,
                 zip: values.zip,
                 state: stateValue,
+                address1: values.address1,
+                address2: values.address2,
+                city: values.city,
                 email: values.email,
                 firstname: values.firstname,
                 lastname: values.lastname,
@@ -182,10 +200,13 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
         lastname: lastname || '',
         zip: zip || '',
         state: state || '',
+        address1: address1 || '',
+        address2: address2 || '',
+        city: city || '',
         email: email || '',
         phone: formattedPhone, // Ensure phone is in E.164 format
       });
-    }, [businessName, firstname, lastname, zip, state, email, phone]);
+    }, [businessName, firstname, lastname, zip, state, email, phone, address1, address2, city]);
     
 
   useEffect(() => {
@@ -248,8 +269,13 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
         <div className="mb-0 mt-6 space-y-4 rounded-lg p-4 shadow-lg sm:p-6 lg:p-8 bg-white">
           <div className="mt-2">
             <form onSubmit={formik.handleSubmit} className="grid gap-4 lg:gap-6">
+            <div className="text-left sm:text-center mb-2">
+              <h2 className="text-lg lg:text-xl font-semibold text-gray-700">
+                Company Information
+              </h2>
+            </div>
             <div className="relative">
-                <label htmlFor="businessName" className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">Business Name</label>
+                <label htmlFor="businessName" className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">Company Name</label>
                 <input
                   id="businessName"
                   name="businessName"
@@ -274,6 +300,199 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
                 )}
                 {formik.touched.businessName && formik.errors.businessName && (
                   <div className="error text-sm text-red-500">{formik.errors.businessName}</div>
+                )}
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
+                <div className="relative">
+                  <label htmlFor="zip" className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">ZIP Code</label>
+                  <input
+                    id="zip"
+                    name="zip"
+                    type="text"
+                    maxLength={5}
+                    onChange={(e) => {
+                      formik.handleChange(e);
+                      setStateValue('');
+                      setZipStatus(null);
+                      setZipError(null);
+                    }}
+                    onBlur={handleZipBlur}
+                    value={formik.values.zip}
+                    className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange bg-white dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
+                  />
+                  {loading ? (
+                    <div className="absolute right-3 top-10 w-6 animate-spin h-6 border-2 border-xorange border-t-transparent rounded-full"></div>
+                  ) : zipStatus === 'valid' ? (
+                    <img src="/images/tick.svg" alt="Valid" className="absolute right-6 top-11 w-4" />
+                  ) : zipStatus === 'invalid' ? (
+                    <img src="/images/warning.svg" alt="Invalid" className="absolute right-3 top-10 w-6" />
+                  ) : null}
+                  {zipError && (
+                    <div className="error text-sm text-red-500">{zipError}</div>
+                  )}
+                </div>
+
+                <div className="relative">
+                  <label htmlFor="state" className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">State</label>
+                  <input
+                    id="state"
+                    name="state"
+                    type="text"
+                    readOnly
+                    value={stateValue}
+                    className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base bg-gray-100 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 focus:border-gray-200 focus:ring-transparent cursor-default"
+                  />
+                  {stateValue ? (
+                    <img src="/images/tick.svg" alt="Valid" className="absolute right-6 top-11 w-4" />
+                  ) : (
+                    <img src="/images/warning.svg" alt="Invalid" className="absolute right-3 top-10 w-6" />
+                  )}
+                </div>
+              </div>
+              {/* address1, address2, city */}
+              <div className="relative">
+                <label htmlFor="city" className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">City</label>
+                <input
+                  id="city"
+                  name="city"
+                  type="text"
+                  onChange={formik.handleChange}
+                  value={formik.values.city}
+                  onBlur={formik.handleBlur}
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
+                />
+                {formik.errors.city ? (
+                  <img
+                    src="/images/warning.svg"
+                    alt="Invalid"
+                    className="absolute right-3 top-10 w-6"
+                  />
+                ) : (
+                  <img
+                    src="/images/tick.svg"
+                    alt="Valid"
+                    className="absolute right-6 top-11 w-4"
+                  />
+                )}
+                {formik.touched.city && formik.errors.city && (
+                  <div className="error text-sm text-red-500">{formik.errors.city}</div>
+                )}
+              </div>
+              <div className="relative">
+                <label htmlFor="address1" className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">Address Line 1</label>
+                <input
+                  id="address1"
+                  name="address1"
+                  type="text"
+                  onChange={formik.handleChange}
+                  value={formik.values.address1}
+                  onBlur={formik.handleBlur}
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
+                />
+                {formik.errors.address1 ? (
+                  <img
+                    src="/images/warning.svg"
+                    alt="Invalid"
+                    className="absolute right-3 top-10 w-6"
+                  />
+                ) : (
+                  <img
+                    src="/images/tick.svg"
+                    alt="Valid"
+                    className="absolute right-6 top-11 w-4"
+                  />
+                )}
+                {formik.touched.address1 && formik.errors.address1 && (
+                  <div className="error text-sm text-red-500">{formik.errors.address1}</div>
+                )}
+              </div>
+              <div className="relative">
+                <label htmlFor="address2" className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">Address Line 2</label>
+                <input
+                  id="address2"
+                  name="address2"
+                  type="text"
+                  onChange={formik.handleChange}
+                  value={formik.values.address2}
+                  onBlur={formik.handleBlur}
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
+                />
+                {formik.values.address2 && !formik.errors.address2 && (
+                  <img
+                    src="/images/tick.svg"
+                    alt="Valid"
+                    className="absolute right-6 top-11 w-4"
+                  />
+                )}
+                {formik.touched.address2 && formik.errors.address2 && (
+                  <div className="error text-sm text-red-500">{formik.errors.address2}</div>
+                )}
+              </div>
+
+              
+
+              
+              <div className="text-left sm:text-center mt-6 mb-2">
+              <h2 className="text-lg lg:text-xl font-semibold text-gray-700">
+              Representative Information
+              </h2>
+            </div>
+              <div className="relative">
+                <label htmlFor="firstname" className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">First Name</label>
+                <input
+                  id="firstname"
+                  name="firstname"
+                  type="text"
+                  onChange={formik.handleChange}
+                  value={formik.values.firstname}
+                  onBlur={formik.handleBlur}
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
+                />
+                {formik.errors.firstname ? (
+                  <img
+                    src="/images/warning.svg"
+                    alt="Invalid"
+                    className="absolute right-3 top-10 w-6"
+                  />
+                ) : (
+                  <img
+                    src="/images/tick.svg"
+                    alt="Valid"
+                    className="absolute right-6 top-11 w-4"
+                  />
+                )}
+                {formik.touched.firstname && formik.errors.firstname && (
+                  <div className="error text-sm text-red-500">{formik.errors.firstname}</div>
+                )}
+              </div>
+
+              <div className="relative">
+                <label htmlFor="lastname" className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">Last Name</label>
+                <input
+                  id="lastname"
+                  name="lastname"
+                  type="text"
+                  onChange={formik.handleChange}
+                  value={formik.values.lastname}
+                  onBlur={formik.handleBlur}
+                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
+                />
+                {formik.errors.lastname ? (
+                  <img
+                    src="/images/warning.svg"
+                    alt="Invalid"
+                    className="absolute right-3 top-10 w-6"
+                  />
+                ) : (
+                  <img
+                    src="/images/tick.svg"
+                    alt="Valid"
+                    className="absolute right-6 top-11 w-4"
+                  />
+                )}
+                {formik.touched.lastname && formik.errors.lastname && (
+                  <div className="error text-sm text-red-500">{formik.errors.lastname}</div>
                 )}
               </div>
 
@@ -340,115 +559,6 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
                   <div className="error text-sm text-red-500">{formik.errors.email}</div>
                 )}
               </div> 
-              
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
-                <div className="relative">
-                  <label htmlFor="zip" className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">ZIP Code</label>
-                  <input
-                    id="zip"
-                    name="zip"
-                    type="text"
-                    maxLength={5}
-                    onChange={(e) => {
-                      formik.handleChange(e);
-                      setStateValue('');
-                      setZipStatus(null);
-                      setZipError(null);
-                    }}
-                    onBlur={handleZipBlur}
-                    value={formik.values.zip}
-                    className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange bg-white dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
-                  />
-                  {loading ? (
-                    <div className="absolute right-3 top-10 w-6 animate-spin h-6 border-2 border-xorange border-t-transparent rounded-full"></div>
-                  ) : zipStatus === 'valid' ? (
-                    <img src="/images/tick.svg" alt="Valid" className="absolute right-6 top-11 w-4" />
-                  ) : zipStatus === 'invalid' ? (
-                    <img src="/images/warning.svg" alt="Invalid" className="absolute right-3 top-10 w-6" />
-                  ) : null}
-                  {zipError && (
-                    <div className="error text-sm text-red-500">{zipError}</div>
-                  )}
-                </div>
-
-                <div className="relative">
-                  <label htmlFor="state" className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">State</label>
-                  <input
-                    id="state"
-                    name="state"
-                    type="text"
-                    readOnly
-                    value={stateValue}
-                    className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base bg-gray-100 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 focus:border-gray-200 focus:ring-transparent cursor-default"
-                  />
-                  {stateValue ? (
-                    <img src="/images/tick.svg" alt="Valid" className="absolute right-6 top-11 w-4" />
-                  ) : (
-                    <img src="/images/warning.svg" alt="Invalid" className="absolute right-3 top-10 w-6" />
-                  )}
-                </div>
-              </div>
-
-              
-
-              <div className="relative">
-                <label htmlFor="firstname" className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">First Name</label>
-                <input
-                  id="firstname"
-                  name="firstname"
-                  type="text"
-                  onChange={formik.handleChange}
-                  value={formik.values.firstname}
-                  onBlur={formik.handleBlur}
-                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
-                />
-                {formik.errors.firstname ? (
-                  <img
-                    src="/images/warning.svg"
-                    alt="Invalid"
-                    className="absolute right-3 top-10 w-6"
-                  />
-                ) : (
-                  <img
-                    src="/images/tick.svg"
-                    alt="Valid"
-                    className="absolute right-6 top-11 w-4"
-                  />
-                )}
-                {formik.touched.firstname && formik.errors.firstname && (
-                  <div className="error text-sm text-red-500">{formik.errors.firstname}</div>
-                )}
-              </div>
-
-              <div className="relative">
-                <label htmlFor="lastname" className="block mb-2 text-sm text-gray-700 font-medium dark:text-white">Last Name</label>
-                <input
-                  id="lastname"
-                  name="lastname"
-                  type="text"
-                  onChange={formik.handleChange}
-                  value={formik.values.lastname}
-                  onBlur={formik.handleBlur}
-                  className="py-3 px-4 block w-full border-gray-200 rounded-lg text-base focus:border-xorange focus:ring-xorange dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-xorange"
-                />
-                {formik.errors.lastname ? (
-                  <img
-                    src="/images/warning.svg"
-                    alt="Invalid"
-                    className="absolute right-3 top-10 w-6"
-                  />
-                ) : (
-                  <img
-                    src="/images/tick.svg"
-                    alt="Valid"
-                    className="absolute right-6 top-11 w-4"
-                  />
-                )}
-                {formik.touched.lastname && formik.errors.lastname && (
-                  <div className="error text-sm text-red-500">{formik.errors.lastname}</div>
-                )}
-              </div>
                 
 
 

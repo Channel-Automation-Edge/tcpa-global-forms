@@ -21,7 +21,7 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
     return null;
   }
 
-  const { promo, setPromo, newsletterOptIn, setNewsletterOptIn, generalOptIn, setGeneralOptIn, phone, firstname, lastname, email, zip, state, selectedService, serviceSpecification, contractorPreferences, termsAndPrivacyOptIn, userNs, teamId, formId } = appContext;
+  const { promo, setPromo, newsletterOptIn, setNewsletterOptIn, generalOptIn, setGeneralOptIn, phone, firstname, lastname, email, zip, state, selectedService, serviceSpecification, contractorPreferences, termsAndPrivacyOptIn, userNs, teamId, formId, address1, address2, city } = appContext;
   const [selectedPromo, setSelectedPromo] = useState<string>(promo);
   const [isOptInRequired, setIsOptInRequired] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false); // State to control spinner
@@ -169,6 +169,9 @@ const Step2PromoOptIn: React.FC<Step2PromoOptInProps> = ({ onNext, onBack, onRes
           phone: formattedPhone,
           zip,
           state,
+          city,
+          address1,
+          address2,
           service: serviceName, // Use the fetched service name
           serviceSpecification,
           contractorPreferences,
