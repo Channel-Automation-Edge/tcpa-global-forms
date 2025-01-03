@@ -120,7 +120,7 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
               firstname: values.firstname,
               lastname: values.lastname,
               services: appContext.contractorServices,
-
+              smsAndCall_optIn: values.generalOptIn,
             }
           ]);
       
@@ -145,6 +145,16 @@ const Step2Info: React.FC<Step2InfoProps> = ({ onNext, onBack }) => {
                 firstname: values.firstname,
                 lastname: values.lastname,
                 services: appContext.contractorServices,
+                consent: {
+                  sms: {
+                    description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Home Project Partners to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
+                    value: values.generalOptIn,
+                  },
+                  call: {
+                    description: 'By clicking Confirm Details, I am providing my ESIGN signature and express written consent for Home Project Partners to contact me at the number provided below for marketing purposes. This includes communication via automated technology, such as SMS/MMS messages, Al generative voice, and prerecorded and/or artificial voice messages. I acknowledge my consent is not required to obtain any goods or services and i can reach out to them directly at (888) 508-3081.',
+                    value: values.generalOptIn,
+                  },
+                },
               },
               error: error ? error.message : null
             })
