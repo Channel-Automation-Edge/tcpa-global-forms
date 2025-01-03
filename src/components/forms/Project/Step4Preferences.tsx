@@ -183,7 +183,7 @@ useEffect(() => {
         <div className='flex justify-center text-center mb-8'>
           <div className="max-w-[40rem] text-center">
             <h1 className="block text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl font-bold sm:font-bold md:font-semibold lg:font-semibold text-gray-800 dark:text-white">
-            What <span className="text-xorange">type of expert</span> do you need? Select as many as you like—it's completely free!
+            Select the offers you want from your <span className="text-xorange">ideal expert</span> so we can find the best match for you
             </h1>
           </div>
         </div>

@@ -219,29 +219,29 @@ const Step3Specifications: React.FC<Step3SpecificationsProps> = ({ onNext, onBac
             <button
               type="button"
               className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[200px] h-[80px] sm:h-[120px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
-              onClick={() => handleSelect("Replacement")}
+              onClick={() => handleSelect("Remodel")}
               style={{
-                boxShadow: serviceSpecification === "Replacement"
+                boxShadow: serviceSpecification === "Remodel"
                   ? 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px'
                   : 'rgba(0, 0, 0, 0.07) 0px 22px 30px -6px',
                 transition: 'box-shadow 0.3s ease',
-                borderColor: serviceSpecification === "Replacement"
+                borderColor: serviceSpecification === "Remodel"
                   ? 'rgba(255, 81, 0, 0.7)'
                   : 'rgba(157, 176, 197, 0.25)',
               }}
               onMouseEnter={(e) => {
-                if (serviceSpecification === "Replacement") {
+                if (serviceSpecification === "Remodel") {
                   e.currentTarget.style.boxShadow = 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px';
                   e.currentTarget.style.borderColor = 'rgba(255, 81, 0, 0.7)';
                 }
               }}
               onMouseLeave={(e) => {
-                if (serviceSpecification !== "Replacement") {
+                if (serviceSpecification !== "Remodel") {
                   e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 22px 30px -6px';
                   e.currentTarget.style.borderColor = 'rgba(157, 176, 197, 0.25)';
               }}}
             >
-              <span className="text-gray-800 text-base font-medium sm:text-center text-left">Replacement</span>
+              <span className="text-gray-800 text-base font-medium sm:text-center text-left">Remodel</span>
             </button>
             <button
               type="button"
