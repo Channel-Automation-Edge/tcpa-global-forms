@@ -23,25 +23,38 @@ const NavBar = () => {
               <span className="sr-only">Home</span>
               <img src="/images/logo.svg" alt="Logo" className="h-12 sm:h-14 lg:h-16" />
             </a>
-          </div>
-
+          </div> 
           <div className="flex items-center gap-4">
           <div className="sm:flex sm:gap-4">
               <a
-                className="rounded-md bg-transparent px-5 py-2.5 text-sm font-medium text-white inline-flex items-center"
+                className="rounded-md bg-transparent px-5 py-2.5 text-[12px] sm:text-sm font-medium text-white inline-flex text-center items-center"
                 href="/contractor-signup"
               >
-                I'm a contractor
+                Join Our Pro Network
               </a>
             </div>
+
             <div className="sm:flex sm:gap-4">
+              <a href="tel:+18594075999">
+                <img
+                    src="/images/phone.svg" // Replace with your image path
+                    alt="Call"
+                    className="sm:hidden w-6 h-6 mr-2" // Adjust width and height as needed
+                    
+                  />
+              </a>
+            
+            </div>
+            
+            <div className="hidden sm:flex sm:gap-4">
+              
               <a
                 className="rounded-md bg-transparent px-5 py-2.5 text-sm font-medium text-white inline-flex items-center"
                 href="tel:+18594075999"
               >
                 <img
                   src="/images/phone.svg" // Replace with your image path
-                  alt="Call"
+                  alt="+1 (859) 407-5999"
                   className="w-6 h-6 mr-2" // Adjust width and height as needed
                 />
                 +1 (859) 407-5999

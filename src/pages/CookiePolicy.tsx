@@ -52,7 +52,13 @@ const CookiePolicy = () => {
             <dl className="list-description">You can opt-out of PostHog tracking by blocking cookies. Note however, that we are tracking for how the website is used, such as, which buttons were clicked to better understand user preferences. If you block cookies, we won't be able to improve our website for user experience.</dl>
           </li>
           <li className="list-label">Browser Settings:
-            <dl className="list-description">You can manage cookies through your web browser settings. Most browsers allow you to block all cookies, block only third-party cookies, or delete existing cookies. However, please note that blocking or deleting cookies may affect the functionality of our website and other websites you visit. Instructions for managing cookies in common browsers can be found here: [Provide links to instructions for common browsers like Chrome, Firefox, Safari]</dl>
+            <dl className="list-description">You can manage cookies through your web browser settings. Most browsers allow you to block all cookies, block only third-party cookies, or delete existing cookies. However, please note that blocking or deleting cookies may affect the functionality of our website and other websites you visit. Instructions for managing cookies in common browsers can be found here: 
+            </dl>
+            <ul className="list-disc list-inside ml-2 mt-2 text-sm">
+              <li><a href="https://support.google.com/chrome/answer/95647?hl=en&co=GENIE.Platform%3DDesktop">https://support.google.com/chrome/answer/95647?hl=en&co=GENIE.Platform%3DDesktop</a></li>
+              <li><a href="https://support.mozilla.org/en-US/kb/clear-cookies-and-site-data-firefox">https://support.mozilla.org/en-US/kb/clear-cookies-and-site-data-firefox</a></li>
+              <li><a href="https://support.apple.com/guide/safari/manage-cookies-sfri11471/mac">https://support.apple.com/guide/safari/manage-cookies-sfri11471/mac</a></li>
+            </ul>
           </li>
         </ul>
         <h3 className="heading-secondary">Changes to this Cookie Policy:</h3>

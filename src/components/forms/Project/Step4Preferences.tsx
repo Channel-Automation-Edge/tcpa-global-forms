@@ -190,13 +190,13 @@ useEffect(() => {
 
         <form onSubmit={handleSubmit} className="mt-12 flex flex-col h-full">
           <div className="flex flex-wrap justify-center gap-4 sm:gap-[20px]" style={{ marginTop: '15px', width: '100%' }}>
-            {['Offers Financing', 'Fast Install', 'Extensive Warranties', 'Credit Cards Payments', 'Offers Price Matching'].map((preference, index) => {
+            {['Offers Financing', 'Fast Install', 'Extensive Warranties', 'Credit Card Payments', 'Offers Price Matching'].map((preference, index) => {
               // Determine the correct icon based on the preference
               const iconSrc = {
                 'Offers Financing': '/images/financing.svg',
                 'Fast Install': '/images/fast.svg',
                 'Extensive Warranties': '/images/warranty.svg',
-                'Credit Cards Payments': '/images/credit.svg',
+                'Credit Card Payments': '/images/credit.svg',
                 'Offers Price Matching': '/images/price.svg',
               }[preference];
 
