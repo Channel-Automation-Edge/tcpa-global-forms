@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
-import supabase from '../lib/supabaseClient';
+import {central} from '@/lib/supabaseClient';
 
 const useResetDatabase = () => {
   const appContext = useContext(AppContext);
@@ -12,13 +12,13 @@ const useResetDatabase = () => {
     }
 
     try {
-      const { formId } = appContext; // Ensure formId is accessible
+      const { form } = appContext; // Ensure formId is accessible
 
       // Check if formId exists in the database
-      const { data, error } = await supabase
+      const { data, error } = await central
         .from('Forms')
         .select('id')
-        .eq('id', formId)
+        .eq('id', form.formId)
         .single();
 
       if (error && error.code !== 'PGRST116') {
@@ -28,7 +28,7 @@ const useResetDatabase = () => {
 
       if (data) {
         // formId exists, clear specific fields
-        const { error: updateError } = await supabase
+        const { error: updateError } = await central
           .from('Forms')
           .update({
             optIn_completion: false,
@@ -37,7 +37,7 @@ const useResetDatabase = () => {
             termsAndPrivacy_optIn: false,
             smsAndCall_optIn: false,
           })
-          .eq('id', formId);
+          .eq('id', form.formId);
 
         if (updateError) {
           console.error('Error clearing form fields:', updateError);

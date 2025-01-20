@@ -36,26 +36,17 @@ export default {
   				DEFAULT: '#00C9B7',
   				foreground: 'hsl(var(--secondary-foreground))'
   			},
-			xorange:{
-				DEFAULT: '#FA5100',
+			accentColor:{
+				DEFAULT: 'var(--accent)',
 			},
-			xorangeDark:{
-				DEFAULT: '#D94900',
+			accentDark:{
+				DEFAULT: 'var(--dark)', //darker
 			},
-			xyellow:{
-				DEFAULT: '#FAD000',
-			},
-			xblue:{
-				DEFAULT: '#2E5B5E',
-			},
-			xpurple:{
-				DEFAULT: '#414871',
-			},
-			lpurple:{
-				DEFAULT: '#E6E9FD',
+			accentLight:{
+				DEFAULT: 'var(--light)', //light
 			},
 			xbg:{
-				DEFAULT: '#F9F9FF', //#F0F1FB 
+				DEFAULT: '#F9F9FF', 
 			},
 			  off: {
 				DEFAULT: '#F0F0E6',	
@@ -115,4 +106,3 @@ export default {
   },
   plugins: [forms, preline, animate],
 }
-

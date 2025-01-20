@@ -3,102 +3,63 @@ import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import GradualSpacing from './ui/gradual-spacing';
 import { motion } from 'framer-motion';
-import { AppContext } from '../context/AppContext';
+import { AppContext } from '@/context/AppContext';
 import NavBar from './NavBar.tsx';
-import posthog from 'posthog-js';
 import useClearFormState from '@/hooks/useClearFormState.tsx';
 
 const Hero = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const appContext = useContext(AppContext);
-  const clearFormState = useClearFormState();;
+  const clearFormState = useClearFormState();
 
-  type HeroContentKey = 'default' | 'fresh' | 'scheduled' | 'past';
+  if (!appContext) {
+    return null; 
+  }
 
+  const { contractor, setForm, setUser, user, form } = appContext; // Include user from appContext
   const urlParams = new URLSearchParams(location.search);
-  const segment = (urlParams.get('segment') as HeroContentKey) || 'default'; // Type-casting segment
   const firstnameParam = urlParams.get('firstname') || '';
   const stateParam = urlParams.get('state') || '';
   const zipParam = urlParams.get('zip') || '';
 
-  const heroContent: Record<HeroContentKey, { h1: string; lede: string; ctaLabel: string }> = {
-    default: {
-      h1: "Instant Everything, Incredible Pricing",
-      lede: zipParam ? `Hi First Name, find top contractors in ${stateParam} near ${zipParam} for your upcoming remodel and control your quotes`
-           : stateParam ? `Hi First Name, find top contractors in ${stateParam} for your upcoming remodel and control your quotes`
-           : "Hi First Name, find top contractors in your area for your upcoming remodel and control your quotes",
-      ctaLabel: "Get Started Now",
-    },
-    fresh: {
-      h1: "Instant Everything, Incredible Pricing",
-      lede: zipParam ? `Hi First Name, find top contractors in ${stateParam} near ${zipParam} for your upcoming remodel and control your quotes`
-           : stateParam ? `Hi First Name, find top contractors in ${stateParam} for your upcoming remodel and control your quotes`
-           : "Hi First Name, find top contractors in your area for your upcoming remodel and control your quotes",
-      ctaLabel: "Get Started Now",
-    },
-    scheduled: {
-      h1: "Manage Your Home Project Matches",
-      lede: zipParam ? `Hi First Name, find top contractors in ${stateParam} near ${zipParam} for your home project and control your matches`
-           : stateParam ? `Hi First Name, find top contractors in ${stateParam} for your home project and control your matches`
-           : "Hi First Name, find top contractors in your area for your home project and control your matches",
-      ctaLabel: "See My Matches",
-    },
-    past: {
-      h1: "Control Exclusive Discounts on Future Projects",
-      lede: zipParam ? `Hi First Name, find top contractors in ${stateParam} near ${zipParam} for your next project and control exclusive discounts.`
-           : stateParam ? `Hi First Name, find top contractors in ${stateParam} for your next project and control exclusive discounts.`
-           : "Hi First Name, find top contractors in your area for your next project and control exclusive discounts.",
-      ctaLabel: "Explore Exclusive Discounts",
-    },
-  };
+  // Default content
+  const defaultH1 = "Instant Everything, Incredible Pricing";
+  const defaultLede = zipParam
+    ? `Hi ${firstnameParam}, find top contractors in ${stateParam} near ${zipParam} for your upcoming remodel and control your quotes`
+    : stateParam
+    ? `Hi ${firstnameParam}, find top contractors in ${stateParam} for your upcoming remodel and control your quotes`
+    : "Hi there, find top contractors in your area for your upcoming remodel and control your quotes";
+  const defaultCtaLabel = "Get Started Now";
 
-  const currentHeroContent = heroContent[segment];
-
-  if (!appContext) {
-    return null; // Handle the case where appContext is not available
-  }
+  const heroH1 = contractor.content.hero_h1 || defaultH1;
+  const heroLede = contractor.content.hero_lede || defaultLede;
+  const heroCtaLabel = contractor.content.hero_cta || defaultCtaLabel;
 
   const [buttonText, setButtonText] = useState("Get a Free Consultation Now");
   const [, setSubheadingText] = useState("Or select a service to get started");
-  const [subheadingText1, setSubheadingText1] = useState("Connect with trusted contractors who have the skills and experience to get the job done right");
+  const [subheadingText1, setSubheadingText1] = useState(heroLede);
   
-  const capitalizeFirstLetter = (input: string): string => {
-    return input.charAt(0).toUpperCase() + input.slice(1);
-  };
+  const initialZip = user.zip && user.zip.trim() !== '' ? user.zip : zipParam; // Use user.zip if available, otherwise url zip
+  const [zip, setZip] = useState<string>(initialZip);  // Initialize zip state
+  const [isZipValid, setIsZipValid] = useState<boolean>(initialZip.length >= 4 && initialZip.length <= 5); // Validate initial zip
 
-  const adjustedHeroContent = {
-    ...currentHeroContent,
-    lede: currentHeroContent.lede.replace('First Name', firstnameParam || '').trim(),
-  };
+  const [showZipInput, setShowZipInput] = useState<boolean>(true);  // State to control ZIP input visibility
 
-  if (!firstnameParam) {
-    adjustedHeroContent.lede = adjustedHeroContent.lede
-      .replace(`Hi ${firstnameParam}, `, '')
-      .replace(`Hi ${firstnameParam}! `, '')
-      .replace(`Welcome back, ${firstnameParam}! `, '')
-      .trim();
-
-    // Capitalize the first letter of the resulting string
-    adjustedHeroContent.lede = capitalizeFirstLetter(adjustedHeroContent.lede);
-  }
-
+  // Update button text based on form progress
   useEffect(() => {
-    const formId = localStorage.getItem('formID');
-    const dynamicSubheading = adjustedHeroContent.lede || `Hi ${firstnameParam}! Connect with trusted contractors who have the skills and experience to get the job done right`;
+    const step = localStorage.getItem('formStep');
 
-    if (formId !== null && formId !== "") {
-      console.log('form id is not empty: ', formId);
+    if (step !== null && step !== "1") {
       setButtonText("Finish your Previous Quote");
       setSubheadingText("Or reset your progress and select another service");
+      setShowZipInput(false);  // Hide ZIP input
     } else {
-      setButtonText(adjustedHeroContent.ctaLabel);
+      setButtonText(heroCtaLabel);
+      setShowZipInput(true);  // Show ZIP input
     }
-
-    // Set the dynamic subheading in both branches
-    setSubheadingText1(dynamicSubheading);
-
-  }, [adjustedHeroContent, firstnameParam]);
+    setSubheadingText1(heroLede);
+  }, [appContext.contractor, appContext.services, heroLede, heroCtaLabel]);
 
   // Function to append current URL parameters
   const navigateWithParams = (path: string) => {
@@ -118,30 +79,41 @@ const Hero = () => {
   };
 
   const handleButtonClick = () => {
-    let formId = localStorage.getItem('formID');
+    let formId = form.formId;
 
+    // If formId is not set, create a new formId
     if (!formId) {
       clearFormState();
-      const urlParams = new URLSearchParams(location.search);
-      const phone = urlParams.get('phone') || generateRandomString(9);
 
       const dateTime = new Date().toISOString().replace(/[-:.T]/g, '').slice(0, 14); // YYYYMMDDHHMMSS format
-      const randomString = generateRandomString(4);
+      const randomString = generateRandomString(6);
 
-      formId = `${phone}-${dateTime}-${randomString}`;
-      localStorage.setItem('formID', formId);
-      posthog.capture('cta clicked: New form created', {
-        cta_label: buttonText,
-        form_id: formId,
-      });
+      formId = `${contractor.id}-${dateTime}-${randomString}`;
+      console.log('Generated formId:', formId);
     } else {
-      posthog.capture('cta clicked: Form retrieved', {
-        cta_label: buttonText,
-        form_id: formId,
-      });
+      console.log('Using existing form ID:', formId);
     }
-    appContext.setFormId(formId);
+
+    // Update the form and user object in context
+    setForm((prevForm) => ({
+      ...prevForm,
+      formId: formId,
+    }));
+
+    setUser((prevUser) => ({
+      ...prevUser,
+      zip: zip,  // Save the zip code to the user context
+    }));
+
     navigateWithParams('/request-quotes');
+  };
+
+  const handleZipChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value.replace(/\D/g, ''); // Remove non-numeric characters
+    if (value.length <= 5) {  // Max length of 5
+      setZip(value);
+      setIsZipValid(value.length >= 4); // Valid if length is 4 or 5
+    }
   };
 
   return (
@@ -162,45 +134,20 @@ const Hero = () => {
         <div className="relative z-[2] w-full overflow-hidden"> {/* Added z-index to content container */}
           <NavBar />
           <div className="z-10 pb-12 md:pb-14 lg:pb-16 flex items-center justify-center flex-col px-4 mt-0 space-y-[25px]">
-            {/* if segment is scheduled or past */}
-            {segment === 'scheduled' || segment === 'past' ? (  
-              <>
-                <GradualSpacing
-                className="hidden sm:block font-display text-center text-4xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-5xl font-semibold -tracking-widest text-white dark:text-white mt-14 lg:mt-20"
-                text={adjustedHeroContent.h1}
-              />
-
-                <div className="block sm:hidden">
-                <GradualSpacing
+            <GradualSpacing
+              className="hidden sm:block font-display text-center text-4xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-5xl font-semibold -tracking-widest text-white dark:text-white mt-14 lg:mt-20"
+              text={heroH1}
+            />
+            <div className="block sm:hidden">
+              <GradualSpacing
                 className="font-display text-center text-[32px] font-bold -tracking-widest text-white dark:text-white mt-4"
-                text={adjustedHeroContent.h1.split(' ').slice(0, 3).join(' ')}
+                text={heroH1.split(' ').slice(0, 3).join(' ')}
               />
               <GradualSpacing
                 className="font-display text-center text-[32px] font-bold -tracking-widest text-white dark:text-white"
-                text={adjustedHeroContent.h1.split(' ').slice(3).join(' ')}
+                text={heroH1.split(' ').slice(3).join(' ')}
               />
             </div>
-              </>   
-
-            
-            ) : ( 
-            <>
-              <GradualSpacing
-                className="hidden sm:block font-display text-center text-4xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-5xl font-semibold -tracking-widest text-white dark:text-white mt-14 lg:mt-20"
-                text='Instant Everything, Incredible Pricing'
-              />
-              <div className="block sm:hidden">
-              <GradualSpacing
-                className="font-display text-center text-[32px] font-bold -tracking-widest text-white dark:text-white mt-4"
-                text='Instant Everything'
-              />
-              <GradualSpacing
-                className="font-display text-center text-[32px] font-bold -tracking-widest text-white dark:text-white"
-                text='Incredible Pricing'
-              />
-            </div>
-            </>
-            )}
 
             <motion.p
               initial={{ opacity: 0, y: 5 }}
@@ -211,47 +158,31 @@ const Hero = () => {
               {subheadingText1}
             </motion.p>
 
-            <style>{`
-              @keyframes wiggle {
-                0%, 100% { transform: rotate(6deg); }
-                25% { transform: rotate(8deg); }
-                75% { transform: rotate(4deg); }
-              }
-            `}</style>
-
-            <motion.button
-              initial={{ opacity: 0, y: 5 }}
+            <motion.div initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 1 }}
-              transition={{ delay: 0.6 }}
-              className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-xorange text-xbg transition-transform transform hover:scale-105 relative mb-10"
-              onClick={handleButtonClick}
-              style={{
-                boxShadow: 'rgba(0, 0, 0, 0.07) 0px 22px 30px -8px',
-                transition: 'box-shadow 0.3s ease',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 10px 25px -4px';
-              }}
-            >
-              {buttonText}
-              <svg
-                className="shrink-0 size-4"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+              transition={{ delay: 0.7 }} className="mt-5 lg:mt-8 flex flex-col items-center gap-2 sm:flex-row sm:gap-3">
+              {showZipInput && (
+                <div className="w-full sm:w-auto">
+                  <input 
+                    type="text" 
+                    id="hero-input" 
+                    name="hero-input" 
+                    className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-accentColor text-center" 
+                    placeholder="Enter ZIP Code" 
+                    value={zip}
+                    onChange={handleZipChange}
+                  /> 
+                </div>
+              )}
+              <button 
+                className="w-full sm:w-auto py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-accentColor text-white hover:bg-accentDark focus:outline-none focus:bg-accentDark disabled:opacity-50 disabled:pointer-events-none" 
+                onClick={handleButtonClick} 
+                disabled={!isZipValid && showZipInput} // Disable button if zip is not valid
               >
-                <path d="m9 18 6-6-6-6" />
-              </svg>
-            </motion.button>
+                {buttonText}
+              </button>
+            </motion.div>
+
           </div>
         </div>
       </div>

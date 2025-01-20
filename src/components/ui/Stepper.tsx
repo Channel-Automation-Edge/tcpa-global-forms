@@ -20,7 +20,7 @@ const Stepper: React.FC<StepperProps> = ({ currentStep }) => {
   <li
     key={index}
     className={`flex items-center justify-center gap-2 p-2 small-stepper:p-3 md:p-4 ${
-      currentStep === index + 1 ? 'bg-lpurple' : ''
+      currentStep === index + 1 ? 'bg-accentLight' : ''
     }`}
   >
     <img

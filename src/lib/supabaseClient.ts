@@ -1,7 +1,11 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = 'https://iqgsxsybllqrazvuebdu.supabase.co';//  https://iqgsxsybllqrazvuebdu.supabase.co
-const supabaseKey = import.meta.env.VITE_SUPABASE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const centralUrl = import.meta.env.VITE_CENTRAL_URL;
+const centralKey = import.meta.env.VITE_CENTRAL_KEY;
+const central = createClient(centralUrl, centralKey)
 
-export default supabase;
+const companyUrl = import.meta.env.VITE_COMPANY_URL;
+const companyKey = import.meta.env.VITE_COMPANY_KEY;
+const company = createClient(companyUrl, companyKey)
+
+export { central, company };

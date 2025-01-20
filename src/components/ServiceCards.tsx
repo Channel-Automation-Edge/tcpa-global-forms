@@ -1,158 +1,123 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '../context/AppContext'; // Ensure AppContext is correctly imported
-import supabase from '../lib/supabaseClient';
-import useFormPersistence from '../hooks/useFormPersistence';
 import useClearFormState from '../hooks/useClearFormState';
 import { useNavigate, useLocation } from 'react-router-dom';
 import BlurFade from './ui/blur-fade';
-import posthog from 'posthog-js';
+import Services from './Services';
+
 const ServiceCards: React.FC = () => {
-  const [services, setServices] = useState<any[]>([]);
-  const supabaseClient = supabase;
   const appContext = useContext(AppContext);
-  const selectedService = localStorage.getItem('selectedService');
+  if (!appContext) {
+    return null;
+  }
+
+  const { contractor, services, user, setUser, form, setForm } = appContext;
+
   const navigate = useNavigate();
   const location = useLocation();
   const clearFormState = useClearFormState();
-  const [, , resetParentCurrentStep] = useFormPersistence('parentFormStep', 1);
-  const [, setProjectCurrentStep, resetProjectCurrentStep] = useFormPersistence('projectFormStep', 1);
-  const [, , resetDetailsCurrentStep] = useFormPersistence('detailsFormStep', 1);
-  const [, , resetAppointmentCurrentStep] = useFormPersistence('appointmentFormStep', 1);
-  const params = new URLSearchParams(window.location.search);
-  const userNs = params.get('user_ns');
 
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const { data, error } = await supabaseClient
-          .from('Services')
-          .select('*');
+  const urlParams = new URLSearchParams(location.search);
+  const zipParam = urlParams.get('zip') || '';
+  const initialZip = user.zip && user.zip.trim() !== '' ? user.zip : zipParam; 
+  const [zip, setZip] = useState<string>(initialZip);
+  const [isZipValid, setIsZipValid] = useState<boolean>(initialZip.length >= 4 && initialZip.length <= 5);
 
-        if (error) {
-          console.error('Error fetching services:', error);
-          return;
-        }
+  const [showZipInput, setShowZipInput] = useState<boolean>(true);
+  const [buttonText, setButtonText] = useState<string>("");
 
-        setServices(data); // Store fetched services
-      } catch (err) {
-        console.error('Unexpected error fetching services:', err);
-      }
-    };
 
-    fetchServices();
-  }, [supabaseClient]);
-
-  const formatPhoneNumber = (phone:string) => {
-    if (!phone || phone.length !== 10) {
-      return phone; // Return the original value if it's not a 10-digit number
-    }
+  // Update button text based on form progress
+    useEffect(() => {
+      const step = localStorage.getItem('formStep');
   
-    const areaCode = phone.slice(0, 3);
-    const centralOfficeCode = phone.slice(3, 6);
-    const lineNumber = phone.slice(6);
-  
-    return `+1 (${areaCode}) ${centralOfficeCode}-${lineNumber}`;
-  };
-  
-  
-
-  const handleServiceSelect = async (serviceId: string) => {
-    if (!appContext) {
-      return;
-    }
-  
-    const { setSelectedService, setFormId } = appContext;
-    const urlParams = new URLSearchParams(location.search);
-    const phoneParam = urlParams.get('phone') || ''
-    const state = urlParams.get('state') || ''
-    const formattedPhone = formatPhoneNumber(phoneParam);
-
-    resetParentCurrentStep();
-    resetProjectCurrentStep();
-    resetDetailsCurrentStep();
-    resetAppointmentCurrentStep();
-    clearFormState(); 
-
-    let formId = localStorage.getItem('formID');
-    if (!formId) {
-      // Generate a new formId if it doesn't exist
-      const phone = phoneParam || generateRandomString(9);
-  
-      const dateTime = new Date().toISOString().replace(/[-:.T]/g, '').slice(0, 14); // YYYYMMDDHHMMSS format
-      const randomString = generateRandomString(4);
-  
-      formId = `${phone}-${dateTime}-${randomString}`;
-      localStorage.setItem('formID', formId);
-    } 
-    setFormId(formId);
-  
-    // Set new service and update local storage
-    setSelectedService(serviceId); // Use serviceId here
-    localStorage.setItem('selectedService', JSON.stringify(serviceId));
-    setProjectCurrentStep(2);
-    navigateWithParams('/request-quotes'); 
-    
-    
-
-    try {
-      // Check if formId exists in the database
-      const { data, error } = await supabaseClient
-        .from('Forms')
-        .select('id')
-        .eq('id', formId)
-        .single();
-
-      if (error && error.code !== 'PGRST116') {
-        console.error('Error checking formId:', error);
-        return;
-      }
-
-      if (data) {
-        // formId exists, 
-        const { error: updateError } = await supabaseClient
-          .from('Forms')
-          .update({
-            updated_at: new Date().toISOString(),
-            optIn_completion: false,
-            appointment_completion: false,
-            email_optIn: false,
-            termsAndPrivacy_optIn: false,
-            smsAndCall_optIn: false,
-            service: serviceId,
-            phone: formattedPhone,
-            user_ns: userNs,
-            state: state
-          })
-          .eq('id', formId);
-
-        if (updateError) {
-          console.error('Error updating formId:', updateError);
-          return;
-        }
-
+      if (step !== null && step !== "1") {
+        setButtonText("Finish your Previous Quote");
+        setShowZipInput(false);  // Hide ZIP input
       } else {
-        // formId does not exist, insert a new row
-        const { error: insertError } = await supabaseClient
-          .from('Forms')
-          .insert([{ id: formId, created_at: new Date().toISOString(), updated_at: new Date().toISOString(), phone: formattedPhone, service: serviceId, user_ns: userNs, state: state, accepted_cookies: appContext.cookiesAccepted, cookie_consent_id: appContext.cookieConsentId, cookie_updated_at: new Date().toISOString() }]);
-
-        if (insertError) {
-          console.error('Error inserting formId:', insertError);
-          return;
-        }
+        setButtonText(contractor.content.services_cta || "See Available Services");
+        setShowZipInput(true);  // Show ZIP input
       }
-    } catch (err) {
-      console.error('Unexpected error:', err);
-      return;
+    }, [appContext.contractor, appContext.services]);
+
+  const handleButtonClick = () => {
+    let formId = form.formId;
+
+    // If formId is not set, create a new formId
+    if (!formId) {
+      clearFormState();
+
+      const dateTime = new Date().toISOString().replace(/[-:.T]/g, '').slice(0, 14); // YYYYMMDDHHMMSS format
+      const randomString = generateRandomString(6);
+
+      formId = `${contractor.id}-${dateTime}-${randomString}`;
+      console.log('Generated formId:', formId);
+    } else {
+      console.log('Using existing form ID:', formId);
     }
-    posthog.capture('service_select', {
-      step: 'landing page',
-      form_id: formId,
-      service_id: serviceId,
-      zip: appContext.zip,
-    });
-    
+
+    // Update the form and user object in context
+    setForm((prevForm) => ({
+      ...prevForm,
+      formId: formId,
+    }));
+
+    setUser((prevUser) => ({
+      ...prevUser,
+      zip: zip,  // Save the zip code to the user context
+    }));
+
+    navigateWithParams('/request-quotes');
   };
+
+  const handleZipChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value.replace(/\D/g, ''); // Remove non-numeric characters
+    if (value.length <= 5) {  // Max length of 5
+      setZip(value);
+      setIsZipValid(value.length >= 4); // Valid if length is 4 or 5
+    }
+  };
+
+  //   if (!appContext) {
+  //     return;
+  //   }
+
+  //   const { form, setForm } = appContext;
+  //   const urlParams = new URLSearchParams(location.search);
+  //   const phoneParam = urlParams.get('phone') || '';
+
+  //   resetCurrentStep();
+  //   clearFormState();
+
+  //   let formId = localStorage.getItem('formID');
+  //   if (!formId) {
+  //     // Generate a new formId if it doesn't exist
+  //     const phone = phoneParam || generateRandomString(9);
+
+  //     const dateTime = new Date().toISOString().replace(/[-:.T]/g, '').slice(0, 14); // YYYYMMDDHHMMSS format
+  //     const randomString = generateRandomString(4);
+
+  //     formId = `${phone}-${dateTime}-${randomString}`;
+  //     localStorage.setItem('formID', formId);
+  //   }
+
+  //   // Update the form object in context
+  //   setForm({
+  //     ...form,
+  //     formId: formId,
+  //     selectedService: serviceId,
+  //   });
+
+  //   console.log('Selected service:', serviceId);
+  //   console.log('Form ID:', formId);
+  //   console.log(appContext.form);
+  //   console.log(services);
+
+  //   // Update local storage
+  //   localStorage.setItem('selectedService', JSON.stringify(serviceId));
+  //   setCurrentStep(2);
+  //   navigateWithParams('/request-quotes');
+  // };
 
   // Function to generate a random string
   const generateRandomString = (length: number): string => {
@@ -171,60 +136,44 @@ const ServiceCards: React.FC = () => {
     navigate(`${path}?${currentParams.toString()}`);
   };
 
+  const test = () => {
+    console.log('test');
+  }
+
   return (
     <div className="z-10 max-w-[100rem] px-4 py-10 lg:py-14 mx-auto relative bg-white">
-        <div className="text-center">
-          {selectedService && JSON.parse(selectedService) !== "" ? (
-
-            <BlurFade delay={3 * 0.15}  yOffset={15} className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200 mt-6">
-            Or select another <span className="text-xorange">service</span> to reset your progress
-
-            </BlurFade>) : (
-
-            <BlurFade delay={3 * 0.15}  yOffset={15} className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200 mt-6">
-            Or select a <span className="text-xorange">service</span> to get started
-
-            </BlurFade>)
-          }
-          <p className="mt-2 md:mt-4 text-gray-500 dark:text-neutral-500"></p>
-        </div>
-      <div className="space-y-8">
-      <div className="flex flex-wrap justify-center gap-4 sm:gap-[20px]" style={{ marginTop: '15px', width: '100%' }}>
-      {services.map((service, index) => (
-        <BlurFade
-          key={service.id}
-          delay={index * 0.1} // Incremental delay for staggered effect
-                  
-                  yOffset={8}
-          className="flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[210px] h-[80px] sm:h-[156px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white"
-          onClick={() => handleServiceSelect(service.id)}
-          style={{
-            boxShadow: 'rgba(0, 0, 0, 0.07) 0px 22px 30px -6px',
-            transition: 'box-shadow 0.3s ease',
-            borderColor: 'rgba(157, 176, 197, 0.25)',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.boxShadow = 'rgba(255, 81, 0, 0.7) 0px 10px 25px -6px';
-            e.currentTarget.style.borderColor = 'rgba(255, 81, 0, 0.7)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.boxShadow = 'rgba(0, 0, 0, 0.07) 0px 10px 25px -6px';
-            e.currentTarget.style.borderColor = 'rgba(157, 176, 197, 0.25)';
-          }}
-        >
-          <img
-            src={service.photo}
-            alt={service.name}
-            className="w-12 h-12 sm:w-14 sm:h-14 sm:mb-4 ml-2 mr-4 sm:ml-0 sm:mr-0"
-            
-          />
-          <span className="text-gray-800 text-base font-medium text-left sm:text-center">{service.name}</span>
+      <div className="text-center">
+        <BlurFade delay={3 * 0.15} yOffset={15} className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200">
+            Check out the <span className="text-accentColor">services</span> we offer
         </BlurFade>
-      ))}
-    </div>
+        <p className="mt-2 md:mt-4 text-gray-500 dark:text-neutral-500"></p>
+      </div>
+      <Services services={services} handleServiceSelect={test} />
+      <div className='flex justify-center'>
+        <div className="mt-5 lg:mt-8 flex flex-col items-center gap-2 sm:flex-row sm:gap-3">
+          {showZipInput && (
+            <div className="w-full sm:w-auto">
+              <input 
+                type="text" 
+                id="hero-input" 
+                name="hero-input" 
+                className="py-3 px-4 block w-full border border-gray-200 rounded-lg text-sm focus:border-accentColor text-center" 
+                placeholder="Enter ZIP Code" 
+                value={zip}
+                onChange={handleZipChange}
+              /> 
+            </div>
+          )}
+          <button 
+            className="w-full sm:w-auto py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-accentColor bg-white text-accentColor hover:bg-accentLight disabled:opacity-50 disabled:pointer-events-none" 
+            onClick={handleButtonClick} 
+            disabled={!isZipValid && showZipInput} // Disable button if zip is not valid
+          >
+            {buttonText}
+          </button>
+        </div>
       </div>
     </div>
-    
   );
 };
 

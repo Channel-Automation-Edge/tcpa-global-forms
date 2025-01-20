@@ -43,14 +43,14 @@ const TimePickerModal: React.FC<TimePickerModalProps> = ({ isOpen, onClose, onSa
             type="time"
             value={selectedTime}
             onChange={handleTimeChange}
-            className="w-full border border-gray-300 rounded-lg p-2 focus:border-xorange focus:ring-xorange"
+            className="w-full border border-gray-300 rounded-lg p-2 focus:border-accentColor focus:ring-accentColor"
           />
         </div>
         <div className="mt-6 flex justify-end">
           <button
             type="button"
             onClick={handleSave}
-            className="py-2 px-4 bg-xorange text-white rounded-lg hover:bg-xorange-dark"
+            className="py-2 px-4 bg-accentColor text-white rounded-lg hover:bg-accentColor-dark"
           >
             Save
           </button>

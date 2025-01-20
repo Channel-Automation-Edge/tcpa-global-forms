@@ -1,8 +1,15 @@
+"use client";
+import { useContext } from 'react'; 
 import Footer from "@/components/Footer";
 import NavBar2 from "@/components/NavBar2";
+import { AppContext } from '@/context/AppContext';
 
 
 const PrivacyPolicy = () => {
+  const appContext = useContext(AppContext);
+    if (!appContext) {
+      return null; 
+    }
   return (
     <div className="bg-gray-100">
       <NavBar2 />
@@ -11,7 +18,7 @@ const PrivacyPolicy = () => {
           <div className='flex justify-center text-center mt-11'>
             <div className="my-10">
               <h1 className="heading-primary">
-                Privacy Policy for <span className="text-xorange">Home Project Partners</span>
+                Privacy Policy for <span className="text-accentColor">{appContext.contractor.name}</span>
               </h1>
             </div>
           </div>
@@ -50,7 +57,7 @@ const PrivacyPolicy = () => {
                         <li>Session Information: ($sesid), including timestamps of your visits.</li>
                         <li>Referring Website: The website you visited before coming to our website.</li>
                         <li>Initial Landing Page URL: The first page you accessed on our website, which may contain Personal Information you provided in the URL's query parameters (e.g., name, location data).</li>
-                        <p className="paragraph mb-2">For more details about the specific cookies used and their purpose, please refer to our<a href="/cookie-policy" target="_blank" rel="noopener noreferrer" className="text-xorange underline ml-1">Cookie Policy</a></p>
+                        <p className="paragraph mb-2">For more details about the specific cookies used and their purpose, please refer to our<a href="/cookie-policy" target="_blank" rel="noopener noreferrer" className="text-accentColor underline ml-1">Cookie Policy</a></p>
                     </ul>
                 </li>
                 <li><strong>Geolocation Data:</strong> We may collect general location information based on your IP address.</li>
@@ -118,11 +125,11 @@ const PrivacyPolicy = () => {
           <li>The rights as described above in "Your Privacy Rights."</li>
           <li>To exercise your rights to know, access, correct, or delete your Personal Information, please submit a request to us by either:
             <ul className="list-disc list-inside ml-4 mt-2">
-              <li>Emailing us at <a href="mailto:hello@homeprojectpartners.com" className="text-xorange underline">hello@homeprojectpartners.com</a></li>
+              <li>Emailing us at <a href="mailto:hello@homeprojectpartners.com" className="text-accentColor underline">hello@homeprojectpartners.com</a></li>
               <li>Calling us at 555-123-4567</li>
             </ul>
           </li>
-          <li>To exercise your <strong>Right to Opt-Out of Sale or Sharing for Cross-Context Behavioral Advertising</strong>, please click on the following link: <a href="http://forms.homeprojectpartners.com/form/qarIJqgP" target="_blank" rel="noopener noreferrer" className="text-xorange underline">Do Not Sell or Share My Personal Information</a>. You can also submit a request to opt-out by using the other methods listed above.</li>
+          <li>To exercise your <strong>Right to Opt-Out of Sale or Sharing for Cross-Context Behavioral Advertising</strong>, please click on the following link: <a href="http://forms.homeprojectpartners.com/form/qarIJqgP" target="_blank" rel="noopener noreferrer" className="text-accentColor underline">Do Not Sell or Share My Personal Information</a>. You can also submit a request to opt-out by using the other methods listed above.</li>
 
           <p className="paragraph">We will need to verify your identity before processing your request. To verify your identity, we may ask you to confirm certain Personal Information we have on file about you. If we cannot verify your identity, we may not be able to fulfill your request.</p>
           <p className="paragraph">You may also designate an authorized agent to make a request on your behalf. If you use an authorized agent, we may require proof that you gave the authorized agent permission to submit the request.          </p>
@@ -131,10 +138,10 @@ const PrivacyPolicy = () => {
         <h3 className="heading-secondary">Your Privacy Choices</h3>
         <ul className="list-label list-inside mt-4">
           <li className="list-label">Cookies:
-            <dl className="list-description">You have choices regarding cookies as described in our <a href="/cookie-policy" target="_blank" rel="noopener noreferrer" className="text-xorange underline ml-1">Cookie Policy</a>. You can manage your cookie preferences through our cookie consent mechanism or through your browser settings.</dl>
+            <dl className="list-description">You have choices regarding cookies as described in our <a href="/cookie-policy" target="_blank" rel="noopener noreferrer" className="text-accentColor underline ml-1">Cookie Policy</a>. You can manage your cookie preferences through our cookie consent mechanism or through your browser settings.</dl>
           </li> 
           <li className="list-label">Opt-out of PostHog:
-            <dl className="list-description">As detailed in our <a href="/cookie-policy" target="_blank" rel="noopener noreferrer" className="text-xorange underline ml-1">Cookie Policy</a>, you can opt-out of PostHog tracking by blocking cookies.</dl>
+            <dl className="list-description">As detailed in our <a href="/cookie-policy" target="_blank" rel="noopener noreferrer" className="text-accentColor underline ml-1">Cookie Policy</a>, you can opt-out of PostHog tracking by blocking cookies.</dl>
           </li> 
         </ul>
 
@@ -157,7 +164,7 @@ const PrivacyPolicy = () => {
         <p className="paragraph">We may update this Privacy Policy from time to time to reflect changes in our practices or applicable laws. We will post any changes on this page and update the "Effective Date" at the top of this policy. We encourage you to review this Privacy Policy periodically.</p>
 
         <h3 className="heading-secondary">Contact Us</h3>
-        <p className="paragraph">If you have any questions about this Privacy Policy or our privacy practices, please contact us at <a href="mailto:hello@homeprojectpartners.com" className="text-xorange underline">hello@homeprojectpartners.com</a></p>
+        <p className="paragraph">If you have any questions about this Privacy Policy or our privacy practices, please contact us at <a href="mailto:hello@homeprojectpartners.com" className="text-accentColor underline">hello@homeprojectpartners.com</a></p>
       </div>
       <Footer />
     </div>

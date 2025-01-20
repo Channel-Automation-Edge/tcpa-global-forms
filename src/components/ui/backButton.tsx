@@ -7,7 +7,7 @@ interface BackButtonProps {
 
 const BackButton: React.FC<BackButtonProps> = ({ onClick }) => {
   return (
-    <button onClick={onClick} className="flex items-center text-gray-600 hover:text-xorange transition-colors duration-200 lg:ml-20 ">
+    <button onClick={onClick} className="flex items-center text-gray-600 hover:text-accentColor transition-colors duration-200 lg:ml-20 ">
       {/* <svg
         width="512"
         height="512"

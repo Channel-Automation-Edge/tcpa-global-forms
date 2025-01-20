@@ -7,9 +7,9 @@ const Benefits: React.FC = () => {
       <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
 
       <BlurFade delay={3 * 0.15} inView yOffset={15} className="text-center mb-12">
-          <h2 className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200">
-          Why Homeowners <span className="text-xorange">Love Us</span>
-          </h2>
+          <p className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200">
+          Why Homeowners <span className="text-accentColor">Love Us</span>
+          </p>
           <p className="mt-2 md:mt-4 text-gray-500 dark:text-neutral-500">
 
           </p>
@@ -20,9 +20,9 @@ const Benefits: React.FC = () => {
 
         {/* Icon Block */}
         <BlurFade delay={4 * 0.15} inView yOffset={15} className="relative flex gap-x-5 rounded-xl p-4">
-        <div className="absolute inset-0 bg-lpurple opacity-90 rounded-xl"></div>
+        <div className="absolute inset-0 bg-accentLight opacity-90 rounded-xl"></div>
           <svg
-            className="shrink-0 mt-1 size-8 text-xorange dark:text-xorange z-10"
+            className="shrink-0 mt-1 size-8 text-accentColor dark:text-accentColor z-10"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -47,9 +47,9 @@ const Benefits: React.FC = () => {
 
         {/* Icon Block */}
         <BlurFade delay={4.5 * 0.15} inView yOffset={15} className="relative flex gap-x-5 rounded-xl p-4">
-        <div className="absolute inset-0 bg-lpurple opacity-90 rounded-xl"></div>
+        <div className="absolute inset-0 bg-accentLight opacity-90 rounded-xl"></div>
           <svg
-            className="shrink-0 mt-1 size-6 text-xorange dark:text-xorange z-10"
+            className="shrink-0 mt-1 size-6 text-accentColor dark:text-accentColor z-10"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -76,9 +76,9 @@ const Benefits: React.FC = () => {
 
         {/* Icon Block */}
         <BlurFade delay={5 * 0.15} inView yOffset={15} className="relative flex gap-x-5 rounded-xl p-4">
-        <div className="absolute inset-0 bg-lpurple opacity-90 rounded-xl"></div>
+        <div className="absolute inset-0 bg-accentLight opacity-90 rounded-xl"></div>
           <svg
-            className="shrink-0 mt-1 size-6 text-xorange dark:text-xorange z-10"
+            className="shrink-0 mt-1 size-6 text-accentColor dark:text-accentColor z-10"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -105,9 +105,9 @@ const Benefits: React.FC = () => {
 
         {/* Icon Block */}
         <BlurFade delay={5.5 * 0.15} inView yOffset={15} className="relative h- flex gap-x-5 rounded-xl p-4">
-        <div className="absolute inset-0 bg-lpurple opacity-90 rounded-xl"></div>
+        <div className="absolute inset-0 bg-accentLight opacity-90 rounded-xl"></div>
           <svg
-            className="shrink-0 mt-1 size-6 text-xorange dark:text-xorange z-10"
+            className="shrink-0 mt-1 size-6 text-accentColor dark:text-accentColor z-10"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -136,9 +136,9 @@ const Benefits: React.FC = () => {
 
         {/* Icon Block */}
         <BlurFade delay={6 * 0.15} inView yOffset={15}  className="relative flex gap-x-5 rounded-xl p-4">
-        <div className="absolute inset-0 bg-lpurple opacity-90 rounded-xl"></div>
+        <div className="absolute inset-0 bg-accentLight opacity-90 rounded-xl"></div>
           <svg
-            className="shrink-0 mt-1 size-8 text-xorange dark:text-xorange z-10"
+            className="shrink-0 mt-1 size-8 text-accentColor dark:text-accentColor z-10"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -163,9 +163,9 @@ const Benefits: React.FC = () => {
 
         {/* Icon Block */}
         <BlurFade delay={6.5 * 0.15} inView yOffset={15} className="relative flex gap-x-5 rounded-xl p-4">
-        <div className="absolute inset-0 bg-lpurple opacity-90 rounded-xl"></div>
+        <div className="absolute inset-0 bg-accentLight opacity-90 rounded-xl"></div>
           <svg
-            className="shrink-0 mt-1 size-8 text-xorange dark:text-xorange z-10"
+            className="shrink-0 mt-1 size-8 text-accentColor dark:text-accentColor z-10"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"

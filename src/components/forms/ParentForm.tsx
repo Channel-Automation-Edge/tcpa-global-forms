@@ -1,167 +1,29 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import ProjectForm from './Project/ProjectForm';
-import DetailsForm from './Details/DetailsForm';
-import AppointmentForm from './Appointment/AppointmentForm';
 import Stepper from '../ui/Stepper';
-import { AppContext } from '../../context/AppContext';
-import useFormPersistence from '../../hooks/useFormPersistence';
-import useClearFormState from '../../hooks/useClearFormState';
-import useResetDatabase from '@/hooks/useResetDatabase';
-
+import { AppContext } from '@/context/AppContext';
+import useFormPersistence from '@/hooks/useFormPersistence';
+import useClearFormState from '@/hooks/useClearFormState';
+import Step1Selection from './Step1Selection';
+import Step3Specifications from './Step3Specifications';
+import ProgressBar from '../ui/ProgressBar';
+import Step1Info from './Step1Info';
+import Step2PromoOptIn from './Step2PromoOptIn';
+import Step2Schedule from './Step2Schedule';
+import Summary from './Summary';
 
 const ParentForm = () => {
-  const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence('parentFormStep', 1);
-  const [, , resetProjectCurrentStep] = useFormPersistence('projectFormStep', 1);
-  const [, , resetDetailsCurrentStep] = useFormPersistence('detailsFormStep', 1);
-  const [, , resetAppointmentCurrentStep] = useFormPersistence('appointmentFormStep', 1);
+  const [currentStep, setCurrentStep, resetCurrentStep] = useFormPersistence('formStep', 1);
   const appContext = useContext(AppContext);
   const navigate = useNavigate();
   const location = useLocation();
-
+  const clearFormState = useClearFormState();
+  // const resetDatabase = useResetDatabase();
+  const progress = (currentStep - 1) * 16.66;
   if (!appContext) {
     return null;
   }
-
-  const {
-    selectedService,
-    matchingContractors,
-    zip,
-    state,
-    contractorPreferences,
-    firstname,
-    lastname,
-    email,
-    phone,
-    generalOptIn,
-    serviceSpecification,
-    promo,
-    consentedContractors,
-    numberOfQuotes,
-    termsAndPrivacyOptIn,
-    newsletterOptIn,
-    scheduledAppointments,
-    contactPreferences,
-    setSelectedService,
-    setMatchingContractors,
-    setZip,
-    setState,
-    setContractorPreferences,
-    setFirstname,
-    setLastname,
-    setEmail,
-    setPhone,
-    setGeneralOptIn,
-    setServiceSpecification,
-    setPromo,
-    setConsentedContractors,
-    setNumberOfQuotes,
-    setTermsAndPrivacyOptIn,
-    setNewsletterOptIn,
-    setScheduledAppointments,
-    setContactPreferences,
-    setFormId,
-    address1,
-    address2,
-    city,
-    setAddress1,
-    setAddress2,
-    setCity,
-  } = appContext;
-
-  useEffect(() => {
-    const loadFromLocalStorage = (key: string, setValue: (value: any) => void, defaultValue: any) => {
-      const savedValue = localStorage.getItem(key);
-      if (savedValue !== null) {
-        setValue(JSON.parse(savedValue));
-      } else {
-        setValue(defaultValue);
-      }
-    };
-
-    loadFromLocalStorage('firstname', setFirstname, '');
-    loadFromLocalStorage('lastname', setLastname, '');
-    loadFromLocalStorage('email', setEmail, '');
-    loadFromLocalStorage('phone', setPhone, '');
-    loadFromLocalStorage('zip', setZip, '');
-    loadFromLocalStorage('state', setState, '');
-    loadFromLocalStorage('address1', setAddress1, '');
-    loadFromLocalStorage('address2', setAddress2, '');
-    loadFromLocalStorage('city', setCity, '');
-
-    loadFromLocalStorage('selectedService', setSelectedService, '');
-    loadFromLocalStorage('serviceSpecification', setServiceSpecification, []);
-    loadFromLocalStorage('contractorPreferences', setContractorPreferences, []);
-    loadFromLocalStorage('promo', setPromo, false);
-    loadFromLocalStorage('numberOfQuotes', setNumberOfQuotes, 0);
-
-    loadFromLocalStorage('generalOptIn', setGeneralOptIn, false);
-    loadFromLocalStorage('termsAndPrivacyOptIn', setTermsAndPrivacyOptIn, false);
-    loadFromLocalStorage('newsletterOptIn', setNewsletterOptIn, false);
-    
-    loadFromLocalStorage('scheduledAppointments', setScheduledAppointments, []);
-    loadFromLocalStorage('matchingContractors', setMatchingContractors, []);
-    loadFromLocalStorage('consentedContractors', setConsentedContractors, []);
-    loadFromLocalStorage('contactPreferences', setContactPreferences, []);
-
-  }, []);
-
-  // Load formId from local storage on component mount
-  useEffect(() => { let formId = localStorage.getItem('formID'); setFormId(formId); }, []);
-
-  // Save context values to local storage whenever they change
-  useEffect(() => {
-    localStorage.setItem('firstname', JSON.stringify(firstname));
-    localStorage.setItem('lastname', JSON.stringify(lastname));
-    localStorage.setItem('email', JSON.stringify(email));
-    localStorage.setItem('phone', JSON.stringify(phone));
-    localStorage.setItem('zip', JSON.stringify(zip));
-    localStorage.setItem('state', JSON.stringify(state));
-    localStorage.setItem('address1', JSON.stringify(address1));
-    localStorage.setItem('address2', JSON.stringify(address2));
-    localStorage.setItem('city', JSON.stringify(city));
-
-    localStorage.setItem('selectedService', JSON.stringify(selectedService));
-    localStorage.setItem('serviceSpecification', JSON.stringify(serviceSpecification));
-    localStorage.setItem('contractorPreferences', JSON.stringify(contractorPreferences));
-    localStorage.setItem('promo', JSON.stringify(promo));
-    localStorage.setItem('numberOfQuotes', JSON.stringify(numberOfQuotes));
-
-    localStorage.setItem('generalOptIn', JSON.stringify(generalOptIn));
-    localStorage.setItem('termsAndPrivacyOptIn', JSON.stringify(termsAndPrivacyOptIn));
-    localStorage.setItem('newsletterOptIn', JSON.stringify(newsletterOptIn));
-
-    localStorage.setItem('scheduledAppointments', JSON.stringify(scheduledAppointments));
-    localStorage.setItem('matchingContractors', JSON.stringify(matchingContractors));
-    localStorage.setItem('consentedContractors', JSON.stringify(consentedContractors));
-    localStorage.setItem('contactPreferences', JSON.stringify(contactPreferences));
-  }, [
-    firstname,
-    lastname,
-    email,
-    phone,
-    zip,
-    state,
-    selectedService,
-    serviceSpecification,
-    contractorPreferences,
-    promo,
-    numberOfQuotes,
-    generalOptIn,
-    termsAndPrivacyOptIn,
-    newsletterOptIn,
-    scheduledAppointments,
-    matchingContractors,
-    consentedContractors,
-    contactPreferences,
-    address1,
-    address2,
-    city,
-  ]);
-
-  const clearFormState = useClearFormState();
-  const resetDatabase = useResetDatabase();
-
+  const { setForm, contractor } = appContext;
 
   const navigateWithParams = (path: string) => {
     const currentParams = new URLSearchParams(location.search);
@@ -169,37 +31,45 @@ const ParentForm = () => {
   };
 
   const handleNextStep = () => {
-    setCurrentStep(currentStep + 1);
+    if (currentStep === 3) {
+      if (contractor.promos && contractor.promos.length > 0) {
+        setCurrentStep(currentStep + 1);
+        console.log('promo exists', contractor.promos);
+      } else {
+        setCurrentStep(currentStep + 2);
+        console.log('promo does not exist');
+      }
+    } else {
+      setCurrentStep(currentStep + 1);
+    }
   };
 
   const handleReset = async () => {
     resetCurrentStep();
-    resetProjectCurrentStep();
-    resetDetailsCurrentStep();
-    resetAppointmentCurrentStep();
     clearFormState();
-    await resetDatabase();
+    // await resetDatabase();
   };
 
   const handleBackStep = () => {
-    setCurrentStep(currentStep - 1);
-  }
-  
-
-  const handleSubmitted = () => {
-    navigateWithParams('/thank-you');
-    resetCurrentStep();
-    resetProjectCurrentStep();
-    resetDetailsCurrentStep();
-    resetAppointmentCurrentStep();
-    setFormId('');
-    localStorage.removeItem('formID');
+    if (currentStep === 5) {
+      if (contractor.promos && contractor.promos.length > 0) {
+        setCurrentStep(currentStep - 1);
+      } else {
+        setCurrentStep(currentStep - 2);
+      }
+    } else {
+      setCurrentStep(currentStep - 1);
+    }
   };
 
-  // const handleNotify = () => {
-  //   resetCurrentStep();
-  //   navigateWithParams('/confirm-details');
-  // }
+  const handleSubmitted = () => {
+    navigateWithParams('/');
+    resetCurrentStep();
+    clearFormState();
+
+    setForm(prev => ({ ...prev, formId: null })); 
+    localStorage.removeItem('formID');
+  };
 
   return (
     <div className='bg-xbg min-h-screen'>
@@ -208,15 +78,30 @@ const ParentForm = () => {
           <Stepper currentStep={currentStep} />
         </div>
       </div>
+      <div className="mx-auto max-w-screen-xl px-4 pb-6 pt-6 sm:px-6 lg:px-8 relative">
+        <div className="flex justify-center">
+          <div className="w-[600px]">
+            <ProgressBar progress={progress} />
+          </div>
+          <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            <img
+              src="/images/avatar.jpg"
+              alt="Avatar"
+              className="w-12 h-12 custom-smallest:w-14 custom-smallest:h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full border-2 border-accentLight object-cover"
+            />
+          </div>
+        </div>
+      </div>
       <div>
-        {currentStep === 1 && <ProjectForm onNext={handleNextStep} onReset={handleReset} />}
-        {currentStep === 2 && <DetailsForm onNext={handleNextStep} onReset={handleReset} onBack={handleBackStep} />}
-        {currentStep === 3 && <AppointmentForm onSubmit={handleSubmitted} onReset={handleReset} onBack={handleBackStep} />}
+        {currentStep === 1 && <Step1Selection onNext={handleNextStep} />}
+        {currentStep === 2 && <Step3Specifications onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} />}
+        {currentStep === 3 && <Step1Info onNext={handleNextStep} onReset={handleReset} onBack={handleBackStep}/>}
+        {currentStep === 4 && <Step2PromoOptIn onNext={handleNextStep} onBack={handleBackStep} onReset={handleReset} />}
+        {currentStep === 5 && <Step2Schedule onNext={handleNextStep} onReset={handleReset} onBack={handleBackStep} />}
+        {currentStep === 6 && <Summary onNext={handleSubmitted} onReset={handleReset} onBack={handleBackStep} />}
       </div>
     </div>
   );
 };
 
 export default ParentForm;
-
-// 

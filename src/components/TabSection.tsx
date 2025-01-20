@@ -10,7 +10,7 @@ const TabSection: React.FC = () => {
         <div className="relative z-10 lg:grid lg:grid-cols-12 lg:gap-16 lg:items-center">
           <BlurFade delay={3 * 0.15} inView yOffset={15} className="mb-10 lg:mb-0 lg:col-span-6 lg:col-start-8 lg:order-2">
             <h2 className="text-2xl text-gray-800 font-semibold sm:text-3xl dark:text-neutral-200">
-              Here’s What You’ll <span className="text-xorange">Gain</span>
+              Here’s What You’ll <span className="text-accentColor">Gain</span>
             </h2>
 
             {/* Tab Navs */}
@@ -18,7 +18,7 @@ const TabSection: React.FC = () => {
             <nav className="grid gap-4 mt-5 md:mt-10" aria-label="Tabs" role="tablist" aria-orientation="vertical">
               <button
                 type="button"
-                className="hs-tab-active:bg-white hs-tab-active:shadow-md hs-tab-active:hover:border-transparent text-start hover:bg-indigo-200 focus:outline-none  p-4 md:p-5 rounded-xl dark:hs-tab-active:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 active"
+                className="hs-tab-active:bg-white hs-tab-active:shadow-md hs-tab-active:hover:border-transparent text-start hover:bg-white focus:outline-none  p-4 md:p-5 rounded-xl dark:hs-tab-active:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 active"
                 id="tabs-with-card-item-1"
                 aria-selected="true"
                 data-hs-tab="#tabs-with-card-1"
@@ -27,7 +27,7 @@ const TabSection: React.FC = () => {
               >
                 <span className="flex gap-x-6">
                   <svg
-                    className="shrink-0 mt-2 size-8 md:size-9 hs-tab-active:text-xorange text-gray-800 dark:hs-tab-active:text-xorange dark:text-neutral-200"
+                    className="shrink-0 mt-2 size-8 md:size-9 hs-tab-active:text-accentColor text-gray-800 dark:hs-tab-active:text-accentColor dark:text-neutral-200"
                     id="fi_4643319" 
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -44,7 +44,7 @@ const TabSection: React.FC = () => {
                   </svg>
                   
                   <span className="grow">
-                    <span className="block text-lg font-semibold hs-tab-active:text-xorange text-gray-800 dark:hs-tab-active:text-xorange dark:text-neutral-200">
+                    <span className="block text-lg font-semibold hs-tab-active:text-accentColor text-gray-800 dark:hs-tab-active:text-accentColor dark:text-neutral-200">
                       Tailored estimates
                     </span>
                     <span className="block mt-1 text-gray-800 dark:hs-tab-active:text-gray-200 dark:text-neutral-200">
@@ -56,7 +56,7 @@ const TabSection: React.FC = () => {
 
               <button
                 type="button"
-                className="hs-tab-active:bg-white hs-tab-active:shadow-md hs-tab-active:hover:border-transparent text-start hover:bg-indigo-200 focus:outline-none  p-4 md:p-5 rounded-xl dark:hs-tab-active:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                className="hs-tab-active:bg-white hs-tab-active:shadow-md hs-tab-active:hover:border-transparent text-start hover:bg-white focus:outline-none  p-4 md:p-5 rounded-xl dark:hs-tab-active:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
                 id="tabs-with-card-item-2"
                 aria-selected="false"
                 data-hs-tab="#tabs-with-card-2"
@@ -65,7 +65,7 @@ const TabSection: React.FC = () => {
               >
                 <span className="flex gap-x-6">
                   <svg
-                    className="shrink-0 mt-2 size-8 md:size-9 hs-tab-active:text-xorange text-gray-800 dark:hs-tab-active:text-xorange dark:text-neutral-200"
+                    className="shrink-0 mt-2 size-8 md:size-9 hs-tab-active:text-accentColor text-gray-800 dark:hs-tab-active:text-accentColor dark:text-neutral-200"
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
@@ -81,7 +81,7 @@ const TabSection: React.FC = () => {
                     <path d="m347.348 293.779c-5.09-.979-18.897-3.637-25.197-4.849-7.602-1.463-13.12-8.143-13.12-15.884v-9.465c5.505-3.373 10.812-7.293 15.906-11.77 18.076-15.889 29.242-38.423 31.497-63.519 13.203-.454 23.778-11.456 23.722-24.867l-.079-19.041c-.025-5.902-2.147-11.553-5.911-15.987v-23.337c0-4.194-3.4-7.594-7.594-7.594s-7.594 3.4-7.594 7.594v16.265c-69.191-19.452-136.773-19.453-205.956 0v-39.378c0-25.495 17.27-47.639 41.997-53.851l42.16-10.59c12.313-3.092 25.329-3.092 37.641 0l42.16 10.59c20.671 5.192 36.731 22.038 40.915 42.917.824 4.112 4.827 6.777 8.938 5.954 4.112-.824 6.778-4.826 5.954-8.938-5.33-26.595-25.783-48.051-52.107-54.663l-42.16-10.59c-14.733-3.701-30.308-3.701-45.042 0l-42.16 10.59c-31.491 7.91-53.485 36.112-53.485 68.581v46.451c-3.764 4.434-5.886 10.085-5.911 15.987l-.079 19.041c-.056 13.41 10.519 24.412 23.722 24.867 2.255 25.097 13.421 47.63 31.497 63.519 5.093 4.477 10.401 8.396 15.906 11.77v9.465c0 7.073-4.343 13.66-13.05 15.864l-25.266 4.87c-69.718 13.417-120.014 74.7-120.014 145.313v30.905c0 23.16 18.842 42.003 42.003 42.003h338.718c23.16 0 42.003-18.842 42.003-42.003v-30.905c0-70.89-50.563-131.949-120.014-145.315zm2.572 16.084c8.197 1.935 16.071 4.62 23.561 7.966v85.439c-4.99-3.38-11.004-5.357-17.471-5.357h-6.089v-88.048zm1.841-174.792c-7.84 7.721-16.978 19.85-35.509 16.649-20.273-3.496-40.26-5.244-60.252-5.244-19.987 0-39.978 1.748-60.247 5.243-18.395 3.175-27.616-8.86-35.545-16.64 64.313-17.528 127.232-17.531 191.553-.008zm-154.67 105.332c-15.288-13.438-24.682-32.657-26.453-54.118-.617-7.474-6.749-13.135-14.263-13.167-5.174-.022-9.365-4.342-9.343-9.63l.079-19.041c.001-.29.023-.577.05-.863 11.637 11.26 24.692 27.67 51.172 23.103 38.806-6.692 76.533-6.692 115.337.001 27.452 4.733 41.424-13.716 51.167-23.144.029.299.051.6.052.903l.079 19.041c.022 5.288-4.169 9.607-9.342 9.63-7.514.032-13.646 5.693-14.263 13.168-1.771 21.46-11.165 40.68-26.453 54.118-34.974 30.741-82.492 31.053-117.819-.001zm111.364 59.144-12.833 10.31c-21.81 17.522-53.38 17.409-75.064-.271l-14.472-11.799c13.511-10.476 11.956-26.004 12.071-26.521 24.736 10.071 50.652 10.192 75.686 0 .088.346-1.501 18.069 14.612 28.281zm-129.242 6.897 10.886-2.095 20.861 17.009c27.217 22.191 66.505 22.57 94.174.339l20.661-16.598 8.936 1.72v91.093h-155.518zm-60.826 138.412c-4.631 5.589-7.181 12.665-7.181 19.924v32.032h-24.565c-14.785 0-26.814-12.029-26.814-26.814v-25.439h58.806zm6.889-15.486h-65.088c3.227-44.068 28.204-82.941 65.087-104.703v21.961c0 4.194 3.4 7.594 7.594 7.594s7.594-3.4 7.594-7.594v-29.649c7.5-3.207 15.375-5.753 23.561-7.557v88.49h-6.179c-6.429 0-12.41 1.954-17.382 5.298v-21.08c0-4.194-3.4-7.594-7.594-7.594s-7.594 3.4-7.594 7.594v47.24zm260.331 67.442h-259.214v-32.032c0-8.196 5.618-11.911 8.23-15.715 4.669-5.636 7.181-12.777 7.181-19.924 0-8.845 7.196-16.041 16.041-16.041h198.163c8.845 0 16.041 7.196 16.041 16.041.085.57-.804 9.89 5.991 19.214 2.852 4.594 7.565 8.091 7.565 15.605v32.852zm3.062-67.442v-103.533c35.815 21.968 59.973 60.244 63.143 103.533zm63.504 40.627c0 14.785-12.029 26.814-26.814 26.814h-24.564v-32.851c0-6.654-2.072-13.014-5.991-18.393l-.735-1.008h58.104z"></path><path d="m227.807 41.458c-9.858 0-17.878 8.02-17.878 17.878v13.184c0 9.858 8.02 17.878 17.878 17.878h56.386c9.858 0 17.878-8.02 17.878-17.878v-13.184c0-9.858-8.02-17.878-17.878-17.878zm59.076 17.878v13.184c0 1.483-1.206 2.69-2.69 2.69h-56.386c-1.483 0-2.69-1.206-2.69-2.69v-13.184c0-1.483 1.206-2.69 2.69-2.69h56.386c1.483 0 2.69 1.207 2.69 2.69z"></path>
                   </svg>
                   <span className="grow">
-                    <span className="block text-lg font-semibold hs-tab-active:text-xorange text-gray-800 dark:hs-tab-active:text-xorange dark:text-neutral-200">
+                    <span className="block text-lg font-semibold hs-tab-active:text-accentColor text-gray-800 dark:hs-tab-active:text-accentColor dark:text-neutral-200">
                       Trusted professionals
                     </span>
                     <span className="block mt-1 text-gray-800 dark:hs-tab-active:text-gray-200 dark:text-neutral-200">
@@ -93,7 +93,7 @@ const TabSection: React.FC = () => {
 
               <button
                 type="button"
-                className="hs-tab-active:bg-white hs-tab-active:shadow-md hs-tab-active:hover:border-transparent text-start hover:bg-indigo-200 focus:outline-none  p-4 md:p-5 rounded-xl dark:hs-tab-active:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                className="hs-tab-active:bg-white hs-tab-active:shadow-md hs-tab-active:hover:border-transparent text-start hover:bg-white focus:outline-none  p-4 md:p-5 rounded-xl dark:hs-tab-active:bg-neutral-700 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
                 id="tabs-with-card-item-3"
                 aria-selected="false"
                 data-hs-tab="#tabs-with-card-3"
@@ -102,7 +102,7 @@ const TabSection: React.FC = () => {
               >
                 <span className="flex gap-x-6">
                   <svg
-                    className="shrink-0 mt-2 size-8 md:size-9 hs-tab-active:text-xorange text-gray-800 dark:hs-tab-active:text-xorange dark:text-neutral-200"
+                    className="shrink-0 mt-2 size-8 md:size-9 hs-tab-active:text-accentColor text-gray-800 dark:hs-tab-active:text-accentColor dark:text-neutral-200"
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
                     height="24"
@@ -115,7 +115,7 @@ const TabSection: React.FC = () => {
                   >
                     <g><path d="m273.911 422.766c-3.735-1.795-8.214-.223-10.01 3.509-2.63 5.469-5.801 13.701-2.986 22.013 2.832 8.356 11.327 14.263 20.659 14.363.083.001.165.001.247.001 7.636 0 15.402-3.794 20.82-10.185.397-.469.792-.958 1.19-1.453.497-.617 1.172-1.457 1.701-2.002.729.575 1.736 1.576 2.465 2.301 3.061 3.042 7.687 7.639 14.563 6.986 2.623-.249 4.69-1.236 6.2-1.957.355-.169.709-.343 1.069-.49 1.996-.816 5.007-.59 8.193-.353.746.056 1.491.111 2.23.156.105.006.21.011.315.012l33.318.606c4.136.11 7.56-3.22 7.635-7.362.076-4.141-3.221-7.56-7.362-7.635l-33.158-.603c-.618-.039-1.239-.085-1.861-.132-4.556-.341-9.723-.727-14.991 1.429-.623.254-1.237.543-1.85.835-.286.137-.636.304-.919.427-.743-.505-1.959-1.714-2.807-2.557-3.131-3.113-7.864-7.818-14.93-6.883-5.826.771-9.239 5.011-11.497 7.818-.316.393-.629.784-.946 1.157-2.584 3.047-6.182 4.923-9.464 4.884-2.925-.031-5.83-1.867-6.613-4.177-.792-2.338-.041-5.838 2.297-10.699 1.796-3.732.225-8.213-3.508-10.009z"></path><path d="m416.352 436.709c-4.142 0-7.5 3.358-7.5 7.5v40.291c0 6.893-5.607 12.5-12.5 12.5h-330.572c-6.893 0-12.5-5.607-12.5-12.5v-361.477c0-4.142-3.358-7.5-7.5-7.5s-7.5 3.358-7.5 7.5v361.477c0 15.164 12.336 27.5 27.5 27.5h330.572c15.164 0 27.5-12.336 27.5-27.5v-40.291c0-4.142-3.358-7.5-7.5-7.5z"></path><path d="m100.018 145.654h145.23c4.142 0 7.5-3.358 7.5-7.5s-3.358-7.5-7.5-7.5h-145.23c-4.142 0-7.5 3.358-7.5 7.5s3.358 7.5 7.5 7.5z"></path><path d="m100.018 178.446h208.561c4.142 0 7.5-3.358 7.5-7.5s-3.358-7.5-7.5-7.5h-208.561c-4.142 0-7.5 3.358-7.5 7.5s3.358 7.5 7.5 7.5z"></path><path d="m92.518 357.301c0 15.164 12.336 27.5 27.5 27.5h234.002c15.164 0 27.5-12.336 27.5-27.5v-122.658c0-15.164-12.336-27.5-27.5-27.5h-234.002c-15.164 0-27.5 12.336-27.5 27.5zm183.135-78.69v34.721h-77.268v-34.721zm-77.268-15v-41.469h77.268v41.469zm168.135 49.722h-75.867v-34.721h75.867zm-90.867 15v41.469h-77.268v-41.469zm-92.268-15h-75.867v-34.721h75.867zm-75.867 43.968v-28.969h75.867v41.469h-63.367c-6.892 0-12.5-5.607-12.5-12.5zm246.502 12.5h-63.367v-41.469h75.867v28.969c0 6.893-5.607 12.5-12.5 12.5zm12.5-135.158v28.969h-75.867v-41.469h63.367c6.893 0 12.5 5.607 12.5 12.5zm-246.502-12.5h63.367v41.469h-75.867v-28.969c0-6.893 5.608-12.5 12.5-12.5z"></path><path d="m110.018 98.643h125.23c9.649 0 17.5-7.851 17.5-17.5v-21.637c0-9.649-7.851-17.5-17.5-17.5h-125.23c-9.649 0-17.5 7.851-17.5 17.5v21.637c0 9.649 7.851 17.5 17.5 17.5zm-2.5-39.137c0-1.378 1.122-2.5 2.5-2.5h125.23c1.378 0 2.5 1.122 2.5 2.5v21.637c0 1.378-1.122 2.5-2.5 2.5h-125.23c-1.378 0-2.5-1.122-2.5-2.5z"></path><path d="m283.878 62.343h42.707c4.142 0 7.5-3.358 7.5-7.5s-3.358-7.5-7.5-7.5h-42.707c-4.142 0-7.5 3.358-7.5 7.5s3.358 7.5 7.5 7.5z"></path><path d="m283.878 93.306h42.707c4.142 0 7.5-3.358 7.5-7.5s-3.358-7.5-7.5-7.5h-42.707c-4.142 0-7.5 3.358-7.5 7.5s3.358 7.5 7.5 7.5z"></path><path d="m100.018 462.652h65.074c4.142 0 7.5-3.358 7.5-7.5s-3.358-7.5-7.5-7.5h-65.074c-4.142 0-7.5 3.358-7.5 7.5s3.358 7.5 7.5 7.5z"></path><path d="m100.018 428.498h65.074c4.142 0 7.5-3.358 7.5-7.5s-3.358-7.5-7.5-7.5h-65.074c-4.142 0-7.5 3.358-7.5 7.5s3.358 7.5 7.5 7.5z"></path><path d="m473.72 132.152c0-30.686-21.289-56.478-49.869-63.422v-41.23c0-15.164-12.336-27.5-27.5-27.5h-330.571c-15.164 0-27.5 12.336-27.5 27.5v60.521c0 4.142 3.358 7.5 7.5 7.5s7.5-3.358 7.5-7.5v-60.521c0-6.893 5.607-12.5 12.5-12.5h330.572c6.893 0 12.5 5.607 12.5 12.5v39.387c-.136-.001-.27-.01-.406-.01-35.993 0-65.275 29.282-65.275 65.275s29.282 65.275 65.275 65.275c.136 0 .27-.01.406-.01v211.791c0 4.142 3.358 7.5 7.5 7.5s7.5-3.358 7.5-7.5v-213.635c28.579-6.943 49.868-32.736 49.868-63.421zm-65.274 50.275c-27.722 0-50.275-22.553-50.275-50.275s22.553-50.275 50.275-50.275 50.275 22.553 50.275 50.275c-.001 27.722-22.554 50.275-50.275 50.275z"></path><path d="m423.786 112.173-24.047 24.047-6.634-6.634c-2.929-2.929-7.678-2.929-10.606 0-2.929 2.929-2.929 7.678 0 10.606l11.938 11.938c1.464 1.465 3.384 2.197 5.303 2.197s3.839-.732 5.303-2.197l29.351-29.35c2.929-2.929 2.929-7.678 0-10.606-2.929-2.93-7.678-2.93-10.608-.001z"></path></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g><g></g></svg>
                   <span className="grow">
-                    <span className="block text-lg font-semibold hs-tab-active:text-xorange text-gray-800 dark:hs-tab-active:text-xorange dark:text-neutral-200">
+                    <span className="block text-lg font-semibold hs-tab-active:text-accentColor text-gray-800 dark:hs-tab-active:text-accentColor dark:text-neutral-200">
                       Transparent pricing
                     </span>
                     <span className="block mt-1 text-gray-800 dark:hs-tab-active:text-gray-200 dark:text-neutral-200">
@@ -162,7 +162,7 @@ const TabSection: React.FC = () => {
 
               {/* SVG Element */}
               <div className="hidden absolute top-0 end-0 translate-x-20 md:block lg:translate-x-20">
-                <svg className="w-16 h-auto text-xorange" width="121" height="135" viewBox="0 0 121 135" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg className="w-16 h-auto text-accentColor" width="121" height="135" viewBox="0 0 121 135" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M5 16.4754C11.7688 27.4499 21.2452 57.3224 5 89.0164" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
                   <path d="M33.6761 112.104C44.6984 98.1239 74.2618 57.6776 83.4821 5" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
                   <path d="M50.5525 130C68.2064 127.495 110.731 117.541 116 78.0874" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
@@ -177,7 +177,7 @@ const TabSection: React.FC = () => {
 
         {/* Background Color */}
         <BlurFade delay={3 * 0.15} inView yOffset={0} className="absolute inset-0 grid grid-cols-12 size-full">
-          <div className="col-span-full lg:col-span-7 lg:col-start-6 bg-lpurple w-full h-5/6 rounded-xl sm:h-3/4 lg:h-full dark:bg-neutral-800"></div>
+          <div className="col-span-full lg:col-span-7 lg:col-start-6 bg-accentLight w-full h-5/6 rounded-xl sm:h-3/4 lg:h-full dark:bg-neutral-800"></div>
         </BlurFade>
         {/* End Background Color */}
       </div>

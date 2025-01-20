@@ -8,7 +8,7 @@ const HowItWorks: React.FC = () => {
       <div className="max-w-[85rem] px-4 pb-4 pt-14 sm:px-6 lg:px-8  mx-auto">
       <BlurFade delay={3 * 0.15}  yOffset={15} className="text-center ">
           <h2 className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200">
-          Here's What to <span className="text-xorange">Expect</span>
+          Here's What to <span className="text-accentColor">Expect</span>
           </h2>
           <p className="mt-2 md:mt-4 text-gray-500 dark:text-neutral-500">
 

@@ -78,7 +78,7 @@
 }
 
 .heading-secondary {
-  @apply text-2xl md:text-3xl font-normal text-xorange mt-8;
+  @apply text-2xl md:text-3xl font-normal text-accentColor mt-8;
 }
 
 .heading-primary {

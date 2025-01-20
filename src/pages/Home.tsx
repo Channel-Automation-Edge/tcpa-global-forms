@@ -6,24 +6,16 @@ import Testimonials from '@/components/Testimonials';
 import Footer from '@/components/Footer';
 import ServiceCards from '@/components/ServiceCards';
 
-
 const Home = () => {
   return (
     <div>
-        
       <Hero/>
+      <Testimonials />
       <ServiceCards />
-
-        <Testimonials />
+        
         <TabSection/> 
-
         <Benefits />
         <FAQ />
-
-        
-
-      
-      
       <Footer />
     </div>
   )

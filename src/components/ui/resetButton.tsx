@@ -23,7 +23,7 @@ const ResetButton: React.FC<ResetButtonProps> = ({ onClick }) => {
       
 
       <Dialog>
-        <DialogTrigger className="flex items-center text-gray-600 hover:text-xorange transition-colors duration-200 lg:mr-20">
+        <DialogTrigger className="flex items-center text-gray-600 hover:text-accentColor transition-colors duration-200 lg:mr-20">
         {/* <svg
           width="512"
           height="512"
@@ -59,7 +59,7 @@ const ResetButton: React.FC<ResetButtonProps> = ({ onClick }) => {
               <Button className='bg-gray-200 hover:bg-gray-300 text-gray-800'>Cancel</Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button className='bg-xorange hover:bg-xorangeDark' onClick={handleConfirm}>Reset Form</Button>
+              <Button className='bg-accentColor hover:bg-accentDark' onClick={handleConfirm}>Reset Form</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>

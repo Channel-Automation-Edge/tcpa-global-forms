@@ -39,7 +39,7 @@ const RequestQuote = () => {
   }, [location.pathname, location.search, isModalOpen]);
 
   const handleLeave = () => {
-    posthog.capture('page_exit test in requesttt',);
+    posthog.capture('page_exit test in request',);
     const params = window.location.search;
     window.location.href = '/' + params;
   };
@@ -68,7 +68,7 @@ const RequestQuote = () => {
               <Button className='bg-gray-200 hover:bg-gray-300 text-gray-800' onClick={handleCloseModal}>Cancel</Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button className='bg-xorange hover:bg-xorangeDark' onClick={handleLeave}>Leave Page</Button>
+              <Button className='bg-accentColor hover:bg-accentDark' onClick={handleLeave}>Leave Page</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
