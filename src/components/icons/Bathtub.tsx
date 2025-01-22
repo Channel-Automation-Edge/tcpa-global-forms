@@ -7,7 +7,7 @@ const Bathtub: React.FC = () => {
     return null; 
   }
     const { contractor } = appContext;
-    const { accent, dark } = contractor.content;
+    const { accent, dark } = contractor.colors;
   
     return (
   <svg

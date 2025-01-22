@@ -59,9 +59,42 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onBack, onReset }) => {
     onReset();
   };
 
+  const payload = {
+    user,
+    form,
+    contractor,
+    selectedService,
+    consent: {
+      general: {
+        description: 'By choosing "Email", "SMS/MMS" and/or "AI or Pre-recorded Voice", and clicking "Confirm Booking" and submitting this form, I am providing my ESIGN signature and express written consent agreement to permit data.fid43, and parties calling on its behalf, to contact me at the number I have provided in this form for marketing purposes including through the use of automated technology I agreed to.',
+        value: form.generalOptIn,
+      },
+    },
+  };
+
   const handleConfirmBooking = async () => {
 		setLoading(true);
-	
+
+		try {
+      const response = await fetch('https://hkdk.events/w8wqxy2op6oty4', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send appointments');
+      }
+
+    } catch (err) {
+      console.error('Error sending appointments:', err);
+    }
+
+    setLoading(false);
+    document.getElementById("dialog")?.click();
+
 		try {
 			const { data, error } = await company
 				.from('bookings')
@@ -99,40 +132,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onBack, onReset }) => {
 			console.error('Unexpected error:', err);
 			// Optionally, handle unexpected errors here
 		} finally {
-			document.getElementById("dialog")?.click();
 		}
-
-		const payload = {
-      user,
-			form,
-			contractor,
-			selectedService,
-      consent: {
-        general: {
-          description: 'By choosing "Email", "SMS/MMS" and/or "AI or Pre-recorded Voice", and clicking "Confirm Booking" and submitting this form, I am providing my ESIGN signature and express written consent agreement to permit data.fid43, and parties calling on its behalf, to contact me at the number I have provided in this form for marketing purposes including through the use of automated technology I agreed to.',
-          value: form.generalOptIn,
-        },
-      },
-    };
-
-		try {
-      const response = await fetch('https://hkdk.events/w8wqxy2op6oty4', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to send appointments');
-      }
-
-    } catch (err) {
-      console.error('Error sending appointments:', err);
-    }
-
-		setLoading(false);
 		
 	};
 
@@ -324,7 +324,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onBack, onReset }) => {
 									</div>
 
 									<div className="mt-4 text-sm text-gray-600 dark:text-neutral-400">
-										By choosing "Email", "SMS/MMS" and/or "AI or Pre-recorded Voice", and clicking "Confirm Booking" and submitting this form, I am providing my ESIGN signature and express written consent agreement to permit data.fid43, and parties calling on its behalf, to contact me at the number I have provided in this form for marketing purposes including through the use of automated technology I agreed to.
+										By choosing "Email", "SMS/MMS" and/or "AI or Pre-recorded Voice", and clicking "Confirm Booking" and submitting this form, I am providing my ESIGN signature and express written consent agreement to permit {contractor.name}, and parties calling on its behalf, to contact me at the number I have provided in this form for marketing purposes including through the use of automated technology I agreed to.
 										My phone number where {contractor.name} may contact me is: {formatPhoneNumber(user.phone)}
 									</div>
 								</div>

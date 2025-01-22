@@ -7,7 +7,7 @@ const Windows: React.FC = () => {
     return null;
   }
   const { contractor } = appContext;
-  const { accent, dark, darker } = contractor.content;
+  const { accent, dark, darker } = contractor.colors;
 
   return (
     <svg

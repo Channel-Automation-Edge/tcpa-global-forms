@@ -47,66 +47,57 @@ function App() {
       } 
         // Fetch contractor
         console.log('Fetching contractor data...');
-        while (true) {
-          try {
-            const { data: contractorData, error: contractorError } = await central
-              .from('contractors')
-              .select('*')
-              .eq('id', companyId)
-              .single();
+        try {
+          const { data, error } = await central
+            .from('contractors')
+            .select('*')
+            .eq('id', companyId)
+            .single();
 
-            if (contractorError) {
-              console.error('Error fetching contractor:', contractorError);
-              continue; // Retry fetching
-            }
-
-            if (contractorData) {
-              setContractor(contractorData);
-              localStorage.setItem('contractor', JSON.stringify(contractorData));
-              console.log('Contractor data fetched successfully');
-
-              // Fetch services
-              const { data: servicesData, error: servicesError } = await central
-                .from('contractor_services')
-                .select('*, services(name)')
-                .eq('contractor_id', companyId);
-
-              if (servicesError) {
-                console.error('Error fetching services:', servicesError);
-                continue; // Retry fetching
-              } else {
-                setServices(servicesData || []);
-                localStorage.setItem('services', JSON.stringify(servicesData || []));
-                console.log('Services fetched successfully');
-              }
-
-              // Fetch locations
-              const { data: locationsData, error: locationsError } = await central
-                .from('contractor_locations')
-                .select('*')
-                .eq('contractor_id', companyId);
-
-              if (locationsError) {
-                console.error('Error fetching locations:', locationsError);
-                continue; // Retry fetching
-              } else {
-                setLocations(locationsData || []);
-                localStorage.setItem('locations', JSON.stringify(locationsData || []));
-                console.log('Locations fetched successfully');
-              }
-
-              setLoading(false); // Data fetched, stop loading
-              break; // Exit the loop
-            }
-          } catch (err) {
-            console.error('Unexpected error fetching data:', err);
+          if (error) {
+            return;
           }
-        
-      }
-    };
+          if (data) {
+            console.log('Contractor data fetched:', data);
+            setContractor(data);
+            localStorage.setItem('contractor', JSON.stringify(data));
 
+            // Fetch services
+            const { data: servicesData, error: servicesError } = await central
+            .from('contractor_services')
+            .select('*, services(name)')
+            .eq('contractor_id', companyId);
+
+            if (servicesError) {
+              console.error('Error fetching services:', servicesError);
+            } else {
+              setServices(servicesData || []);
+              localStorage.setItem('services', JSON.stringify(servicesData || []));
+              console.log('Services fetched successfully');
+            }
+
+            // Fetch locations
+            const { data: locationsData, error: locationsError } = await central
+            .from('contractor_locations')
+            .select('*')
+            .eq('contractor_id', companyId);
+
+            if (locationsError) {
+              console.error('Error fetching locations:', locationsError);
+            } else {
+              setLocations(locationsData || []);
+              localStorage.setItem('locations', JSON.stringify(locationsData || []));
+              console.log('Locations fetched successfully');
+            }
+            setLoading(false);
+          }
+        } catch (err) {
+          console.error('Unexpected error fetching data:', err);
+          return;
+        }
+    };
     fetchInitialData();
-  }, [setContractor, setServices, setLocations, companyId]);
+  }, []);
 
   // log in console
   useEffect(() => {
