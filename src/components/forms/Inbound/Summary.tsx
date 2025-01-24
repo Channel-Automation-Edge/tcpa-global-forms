@@ -112,7 +112,9 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
   }, []);
   
 
-  const handleRedirect = () => {
+  const handleRefresh = () => {
+    window.location.reload();
+
   };
 
   const payload = {
@@ -459,17 +461,17 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                 </div>
               )}
 
-              {/* display only if validAppointment is true */}
-              {validAppointment && (
+              {/* Display only if validAppointment is true and form.isBooked is false */}
+              {validAppointment && !form.isBooked && (
                 <div className="">
                   <button
                     onClick={handleConfirmBooking}
                     className={`mt-4 w-full py-5 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
                       form.generalOptIn
-                            ? 'bg-accentColor text-white hover:bg-accentDark transform transition-transform'
-                            : 'bg-gray-200 text-white cursor-not-allowed'
-                        }`}
-                        disabled={loading || !form.generalOptIn }  // Disable button if generalOptIn is not true
+                        ? 'bg-accentColor text-white hover:bg-accentDark transform transition-transform'
+                        : 'bg-gray-200 text-white cursor-not-allowed'
+                    }`}
+                    disabled={loading || !form.generalOptIn}  // Disable button if generalOptIn is not true
                   >
                     {loading ? (
                       <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
@@ -479,6 +481,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                   </button>
                 </div>
               )}
+
             
             </div>
           </div>
@@ -499,7 +502,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild className='items-center'>
-              <Button className='bg-accentColor hover:bg-accentDark w-full' onClick={handleRedirect}>OK</Button>
+              <Button className='bg-accentColor hover:bg-accentDark w-full' onClick={handleRefresh}>OK</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>

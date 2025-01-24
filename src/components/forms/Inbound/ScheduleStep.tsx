@@ -87,8 +87,8 @@ const ScheduleStep: React.FC<ScheduleStepProps> = ({ onNext }) => {
         <div className='flex justify-center text-center mb-8'>
           <div className="max-w-[40rem] text-center">
             <h1 className="block text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl font-bold sm:font-bold md:font-semibold lg:font-semibold text-gray-800 dark:text-white">
-              Great! Let's  
-              <span className="text-accentColor"> Schedule your consultation</span>—pick a date and time for an expert to visit you for your quote
+              Pick a  
+              <span className="text-accentColor"> date and time</span> that works for you
             </h1>
           </div>
         </div>

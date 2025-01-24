@@ -110,7 +110,7 @@ const InfoStep: React.FC<InfoStepProps> = ({ onNext, onBack }) => {
         <div className='flex justify-center text-center mb-8'>
           <div className="max-w-[40rem] text-center">
             <h1 className="block text-2xl sm:text-2xl md:text-3xl lg:text-3xl xl:text-3xl font-bold sm:font-bold md:font-semibold lg:font-semibold text-gray-800 dark:text-white">
-            Please <span className="text-accentColor">confirm your information</span> so we can get everything ready for your project
+            Great! Let’s <span className="text-accentColor">confirm </span> your contact details
             </h1>
           </div>
         </div>
