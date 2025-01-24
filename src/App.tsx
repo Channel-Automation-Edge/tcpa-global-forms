@@ -24,7 +24,7 @@ function App() {
     return null;
   }
 
-  const { setContractor, setServices, setLocations } = appContext;
+  const { setContractor, setServices, setLocations, contractor } = appContext;
 
   useEffect(() => {
     window.HSStaticMethods.autoInit();
@@ -96,6 +96,25 @@ function App() {
     };
     fetchInitialData();
   }, [companyId, setContractor, setServices, setLocations]);
+
+  useEffect(() => {
+    if (contractor) {
+      // Update the document title
+      document.title = contractor.name;
+
+      // Update the favicon
+      const favicon = document.querySelector("link[rel~='icon']") as HTMLLinkElement | null;
+      if (favicon) {
+        favicon.href = contractor.favicon;
+      } else {
+        const newFavicon = document.createElement('link');
+        newFavicon.rel = 'icon';
+        newFavicon.href = contractor.favicon;
+        document.head.appendChild(newFavicon);
+      }
+    }
+  }, [contractor]);
+
 
   // log in console
   useEffect(() => {
