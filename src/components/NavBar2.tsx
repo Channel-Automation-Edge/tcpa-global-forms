@@ -9,7 +9,7 @@ const NavBar2 = () => {
     }
     const logoSrc = appContext.contractor.content.logo;  return (
     <div         
-    className=''>
+    className='bg-white'>
         <header className="">
       <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-28 items-center justify-between">

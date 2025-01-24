@@ -1,14 +1,11 @@
 import { Routes, Route, useLocation } from 'react-router-dom';
-import Home from './pages/Home';
-import RequestQuote from './pages/RequestQuote';
 import "preline/preline";
 import { IStaticMethods } from "preline/preline";
 import { useContext, useEffect, useState } from 'react';
-import CookiePolicy from './pages/CookiePolicy';
-import PrivacyPolicy from './pages/PrivacyPolicy';
 import "vanilla-cookieconsent/dist/cookieconsent.css";
 import {central} from '@/lib/supabaseClient';
 import { AppContext } from '@/context/AppContext';
+import Inbound from './pages/Inbound';
 
 declare global {
   interface Window {
@@ -19,14 +16,15 @@ declare global {
 function App() {
   const location = useLocation();
   const appContext = useContext(AppContext);
-  const [loading, setLoading] = useState(true); // State to control rendering
+  const [loading, setLoading] = useState(false); // State to control rendering
+  const params = new URLSearchParams(location.search);
+  const companyId = params.get('company_id');
 
   if (!appContext) {
     return null;
   }
 
   const { setContractor, setServices, setLocations } = appContext;
-  const companyId = import.meta.env.VITE_COMPANY_ID; // Access VITE_COMPANY_ID
 
   useEffect(() => {
     window.HSStaticMethods.autoInit();
@@ -97,13 +95,15 @@ function App() {
         }
     };
     fetchInitialData();
-  }, []);
+  }, [companyId, setContractor, setServices, setLocations]);
 
   // log in console
   useEffect(() => {
     console.log('contractor', appContext.contractor);
     console.log('services', appContext.services);
     console.log('locations', appContext.locations);
+    console.log('form', appContext.form);
+    console.log('user', appContext.user);
   }
   , [appContext]);
 
@@ -128,11 +128,8 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/request-quotes' element={<RequestQuote />} />
-        <Route path='/cookie-policy' element={<CookiePolicy />} />
-        <Route path='/privacy-policy' element={<PrivacyPolicy />} />
-        <Route path="*" element={<Home />} />
+        <Route path='/' element={<Inbound />} />
+        <Route path="*" element={<Inbound />} />
       </Routes>
     </>
   );

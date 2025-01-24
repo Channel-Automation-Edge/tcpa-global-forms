@@ -12,17 +12,18 @@ interface UserData {
   phone: string | null;
   state: string | null;
   userNs: string | null;
+  timezone: string | null;
 }
 
 interface FormData {
   formId: string | null;
   serviceSpecification: string | null;
-  promo: string;
+  promo: string | null;
   generalOptIn: boolean;
   termsAndPrivacyOptIn: boolean;
   date: string | null;
   time: string | null;
-  contactPreferences: string[];
+  isBooked: boolean;
 }
 
 interface AppContextType {
@@ -70,17 +71,18 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
     phone: null,
     state: null,
     userNs: null,
+    timezone: null,
   });
 
   const [form, setForm] = useState<FormData>({
     formId: null,
     serviceSpecification: null,
-    promo: '',
+    promo: null,
     generalOptIn: false,
     termsAndPrivacyOptIn: false,
     date: null,
     time: null,
-    contactPreferences: [],
+    isBooked: false,
   });
 
   const [selectedService, setSelectedService] = useState<any>(null);
@@ -88,37 +90,56 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
   const [services, setServices] = useState<any>(null);
   const [locations, setLocations] = useState<any>(null);
 
-  // Initialize userNs from URL parameters
+  // Utility function to capitalize the first letter of each word
+  const capitalizeWords = (str: string | null) => {
+    if (!str) return '';
+    return str.replace(/\b\w/g, char => char.toUpperCase());
+  };
+
+  // Initialize data from URL parameters
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    setUser(prevUser => ({ ...prevUser, userNs: params.get('user_ns') }));
+    
+    setUser(prevUser => ({
+      ...prevUser,
+      userNs: params.get('user_ns'),
+      firstname: capitalizeWords(params.get('firstname')),
+      lastname: capitalizeWords(params.get('lastname')),
+      email: params.get('email'),
+      phone: params.get('phone'),
+      zip: params.get('zip'),
+      address1: capitalizeWords(params.get('address1')),
+      address2: capitalizeWords(params.get('address2')),
+      city: capitalizeWords(params.get('city')),
+      state: params.get('state'),
+    }));
+
+    setForm(prevForm => ({
+      ...prevForm,
+      formId: params.get('form_id'),
+      serviceSpecification: capitalizeWords(params.get('service_specification')),
+      promo: params.get('promo'),
+      date: params.get('adate'),
+      time: params.get('atime'),
+    }));
   }, [location.search]);
 
-  // Initialize cookiesAccepted from local storage
-  useEffect(() => {
-    const storedCookies = localStorage.getItem('cookiesAccepted');
-    const storedCookieConsentId = localStorage.getItem('cookieConsentId');
-    if (storedCookies) {
-      setCookiesAccepted(JSON.parse(storedCookies));
-    }
-    if (storedCookieConsentId) {
-      setCookieConsentId(storedCookieConsentId);
-    }
-  }, []);
 
+  // Load context values from local storage when the component mounts
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    const storedForm = localStorage.getItem('form');
-    if (storedForm) {
-      setForm(JSON.parse(storedForm));
-    }
-    const storedSelectedService = localStorage.getItem('selectedService');
-    if (storedSelectedService) {
-      setSelectedService(JSON.parse(storedSelectedService));
-    }
+    // const storedUser = localStorage.getItem('user');
+    // if (storedUser) {
+    //   setUser(JSON.parse(storedUser));
+    // }
+    // const storedForm = localStorage.getItem('form');
+    // if (storedForm) {
+    //   setForm(JSON.parse(storedForm));
+    // }
+    // const storedSelectedService = localStorage.getItem('selectedService');
+    // if (storedSelectedService) {
+    //   setSelectedService(JSON.parse(storedSelectedService));
+    // }
+
     const storedContractor = localStorage.getItem('contractor');
     if (storedContractor) {
       setContractor(JSON.parse(storedContractor));
@@ -136,13 +157,13 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
   
   // Save context values to local storage whenever they change
   useEffect(() => {
-    localStorage.setItem('user', JSON.stringify(user));
-    localStorage.setItem('form', JSON.stringify(form));
-    localStorage.setItem('selectedService', JSON.stringify(selectedService));
+    // localStorage.setItem('user', JSON.stringify(user));
+    // localStorage.setItem('form', JSON.stringify(form));
+    // localStorage.setItem('selectedService', JSON.stringify(selectedService));
     localStorage.setItem('contractor', JSON.stringify(contractor));
     localStorage.setItem('services', JSON.stringify(services));
     localStorage.setItem('locations', JSON.stringify(locations));
-  }, [user, form, selectedService, contractor, services, locations]);
+  }, [contractor, services, locations]);
 
   return (
     <AppContext.Provider

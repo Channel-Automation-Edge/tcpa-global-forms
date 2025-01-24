@@ -2,17 +2,15 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { AppContext } from '@/context/AppContext';
-import ResetButton from '@/components/ui/resetButton';
 import BackButton from '@/components/ui/backButton';
 import PhoneInput from 'react-phone-number-input/input';
 
-interface Step1InfoProps {
+interface InfoStepProps {
   onNext: () => void;
-  onReset: () => void;
   onBack: () => void;
 }
 
-const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
+const InfoStep: React.FC<InfoStepProps> = ({ onNext, onBack }) => {
   const appContext = useContext(AppContext);
 
   if (!appContext) {
@@ -21,10 +19,6 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
 
   const { user, form, setUser, setForm } = appContext;
   const [loading, setLoading] = useState<boolean>(false);
-
-  const handleReset = () => {
-    onReset();
-  };
 
   const handleBack = () => {
     onBack();
@@ -44,10 +38,10 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
       city: user.city || params.get('city') || '',
       email: user.email || params.get('email') || '',
       phone: initialPhone ? `+1${numericPhone}` : '',
-      termsAndPrivacyOptIn: form.termsAndPrivacyOptIn || false,
+      generalOptIn: form.generalOptIn || false,
     });
-    formik.setFieldTouched('termsAndPrivacyOptIn', true, true);
-  }, [user, form.termsAndPrivacyOptIn]);
+    formik.setFieldTouched('generalOptIn', true, true);
+  }, [user, form.generalOptIn]);
 
   const validationSchema = Yup.object({
     firstname: Yup.string().required('First name is required'),
@@ -60,7 +54,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
     phone: Yup.string()
       .matches(/^\+1\d{10}$/, 'Phone number must be 10 digits')
       .required('Phone number is required'),
-    termsAndPrivacyOptIn: Yup.boolean().oneOf([true], 'You must opt-in to continue'),
+    generalOptIn: Yup.boolean().oneOf([true], 'You must opt-in to continue'),
   });
 
   const formik = useFormik({
@@ -74,7 +68,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
       phone: '',
       firstname: '',
       lastname: '',
-      termsAndPrivacyOptIn: false,
+      generalOptIn: false,
     },
     validationSchema,
     validateOnMount: true,
@@ -98,7 +92,7 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
 
       setForm((prevForm) => ({
         ...prevForm,
-        termsAndPrivacyOptIn: values.termsAndPrivacyOptIn,
+        generalOptIn: values.generalOptIn,
       }));
 
       setLoading(false);
@@ -108,9 +102,8 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
 
   return (
     <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
-      <div className="absolute top-[-102px] custom-smallest:top-[-110px] small-stepper:top-[-115px] sm:top-[-121px] md:top-[-137px] left-0 w-full flex justify-between p-4">
+      <div className=" w-full flex justify-between p-4">
         <BackButton onClick={handleBack} />
-        <ResetButton onClick={handleReset} />
       </div>
       
       <div className="max-w-xl mx-auto">
@@ -371,14 +364,17 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
 
               <div className="flex items-start mt-4">
                 <input
-                  id="termsAndPrivacyOptIn"
-                  name="termsAndPrivacyOptIn"
+                  id="generalOptIn"
+                  name="generalOptIn"
                   type="checkbox"
                   onChange={formik.handleChange}
-                  checked={formik.values.termsAndPrivacyOptIn}
+                  checked={formik.values.generalOptIn}
                   className="h-6 w-6 text-accentColor border-gray-300 rounded focus:ring-accentColor bg-white"
                 />
-                <label htmlFor="termsAndPrivacyOptIn" className="ml-4 block text-base text-gray-900 dark:text-gray-300">
+                <label htmlFor="generalOptIn" className="ml-4 block text-base text-gray-900 dark:text-gray-300">
+                Yes, I agree to receiving updates about my free assessment. I understand that I can opt-out anytime.
+                </label>
+                {/* <label htmlFor="generalOptIn" className="ml-4 block text-base text-gray-900 dark:text-gray-300">
                   I have read and agree to the 
                   <a href="https://projectquote.com/terms-and-conditions" target="_blank" rel="noopener noreferrer" className="text-accentColor underline ml-1">
                     Terms & Conditions
@@ -387,11 +383,11 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
                   <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-accentColor underline ml-1">
                     Privacy Policy
                   </a>.
-                </label>
+                </label> */}
               </div>
-              {formik.errors.termsAndPrivacyOptIn && (
+              {formik.errors.generalOptIn && (
                 <div className="text-sm text-red-500">
-                  {formik.errors.termsAndPrivacyOptIn}
+                  {formik.errors.generalOptIn}
                 </div>
               )}
 
@@ -399,11 +395,11 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
                 <button
                   type="submit"
                   className={`w-full py-5 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
-                    formik.isValid && formik.values.termsAndPrivacyOptIn
+                    formik.isValid && formik.values.generalOptIn
                       ? 'bg-accentColor text-white hover:bg-accentDark transform transition-transform'
                       : 'bg-gray-200 text-white cursor-not-allowed'
                   }`}
-                  disabled={!formik.isValid || !formik.values.termsAndPrivacyOptIn}
+                  disabled={!formik.isValid || !formik.values.generalOptIn}
                   >
                   {loading ? (
                     <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
@@ -412,10 +408,16 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
                   )}
                 </button>
               </div>
-              <div className="mt-3 text-center">
+              <div>
                 <p className="text-sm text-gray-500 dark:text-neutral-500">
                   {/* Additional information or disclaimer can go here */}
                 </p>
+                {formik.values.generalOptIn && (
+                   
+                  <div className="mt-4 text-sm text-gray-600 dark:text-neutral-400">
+                    By checking the box above, I provide my ESIGN and express written consent for {appContext.contractor.name} and its authorized partners to contact me at the phone number and email address I have provided in this form. This may include marketing communications sent using automated technology, such as calls, texts, or emails. I understand that this consent is not required to make a purchase.
+                  </div>
+                )}
               </div>
             </form>
           </div>
@@ -425,4 +427,4 @@ const Step1Info: React.FC<Step1InfoProps> = ({ onNext, onReset, onBack }) => {
   );
 };
 
-export default Step1Info;
+export default InfoStep;
