@@ -426,7 +426,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                     name="generalOptIn"
                     checked={form.generalOptIn}
                     onChange={handleGeneralOptInChange}
-                    className="size-4 rounded border-gray-300"
+                    className="size-4 rounded border-gray-300 text-accentColor focus:ring-accentColor"
                   />
                   <label htmlFor="generalOptIn" className="ml-4 block text-base text-gray-900 dark:text-gray-300">
                     {!form.generalOptIn && <span className="text-red-500">* </span>}
