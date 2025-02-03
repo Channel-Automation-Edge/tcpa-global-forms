@@ -309,12 +309,13 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                     <div className="flex items-center mb-4 ml-4 md:ml-8 min-w-52">
                       <div className="w-14 h-14">{iconMapping[selectedService.name]}</div>
                       <div className="flex flex-wrap justify-between flex-grow">
-                        <h3 className="text-lg font-medium text-gray-800 dark:text-white pl-6 pr-4">
-                          {selectedService.name} Service
-                        </h3>
-                        <span className="mt-2 ml-6 sm:mt-0 sm:ml-0  max-w-full sm:max-w-none whitespace-nowrap sm:whitespace-normal py-1.5 px-3 rounded-lg text-xs font-medium bg-accentLight border border-accentColor text-accentColor">
-                          {form.serviceSpecification}
-                        </span>
+                      <h3 className="text-lg font-medium text-gray-800 dark:text-white pl-6 pr-4">
+                        {selectedService.name} {form.serviceSpecification ? form.serviceSpecification : 'Service'}
+                      </h3>
+
+                        {/* <span className="mt-2 ml-6 sm:mt-0 sm:ml-0  max-w-full sm:max-w-none whitespace-nowrap sm:whitespace-normal py-1.5 px-3 rounded-lg text-xs font-medium bg-accentLight border border-accentColor text-accentColor">
+                          
+                        </span> */}
                       </div>
                     </div>
                     {/* Schedule */}
@@ -418,7 +419,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
               )}
 
               {!hideOptIn && (
-                <div className="flex items-start">
+                <div className="flex items-center">
                   <input
                     type="checkbox"
                     id="generalOptIn"
@@ -429,15 +430,14 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                   />
                   <label htmlFor="generalOptIn" className="ml-4 block text-base text-gray-900 dark:text-gray-300">
                     {!form.generalOptIn && <span className="text-red-500">* </span>}
-                    I agree to receiving updates about my free assessment through my chosen contact preferences. I understand that I can opt-out anytime.
+                    Yes, I agree to receiving updates about my free assessment. I understand that I can opt-out anytime.
                   </label>
                 </div>
               )}
               {!hideOptIn && form.generalOptIn && (
                 <div>
                   <div className="mt-4 text-sm text-gray-600 dark:text-neutral-400">
-                    By choosing "Email", "SMS/MMS" and/or "AI or Pre-recorded Voice", and clicking "Confirm Booking" and submitting this form, I am providing my ESIGN signature and express written consent agreement to permit {contractor.name}, and parties calling on its behalf, to contact me at the number I have provided in this form for marketing purposes including through the use of automated technology I agreed to.
-                    My phone number where {contractor.name} may contact me is: {formatPhoneNumber(user.phone)}
+                  By checking the box above, I provide my ESIGN and express written consent for {appContext.contractor.name} and its authorized partners to contact me at the phone number and email address I have provided in this form. This may include marketing communications sent using automated technology, such as calls, texts, or emails. I understand that this consent is not required to make a purchase.
                   </div>
                 </div>
               )}

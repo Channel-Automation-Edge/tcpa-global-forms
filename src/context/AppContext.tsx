@@ -71,7 +71,7 @@ const AppContextProvider: React.FC<AppContextProviderProps> = ({ children }) => 
     phone: null,
     state: null,
     userNs: null,
-    timezone: null,
+    timezone: null, 
   });
 
   const [form, setForm] = useState<FormData>({
