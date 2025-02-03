@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import Marquee from "./ui/marquee";
-import BlurFade from "./ui/blur-fade";
 import { AppContext } from '@/context/AppContext';
 
 interface Review {
@@ -46,24 +45,24 @@ const Testimonials: React.FC = () => {
 
   return (
     <div>
-      <div className="relative flex w-full pt-16 pb-10 flex-col items-center justify-center overflow-hidden bg-white pointer-events-none">
-        <div className="text-center">
-          <BlurFade delay={3 * 0.15} inView yOffset={15} className="font-semibold text-2xl md:text-3xl text-gray-800 dark:text-neutral-200 mb-[25px]">
+      <div className="relative flex w-full flex-col items-center justify-center overflow-hidden pointer-events-none py-4">
+        <div className="hidden text-center">
+          <div className="section_header mb-[25px]">
             What our <span className="text-accentColor">satisfied</span> clients say about us
-          </BlurFade>
+          </div>
           <p className="mt-2 md:mt-4 text-gray-500 dark:text-neutral-500"></p>
         </div>
 
-        <BlurFade delay={6 * 0.15} inView yOffset={15}>
+        <div>
           {/* First Marquee: Ascending order */}
           <Marquee pauseOnHover className="[--duration:20s]">
             {sortedReviews.map((review: Review) => (
               <ReviewCard key={review.id} {...review} />
             ))}
           </Marquee>
-        </BlurFade>
-        <div className="hidden sm:block pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-white dark:from-background"></div>
-        <div className="hidden sm:block pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-white dark:from-background"></div>
+        </div>
+        <div className="hidden sm:block pointer-events-none absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-gray-50 dark:from-background"></div>
+        <div className="hidden sm:block  pointer-events-none absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-gray-50 dark:from-background"></div>
       </div>
     </div>
   );

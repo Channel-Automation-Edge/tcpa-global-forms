@@ -1,6 +1,5 @@
 import { useContext, useState } from 'react';
 import { AppContext } from '@/context/AppContext';
-import NavQuote from '@/components/NavQuote';
 import Summary from './Summary';
 import ScheduleStep from './ScheduleStep';
 import InfoStep from './InfoStep';
@@ -56,9 +55,9 @@ const InboundForm = () => {
     // };
   
     return (
-      <div className='bg-xbg min-h-screen'>
+      <div className='max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto'>
         <div>
-          <NavQuote />  
+          
           {currentStep === 1 && <Summary onNext={handleNextStep} onSchedule={handleSchedule}/>}
         	{currentStep === 2 && <ScheduleStep onNext={handleNextStep} />}
 					{currentStep === 3 && <InfoStep onNext={handleNextStep} onBack={handleBackStep}/>}

@@ -84,3 +84,45 @@
 .heading-primary {
   @apply text-3xl md:text-4xl font-bold text-gray-800 dark:text-white;
 }
+
+.heading-form {
+  @apply text-2xl md:text-3xl font-semibold text-gray-800 dark:text-white;
+}
+
+.container-form {
+  @apply z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative
+}
+
+.container-cards {
+  @apply flex flex-wrap justify-center gap-4 sm:gap-[20px];
+  margin-top: 15px;
+  width: 100%;
+}
+
+.cards-button {
+  @apply flex flex-row sm:flex-col items-center justify-start sm:justify-center w-full sm:w-[200px] h-[80px] sm:h-[156px] border border-transparent rounded-xl shadow-md p-4 transition-transform transform hover:scale-100 sm:hover:scale-105 bg-white;
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 22px 30px -6px;
+  transition: box-shadow 0.3s ease;
+  border-color: rgba(157, 176, 197, 0.25);
+}
+
+.cards-text {
+  @apply text-gray-800 text-base font-medium text-left sm:text-center
+}
+
+.input-label {
+  @apply block mb-2 text-sm text-gray-700 font-medium dark:text-white
+}
+
+.input-field {
+  @apply py-3 px-4 w-full border border-gray-200 rounded-lg text-base focus:outline-none focus:ring-1 focus:border-accentColor
+  focus:ring-accentColor
+}
+
+.section_header {
+  @apply font-semibold text-2xl md:text-3xl lg:text-4xl text-gray-800 dark:text-neutral-200;
+}
+
+.section_description {
+  @apply text-sm md:text-sm lg:text-base text-gray-500 dark:text-neutral-500;
+}

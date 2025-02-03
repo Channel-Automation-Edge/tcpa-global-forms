@@ -242,43 +242,29 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
 
   return (
     <div>
-      <div className="z-10 max-w-[100rem] px-4 md:px-12 py-4 md:py-8 mx-auto relative">
+      <div className="z-10">
         <div className="space-y-8">
-          <div className='mt-4 flex justify-center text-center'>
-            <div className="max-w-[40rem] text-center">
-              <h1 className="block text-2xl md:text-3xl font-bold md:font-semibold lg:font-bold text-gray-800 dark:text-white px-4">
+          <div className='flex justify-center text-center'>
+            <div className="max-w-[60rem] text-center">
+              <h1 className="section_header">
                 {validAppointment
                   ? form.isBooked
                     ? 'Your Appointment is Confirmed - See You Soon!'
                     : 'Almost There! Confirm Your Appointment Now'
                   : `Hi ${user.firstname}, Let's Finish Setting Up Your Appointment`}
               </h1>
-            </div>
-          </div>
-
-          {!hideOptIn && (
+              {!hideOptIn && (
             <div >
-              <p className="text-center text-sm text-gray-600 dark:text-neutral-400 mt-4">
+              <p className="section_description text-center mt-2 sm:mt-4">
               {form.isBooked
                 ? 'Thank you for booking with us! Your appointment has been successfully confirmed. You’ll receive a confirmation email with all the details shortly. We look forward to seeing you!'
-                  : `You’ve provided all the required details for your appointment. Please review the information below and click “Confirm Appointment” to finalize your booking`}
+                  : `Please review the information below and click “Confirm Appointment” to finalize your booking`}
                 </p>
               </div>
           )}
-          {/* <div className='mt-4 flex justify-center text-center'>
-            <div className="max-w-[60rem] text-center">
-            <p className="text-center text-sm text-gray-600 dark:text-neutral-400 mt-4">
-            {validAppointment
-              ? form.isBooked
-                ? 'Your Appointment is Confirmed - See You Soon!'
-                : `You’ve provided all the required details for your appointment. Please review the information below and click “Confirm Appointment” to finalize your booking`
-              : `Hi ${user.firstname}, Let's Finish Setting Up Your Appointment`}
-            </p>
-            
             </div>
-            
-          </div> */}
-          <div className="flex justify-center mt-10">
+          </div>
+          <div className="flex justify-center">
             <div className="flex flex-wrap gap-4 max-w-screen-lg w-full sm:px-8">
               <div className="flex flex-col gap-4 flex-grow min-w-[250px] w-[600px] max-w-[100%]">
                 <div className="bg-white border border-gray-200 rounded-md">
@@ -403,88 +389,89 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
               </div>
             </div>
           </div>
-
-          <div className="mt-4 flex justify-center items-center">
-            <div className="justify-center sm:mx-8 w-[960px]">
-              {hideOptIn && (
-                <div>
-                  <p className="text-center text-sm text-gray-600 dark:text-neutral-400 mt-4">
-              {validAppointment
-                ? form.isBooked
-                  ? 'Thank you for booking with us! Your appointment has been successfully confirmed. You’ll receive a confirmation email with all the details shortly. We look forward to seeing you!'
-                  : `You’ve provided all the required details for your appointment. Please review the information below and click “Confirm Appointment” to finalize your booking`
-                : `It looks like some details are missing to finalize your appointment. Please click the button below to continue setting it up. Your appointment is not confirmed until all details are complete.`}
-                </p>
-              </div>
-              )}
-
-              {!hideOptIn && (
-                <div className="flex items-center">
-                  <input
-                    type="checkbox"
-                    id="generalOptIn"
-                    name="generalOptIn"
-                    checked={form.generalOptIn}
-                    onChange={handleGeneralOptInChange}
-                    className="size-4 rounded border-gray-300 text-accentColor focus:ring-accentColor"
-                  />
-                  <label htmlFor="generalOptIn" className="ml-4 block text-base text-gray-900 dark:text-gray-300">
-                    {!form.generalOptIn && <span className="text-red-500">* </span>}
-                    Yes, I agree to receiving updates about my free assessment. I understand that I can opt-out anytime.
-                  </label>
+          {!form.isBooked && (
+            <div className="flex justify-center items-center">
+              <div className="justify-center sm:mx-8 w-[960px]">
+                {hideOptIn && (
+                  <div>
+                    <p className="text-center text-sm text-gray-600 dark:text-neutral-400 mt-4">
+                {validAppointment
+                  ? form.isBooked
+                    ? 'Thank you for booking with us! Your appointment has been successfully confirmed. You’ll receive a confirmation email with all the details shortly. We look forward to seeing you!'
+                    : `You’ve provided all the required details for your appointment. Please review the information below and click “Confirm Appointment” to finalize your booking`
+                  : `It looks like some details are missing to finalize your appointment. Please click the button below to continue setting it up. Your appointment is not confirmed until all details are complete.`}
+                  </p>
                 </div>
-              )}
-              {!hideOptIn && form.generalOptIn && (
-                <div>
-                  <div className="mt-4 text-sm text-gray-600 dark:text-neutral-400">
-                  By checking the box above, I provide my ESIGN and express written consent for {appContext.contractor.name} and its authorized partners to contact me at the phone number and email address I have provided in this form. This may include marketing communications sent using automated technology, such as calls, texts, or emails. I understand that this consent is not required to make a purchase.
+                )}
+
+                {!hideOptIn  && !form.isBooked && (
+                  <div className="flex items-center">
+                    <input
+                      type="checkbox"
+                      id="generalOptIn"
+                      name="generalOptIn"
+                      checked={form.generalOptIn}
+                      onChange={handleGeneralOptInChange}
+                      className="size-4 rounded border-gray-300 text-accentColor focus:ring-accentColor"
+                    />
+                    <label htmlFor="generalOptIn" className="ml-4 block text-base text-gray-900 dark:text-gray-300">
+                      {!form.generalOptIn && <span className="text-red-500">* </span>}
+                      Yes, I agree to receiving updates about my free assessment. I understand that I can opt-out anytime.
+                    </label>
                   </div>
-                </div>
-              )}
+                )}
+                {!hideOptIn && form.generalOptIn && !form.isBooked && (
+                  <div>
+                    <div className="mt-4 text-sm text-gray-600 dark:text-neutral-400">
+                    By checking the box above, I provide my ESIGN and express written consent for {appContext.contractor.name} and its authorized partners to contact me at the phone number and email address I have provided in this form. This may include marketing communications sent using automated technology, such as calls, texts, or emails. I understand that this consent is not required to make a purchase.
+                    </div>
+                  </div>
+                )}
 
 
-              {!validAppointment && (
-                <div>
-                  <div className='flex justify-center mt-8'>
+                {!validAppointment && (
+                  <div>
+                    <div className='flex justify-center mt-8'>
+                      <button
+                      onClick={handleSetAppointment}
+                        className='mt-4 w-full py-5 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-accentColor text-white hover:bg-accentDark transform transition-transform'
+                        disabled={loading }
+                      >
+                        {loading ? (
+                          <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+                        ) : (
+                          'Set Up Appointment'
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Display only if validAppointment is true and form.isBooked is false */}
+                {validAppointment && !form.isBooked && (
+                  <div className="">
                     <button
-                    onClick={handleSetAppointment}
-                      className='mt-4 w-full py-5 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-accentColor text-white hover:bg-accentDark transform transition-transform'
-                      disabled={loading }
+                      onClick={handleConfirmBooking}
+                      className={`mt-4 w-full py-5 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
+                        form.generalOptIn
+                          ? 'bg-accentColor text-white hover:bg-accentDark transform transition-transform'
+                          : 'bg-gray-200 text-white cursor-not-allowed'
+                      }`}
+                      disabled={loading || !form.generalOptIn}  // Disable button if generalOptIn is not true
                     >
                       {loading ? (
                         <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
                       ) : (
-                        'Set Up Appointment'
+                        'Confirm Appointment'
                       )}
                     </button>
                   </div>
-                </div>
-              )}
+                )}
 
-              {/* Display only if validAppointment is true and form.isBooked is false */}
-              {validAppointment && !form.isBooked && (
-                <div className="">
-                  <button
-                    onClick={handleConfirmBooking}
-                    className={`mt-4 w-full py-5 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent ${
-                      form.generalOptIn
-                        ? 'bg-accentColor text-white hover:bg-accentDark transform transition-transform'
-                        : 'bg-gray-200 text-white cursor-not-allowed'
-                    }`}
-                    disabled={loading || !form.generalOptIn}  // Disable button if generalOptIn is not true
-                  >
-                    {loading ? (
-                      <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
-                    ) : (
-                      'Confirm Booking'
-                    )}
-                  </button>
-                </div>
-              )}
-
-            
+              
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
       <Dialog>

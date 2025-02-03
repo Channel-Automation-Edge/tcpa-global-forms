@@ -10,12 +10,16 @@ import { AppContext } from '@/context/AppContext';
 import InboundForm from '@/components/forms/Inbound/InboundForm';
 import { central, company } from '@/lib/supabaseClient';
 import useFormPersistence from '@/hooks/useFormPersistence';
+import Testimonials from '@/components/Testimonials';
+import HowItWorks from '@/components/HowItWorks';
+import FAQ from '@/components/FAQ';
+import Feature from '@/components/Feature';
+import NavQuote from '@/components/NavQuote';
 
 const Inbound = () => {
   const location = useLocation();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [isBooked, setIsBooked] = useState(false);
   const appContext = useContext(AppContext);
   const [, setCurrentStep] = useFormPersistence('InboundStep', 1);
 
@@ -94,7 +98,7 @@ const Inbound = () => {
 
           if (error) {
             console.error('Error fetching appointment:', error);
-            setIsBooked(false);
+            
           } else {
             // form is already booked, save to form
             setForm(prevForm => ({
@@ -125,10 +129,9 @@ const Inbound = () => {
           }
         } catch (err) {
           console.error('Unexpected error:', err);
-          setIsBooked(false);
+          
         }
       } else {
-        setIsBooked(false);
       }
     };
 
@@ -170,12 +173,13 @@ const Inbound = () => {
   }
 
   return (
-    <div>
-      {isBooked ? (
-        <div>Your appointment is already booked successfully</div>
-      ) : (
-        <InboundForm />
-      )}
+    <div className='bg-gray-50'>
+      <NavQuote />  
+      <InboundForm />
+      {form.isBooked && (<HowItWorks />)}
+      <Testimonials />
+      <Feature />
+      <FAQ />
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogTrigger asChild>
@@ -199,6 +203,8 @@ const Inbound = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+
     </div>
   );
 };
