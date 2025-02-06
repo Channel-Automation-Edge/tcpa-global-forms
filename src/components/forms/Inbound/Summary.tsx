@@ -25,6 +25,7 @@ import { Button } from '@/components/ui/button';
 import ConfirmCheck from '@/components/icons/ConfirmCheck';
 import Doors from '@/components/icons/Doors';
 import { useNavigate } from 'react-router-dom';
+import Solar from '@/components/icons/Solar';
 
 // Icon mapping
 const iconMapping: Record<string, JSX.Element> = {
@@ -44,6 +45,7 @@ const iconMapping: Record<string, JSX.Element> = {
   'Siding': <Siding />,
   'Shower': <Shower />,
   'Windows': <Windows />,
+  'Solar': <Solar />,
   // Add more mappings as needed
 };
 

@@ -25,6 +25,7 @@ import Siding from '@/components/icons/Siding';
 import Shower from '@/components/icons/Shower';
 import Windows from '@/components/icons/Windows';
 import NavQuote from '@/components/NavQuote';
+import Solar from '@/components/icons/Solar';
 
 
 // Icon mapping
@@ -45,6 +46,7 @@ const iconMapping: Record<string, JSX.Element> = {
   'Siding': <Siding />,
   'Shower': <Shower />,
   'Windows': <Windows />,
+  'Solar': <Solar />,
   // Add more mappings as needed
 };
 
