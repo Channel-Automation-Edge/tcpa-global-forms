@@ -45,7 +45,7 @@ const Testimonials: React.FC = () => {
 
   return (
     <div>
-      <div className="relative flex w-full flex-col items-center justify-center overflow-hidden pointer-events-none py-4">
+      <div className="relative flex w-full flex-col items-center justify-center overflow-hidden pointer-events-none">
         <div className="hidden text-center">
           <div className="section_header mb-[25px]">
             What our <span className="text-accentColor">satisfied</span> clients say about us

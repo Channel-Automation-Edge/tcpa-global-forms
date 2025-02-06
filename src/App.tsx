@@ -6,6 +6,7 @@ import "vanilla-cookieconsent/dist/cookieconsent.css";
 import {central} from '@/lib/supabaseClient';
 import { AppContext } from '@/context/AppContext';
 import Inbound from './pages/Inbound';
+import ThankYou from './components/forms/Inbound/ThankYou';
 
 declare global {
   interface Window {
@@ -19,17 +20,19 @@ function App() {
   const [loading, setLoading] = useState(false); // State to control rendering
   const params = new URLSearchParams(location.search);
   const companyId = params.get('company_id');
+  const serviceId = params.get('service');
 
   if (!appContext) {
     return null;
   }
 
-  const { setContractor, setServices, setLocations, contractor } = appContext;
+  const { setContractor, setServices, setLocations, contractor, setSelectedService, form, setForm, setUser, user } = appContext;
 
   useEffect(() => {
     window.HSStaticMethods.autoInit();
   }, [location.pathname]);
 
+  // Fetch contractor data, services, locations, and selected service
   useEffect(() => {
     const fetchInitialData = async () => {
       const storedContractor = localStorage.getItem('contractor');
@@ -87,7 +90,26 @@ function App() {
               localStorage.setItem('locations', JSON.stringify(locationsData || []));
               console.log('Locations fetched successfully');
             }
-            setLoading(false);
+            
+            // Fetch selected service
+            if (serviceId) {
+              try {
+                const { data, error } = await central
+                  .from('services')
+                  .select('*')
+                  .eq('id', serviceId)
+                  .single();
+      
+                if (error) {
+                  console.error('Error fetching service:', error);
+                } else {
+                  setSelectedService(data);
+                }
+              } catch (err) {
+                console.error('Unexpected error:', err);
+              }
+            }
+            setLoading(false)
           }
         } catch (err) {
           console.error('Unexpected error fetching data:', err);
@@ -95,14 +117,12 @@ function App() {
         }
     };
     fetchInitialData();
-  }, [companyId, setContractor, setServices, setLocations]);
+  }, [location.search]);
 
+  // Update the document title and favicon
   useEffect(() => {
     if (contractor) {
-      // Update the document title
       document.title = contractor.name;
-
-      // Update the favicon
       const favicon = document.querySelector("link[rel~='icon']") as HTMLLinkElement | null;
       if (favicon) {
         favicon.href = contractor.favicon;
@@ -115,6 +135,88 @@ function App() {
     }
   }, [contractor]);
 
+  // Check if the appointment is already booked if formId is present or changed
+  useEffect(() => {
+    const checkBookingStatus = async () => {
+      if (form.formId) {
+        try {
+          const { data, error } = await central
+            .from('bookings') 
+            .select('*')
+            .eq('id', form.formId)
+            .single();
+
+          if (error) {
+            console.error('Error fetching appointment:', error);
+            
+          } else {
+            // form is already booked, save to form
+            setForm(prevForm => ({
+                ...prevForm,
+                formId: data.id,
+                serviceSpecification: data.service_specification,
+                promo: data.promo,
+                generalOptIn: data.opt_in,
+                date: data.date,
+                time: data.time,
+                isBooked: data.is_booked,
+            }));
+
+            setUser(prevUser => ({ 
+                ...prevUser,
+                firstname: data.firstname,
+                lastname: data.lastname,
+                email: data.email,
+                phone: data.phone,
+                zip: data.zip,
+                address1: data.address1,
+                address2: data.address2,
+                city: data.city,
+                state: data.state,
+                userNs: data.user_ns,
+            }));
+            
+          }
+        } catch (err) {
+          console.error('Unexpected error:', err);
+          
+        }
+      } else {
+      }
+    };
+
+    checkBookingStatus();
+  }, [form.formId]);
+
+  // fetch zip if user.zip is present or changed
+  useEffect(() => {
+    const fetchZip = async () => {
+      if (user.zip) {
+        try {
+          const { data, error } = await central
+            .from('zips')
+            .select('*')
+            .eq('zip', user.zip)
+            .single();
+
+          if (error) {
+            console.error('Error fetching zip:', error);
+          } else {
+            setUser(prevUser => ({
+              ...prevUser,
+              city: data.city,
+              state: data.state_id,
+              timezone: data.timezone,
+            }));
+          }
+        } catch (err) {
+          console.error('Unexpected error:', err);
+        }
+      }
+    };
+
+    fetchZip();
+  }, [user.zip]);
 
   // log in console
   useEffect(() => {
@@ -147,7 +249,8 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path='/' element={<Inbound />} />
+        <Route path='/:slug' element={<Inbound />} />
+        <Route path='/summary/:slug' element={<ThankYou />} />
         <Route path="*" element={<Inbound />} />
       </Routes>
     </>

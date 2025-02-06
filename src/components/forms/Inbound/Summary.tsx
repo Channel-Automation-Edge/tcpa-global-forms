@@ -16,7 +16,7 @@ import Siding from '@/components/icons/Siding';
 import Shower from '@/components/icons/Shower';
 import Windows from '@/components/icons/Windows';
 import Fence from '@/components/icons/Fence';
-import { company } from '@/lib/supabaseClient';
+import { central } from '@/lib/supabaseClient';
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
   DialogHeader, DialogTrigger, DialogClose, DialogTitle
@@ -24,6 +24,7 @@ import {
 import { Button } from '@/components/ui/button';
 import ConfirmCheck from '@/components/icons/ConfirmCheck';
 import Doors from '@/components/icons/Doors';
+import { useNavigate } from 'react-router-dom';
 
 // Icon mapping
 const iconMapping: Record<string, JSX.Element> = {
@@ -63,7 +64,18 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [validAppointment, setValidAppointment] = useState<boolean>(false);
   const [hideOptIn, setHideOptIn] = useState<boolean>(false);
+  const navigate = useNavigate();
+  const navigateWithParams = (path: string) => {
+    const currentParams = new URLSearchParams(location.search);
+    navigate(`${path}?${currentParams.toString()}`);
+  };
+  const [slug, setSlug] = useState('');
 
+  useEffect(() => {
+    if (appContext && appContext.contractor) {
+      setSlug(appContext.contractor.slug);
+    }
+  }, [appContext, appContext.contractor]);
 
   // Check if form is valid
   useEffect(() => {
@@ -87,7 +99,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
     }
   }, [form, user, selectedService]);
 
-  //
+  // validate form
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
   
@@ -154,7 +166,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
 
     // Insert data to database
     try {
-      const { data, error } = await company
+      const { data, error } = await central
         .from('bookings')
         .insert([
           {
@@ -188,6 +200,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
     } catch (err) {
       console.error('Unexpected error:', err);
     }
+    navigateWithParams(`/summary/${slug}`);
   };
 
   const formatDate = (dateString: any) => {
@@ -213,7 +226,6 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
   
     return `${hour}:${minutes} ${period}`;
   };
-  
 
   const formatPhoneNumber = (phone: any) => {
     if (!phone || phone.length !== 10) {
@@ -251,7 +263,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                   ? form.isBooked
                     ? 'Your Appointment is Confirmed - See You Soon!'
                     : 'Almost There! Confirm Your Appointment Now'
-                  : `Hi ${user.firstname}, Let's Finish Setting Up Your Appointment`}
+                  : `Hi ${user.firstname}, let's finish setting up your appointment`}
               </h1>
               {!hideOptIn && (
             <div >
@@ -308,15 +320,36 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                     <hr className='mb-4'></hr>
                     <p className="text-sm font-semibold text-gray-800 mb-3">Scheduled Date and Time</p>
                     {form.date && form.time ? (
-                      <div className="flex flex-wrap justify-between my-4 w-auto bg-gray-100 rounded-md py-4">
-                        <div className="flex items-center px-8 min-w-[200px]">
+                      <div className="flex flex-wrap justify-between my-4 w-auto bg-gray-100 rounded-md pb-4 space-y-2">
+                        <div className="flex items-center px-8 min-w-[200px] mt-2">
                           <img src="/images/calendar.svg" alt="Calendar" className="inline mr-2 h-5" />
                           <p className="text-base text-gray-800">{formatDate(form.date)}</p>
                         </div>
-                        <div className="flex items-center px-8">
+
+                        <div className="hidden sm:flex items-center px-8">
+                          <img src="/images/clock.svg" alt="Clock" className="inline mr-2 h-5" />
+                          <p className="text-base text-gray-800">{formatTime(form.time)}</p>
+                          
+                          {user.timezone && ( 
+                            <div className='flex items-center'>
+                              <img src="/images/globe.svg" alt="Clock" className="inline ml-4 mr-2 h-5" />
+                              <p className="text-base text-gray-800">{user.timezone}</p>
+                            </div>)}
+
+                        </div>
+
+
+                        <div className="flex items-center px-8 sm:hidden">
                           <img src="/images/clock.svg" alt="Clock" className="inline mr-2 h-5" />
                           <p className="text-base text-gray-800">{formatTime(form.time)}</p>
                         </div>
+                        {user.timezone && (
+                          <div className="flex items-center px-8 sm:hidden">
+                            <img src="/images/globe.svg" alt="Clock" className="inline mr-2 h-5" />
+                            <p className="text-base text-gray-800">{user.timezone}</p>
+                          </div>
+                        )}
+
                       </div>
                     ) : (
                       <div className="flex flex-wrap justify-between my-4 w-auto bg-red-100 rounded-md py-4">
@@ -440,7 +473,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                         {loading ? (
                           <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
                         ) : (
-                          'Set Up Appointment'
+                          'Complete Missing Details'
                         )}
                       </button>
                     </div>
@@ -474,6 +507,8 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
           )}
         </div>
       </div>
+
+      
       <Dialog>
         <DialogTrigger asChild>
           <button id='dialog' className='hidden'></button>

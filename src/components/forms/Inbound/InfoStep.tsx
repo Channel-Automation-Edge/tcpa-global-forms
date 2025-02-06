@@ -102,7 +102,7 @@ const InfoStep: React.FC<InfoStepProps> = ({ onNext, onBack }) => {
 
   return (
     <div className="z-10 max-w-[100rem] px-4 lg:px-14 py-10 lg:py-14 mx-auto relative">
-      <div className=" w-full flex justify-between p-4">
+      <div className="w-full flex justify-between p-4">
         <BackButton onClick={handleBack} />
       </div>
       

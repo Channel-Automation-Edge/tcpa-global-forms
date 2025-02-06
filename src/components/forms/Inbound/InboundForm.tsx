@@ -4,22 +4,16 @@ import Summary from './Summary';
 import ScheduleStep from './ScheduleStep';
 import InfoStep from './InfoStep';
 
-
 const InboundForm = () => {
 		const [currentStep, setCurrentStep] = useState<number>(1);
     const appContext = useContext(AppContext);
-    // const navigate = useNavigate();
     // const location = useLocation();
     // const progress = (currentStep - 1) * 16.66;
-    if (!appContext) {
+    if (!appContext || !appContext.contractor || !appContext.services) {
       return null;
     }
 		const [summary, setSummary] = useState<boolean>(false);
-  
-    // const navigateWithParams = (path: string) => {
-    //   const currentParams = new URLSearchParams(location.search);
-    //   navigate(`${path}?${currentParams.toString()}`);
-    // };
+
   
     const handleNextStep = () => {
 			// if cuurent step is 3, then go back to 1
@@ -50,17 +44,17 @@ const InboundForm = () => {
     const handleBackStep = () => {
 			setCurrentStep(currentStep - 1);
     };
-  
-    // const handleSubmitted = () => {
-    // };
+
+    if (!appContext || !appContext.contractor || !appContext.services) {
+      return null;
+    }
   
     return (
-      <div className='max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto'>
+      <div className=''>
         <div>
-          
           {currentStep === 1 && <Summary onNext={handleNextStep} onSchedule={handleSchedule}/>}
-        	{currentStep === 2 && <ScheduleStep onNext={handleNextStep} />}
-					{currentStep === 3 && <InfoStep onNext={handleNextStep} onBack={handleBackStep}/>}
+          {currentStep === 2 && <ScheduleStep onNext={handleNextStep} />}
+          {currentStep === 3 && <InfoStep onNext={handleNextStep} onBack={handleBackStep}/>}
         </div>
       </div>
     );

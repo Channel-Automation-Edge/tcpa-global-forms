@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Dialog, DialogContent, DialogDescription,
   DialogFooter, DialogHeader, DialogTrigger,
@@ -8,10 +8,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { AppContext } from '@/context/AppContext';
 import InboundForm from '@/components/forms/Inbound/InboundForm';
-import { central, company } from '@/lib/supabaseClient';
 import useFormPersistence from '@/hooks/useFormPersistence';
 import Testimonials from '@/components/Testimonials';
-import HowItWorks from '@/components/HowItWorks';
 import FAQ from '@/components/FAQ';
 import Feature from '@/components/Feature';
 import NavQuote from '@/components/NavQuote';
@@ -22,13 +20,26 @@ const Inbound = () => {
   const [loading, setLoading] = useState(true);
   const appContext = useContext(AppContext);
   const [, setCurrentStep] = useFormPersistence('InboundStep', 1);
+  const navigate = useNavigate();
 
   if (!appContext) {
     return null;
   }
 
-  const { form, user, setSelectedService, setForm, setUser } = appContext;
+  const { form } = appContext;
+  const navigateWithParams = (path: string) => {
+    const currentParams = new URLSearchParams(location.search);
+    navigate(`${path}?${currentParams.toString()}`);
+  };
+  const [slug, setSlug] = useState('');
 
+  useEffect(() => {
+    if (appContext && appContext.contractor) {
+      setSlug(appContext.contractor.slug);
+    }
+  }, [appContext, appContext.contractor]);
+
+  // Modal to confirm leaving page
   useEffect(() => {
     const handlePopState = () => {
       if (!isModalOpen) {
@@ -55,118 +66,21 @@ const Inbound = () => {
     setIsModalOpen(false);
   };
 
-  // Fetch service data from URL params
+  // If form.isBooked, redirect to thank you page
   useEffect(() => {
-    const fetchService = async () => {
-      const params = new URLSearchParams(location.search);
-      const serviceId = params.get('service');
+    if (form.isBooked == true) {
+      navigateWithParams(`/summary/${slug}`);
+      console.log('form is booked');
+      setLoading(false);
+    } else {
+      console.log('form is not booked');
+      setLoading(false);
+    }
+  }, [form.isBooked]);
 
-      if (serviceId) {
-        try {
-          const { data, error } = await central
-            .from('services')
-            .select('*')
-            .eq('id', serviceId)
-            .single();
-
-          if (error) {
-            console.error('Error fetching service:', error);
-          } else {
-            setSelectedService(data);
-          }
-        } catch (err) {
-          console.error('Unexpected error:', err);
-        }
-      }
-
-      setLoading(false); // Set loading to false after fetching
-    };
-
-    fetchService();
-  }, [location.search, setSelectedService]);
-
-  // Check if the appointment is already booked if formId is present or changed
-  useEffect(() => {
-    const checkBookingStatus = async () => {
-      if (form.formId) {
-        try {
-          const { data, error } = await company
-            .from('bookings') 
-            .select('*')
-            .eq('id', form.formId)
-            .single();
-
-          if (error) {
-            console.error('Error fetching appointment:', error);
-            
-          } else {
-            // form is already booked, save to form
-            setForm(prevForm => ({
-                ...prevForm,
-                formId: data.id,
-                serviceSpecification: data.service_specification,
-                promo: data.promo,
-                generalOptIn: data.opt_in,
-                date: data.date,
-                time: data.time,
-                isBooked: data.is_booked,
-            }));
-
-            setUser(prevUser => ({ 
-                ...prevUser,
-                firstname: data.firstname,
-                lastname: data.lastname,
-                email: data.email,
-                phone: data.phone,
-                zip: data.zip,
-                address1: data.address1,
-                address2: data.address2,
-                city: data.city,
-                state: data.state,
-                userNs: data.user_ns,
-            }));
-            
-          }
-        } catch (err) {
-          console.error('Unexpected error:', err);
-          
-        }
-      } else {
-      }
-    };
-
-    checkBookingStatus();
-  }, [form.formId]);
-
-  // fetch zip if user.zip is present or changed
-  useEffect(() => {
-    const fetchZip = async () => {
-      if (user.zip) {
-        try {
-          const { data, error } = await central
-            .from('zips')
-            .select('*')
-            .eq('zip', user.zip)
-            .single();
-
-          if (error) {
-            console.error('Error fetching zip:', error);
-          } else {
-            setUser(prevUser => ({
-              ...prevUser,
-              city: data.city,
-              state: data.state_id,
-              timezone: data.timezone,
-            }));
-          }
-        } catch (err) {
-          console.error('Unexpected error:', err);
-        }
-      }
-    };
-
-    fetchZip();
-  }, [user.zip]);
+  if  (!appContext.services || !appContext.contractor || !appContext.selectedService) {
+    return null; // Handle the case where data is not loaded yet
+  }
 
   if (loading) {
     return null;
@@ -175,11 +89,14 @@ const Inbound = () => {
   return (
     <div className='bg-gray-50'>
       <NavQuote />  
-      <InboundForm />
-      {form.isBooked && (<HowItWorks />)}
-      <Testimonials />
-      <Feature />
-      <FAQ />
+      
+      <div className='max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 lg:py-12 space-y-12 sm:space-y-20 lg:space-y-24'>
+        <InboundForm />
+        <Testimonials />
+        <Feature />
+        <FAQ />
+      </div>
+
 
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogTrigger asChild>
