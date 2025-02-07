@@ -205,10 +205,17 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
     navigateWithParams(`/summary/${slug}`);
   };
 
-  const formatDate = (dateString: any) => {
-    const date = new Date(dateString);
+  const formatDate = (dateString:any) => {
+    // Split the date string into components
+    const [year, month, day] = dateString.split('-');
+  
+    // Create a new Date object using local timezone
+    const date = new Date(year, month - 1, day); // Month is 0-indexed
+  
+    // Format the date manually to ensure consistency
     return new Intl.DateTimeFormat('en-US', { month: 'long', day: 'numeric', year: 'numeric' }).format(date);
   };
+  
 
   const formatTime = (timeString: string) => {
     // Split the time string into hours and minutes
