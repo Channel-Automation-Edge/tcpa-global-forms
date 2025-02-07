@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AppContext } from '@/context/AppContext';
 import Summary from './Summary';
 import ScheduleStep from './ScheduleStep';
@@ -14,7 +14,14 @@ const InboundForm = () => {
     }
 		const [summary, setSummary] = useState<boolean>(false);
 
-  
+    // Scroll to top when the step changes
+    useEffect(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth', // Use smooth scrolling
+      });
+    }, [currentStep]);
+
     const handleNextStep = () => {
 			// if cuurent step is 3, then go back to 1
 			if (currentStep === 3) {

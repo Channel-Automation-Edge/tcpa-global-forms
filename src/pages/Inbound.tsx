@@ -115,7 +115,7 @@ const Inbound = () => {
               <Button className='bg-gray-200 hover:bg-gray-300 text-gray-800' onClick={handleCloseModal}>Cancel</Button>
             </DialogClose>
             <DialogClose asChild>
-              <Button className='bg-accentColor hover:bg-accentDark' onClick={handleLeave}>Leave Page</Button>
+              <Button className='bg-accentColor hover:bg-accentDark mb-2' onClick={handleLeave}>Leave Page</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
