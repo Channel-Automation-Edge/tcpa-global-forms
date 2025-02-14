@@ -272,7 +272,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                   ? form.isBooked
                     ? 'Your Appointment is Confirmed - See You Soon!'
                     : 'Almost There! Confirm Your Appointment Now'
-                  : `Hi ${user.firstname}, ready to schedule your appointment?`}
+                  : `Hi ${user.firstname}, let's finish setting up your appointment`}
               </h1>
               {!hideOptIn && (
             <div >
@@ -308,7 +308,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                             <path d="m15.8 24.7c-2.3.1-1.9-3.9.3-3.4 2.3-.1 2 3.9-.3 3.4zm.2-5.5c-.6 0-.9-.3-.9-1l-.7-9.2c-.1-.9.6-1.7 1.5-1.8s1.7.6 1.8 1.5v.3l-.7 9.2c-.1.7-.4 1-1 1z" fill="#eee"></path>
                           </g>
                         </svg>
-                        <p className="text-lg font-semibold ml-2">No Appointment Requested</p>
+                        <p className="text-lg font-semibold ml-2">Pending Confirmation</p>
                       </div>
                     )}
                   </div>
@@ -364,7 +364,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                       <div className="flex flex-wrap justify-between my-4 w-auto bg-red-100 rounded-md py-4">
                         <div className="flex items-center px-8 min-w-[200px]">
                           <img src="/images/warning.svg" alt="warning" className="inline mr-2 h-5" />
-                          <p className="text-base text-red-800">Choose a date and time that works for you</p>
+                          <p className="text-base text-red-800">No schedule is set</p>
                         </div>
                       </div>
                     )}
@@ -441,7 +441,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                   ? form.isBooked
                     ? 'Thank you for booking with us! Your appointment has been successfully confirmed. You’ll receive a confirmation email with all the details shortly. We look forward to seeing you!'
                     : `You’ve provided all the required details for your appointment. Please review the information below and click “Confirm Appointment” to finalize your booking`
-                  : `Click the button below to request your free consultation and take the first step toward your home improvement goals.`}
+                  : `It looks like some details are missing to finalize your appointment. Please click the button below to continue setting it up. Your appointment is not confirmed until all details are complete.`}
                   </p>
                 </div>
                 )}
@@ -482,7 +482,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                         {loading ? (
                           <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
                         ) : (
-                          'Request an Appointment'
+                          'Complete Missing Details'
                         )}
                       </button>
                     </div>
