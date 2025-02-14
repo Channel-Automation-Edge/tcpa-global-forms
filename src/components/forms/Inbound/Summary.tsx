@@ -308,7 +308,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                             <path d="m15.8 24.7c-2.3.1-1.9-3.9.3-3.4 2.3-.1 2 3.9-.3 3.4zm.2-5.5c-.6 0-.9-.3-.9-1l-.7-9.2c-.1-.9.6-1.7 1.5-1.8s1.7.6 1.8 1.5v.3l-.7 9.2c-.1.7-.4 1-1 1z" fill="#eee"></path>
                           </g>
                         </svg>
-                        <p className="text-lg font-semibold ml-2">Pending Confirmation</p>
+                        <p className="text-lg font-semibold ml-2">No Appointment Requested</p>
                       </div>
                     )}
                   </div>
@@ -364,7 +364,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                       <div className="flex flex-wrap justify-between my-4 w-auto bg-red-100 rounded-md py-4">
                         <div className="flex items-center px-8 min-w-[200px]">
                           <img src="/images/warning.svg" alt="warning" className="inline mr-2 h-5" />
-                          <p className="text-base text-red-800">No schedule is set</p>
+                          <p className="text-base text-red-800">Choose a date and time that works for you</p>
                         </div>
                       </div>
                     )}
