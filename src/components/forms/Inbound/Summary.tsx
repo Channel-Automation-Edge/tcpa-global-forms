@@ -272,7 +272,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                   ? form.isBooked
                     ? 'Your Appointment is Confirmed - See You Soon!'
                     : 'Almost There! Confirm Your Appointment Now'
-                  : `Hi ${user.firstname}, let's finish setting up your appointment`}
+                  : `Hi ${user.firstname}, ready to schedule your appointment?`}
               </h1>
               {!hideOptIn && (
             <div >
@@ -441,7 +441,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                   ? form.isBooked
                     ? 'Thank you for booking with us! Your appointment has been successfully confirmed. You’ll receive a confirmation email with all the details shortly. We look forward to seeing you!'
                     : `You’ve provided all the required details for your appointment. Please review the information below and click “Confirm Appointment” to finalize your booking`
-                  : `It looks like some details are missing to finalize your appointment. Please click the button below to continue setting it up. Your appointment is not confirmed until all details are complete.`}
+                  : `Click the button below to request your free consultation and take the first step toward your home improvement goals.`}
                   </p>
                 </div>
                 )}
@@ -482,7 +482,7 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                         {loading ? (
                           <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
                         ) : (
-                          'Complete Missing Details'
+                          'Request an Appointment'
                         )}
                       </button>
                     </div>
