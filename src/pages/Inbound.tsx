@@ -97,7 +97,6 @@ const Inbound = () => {
         <FAQ />
       </div>
 
-
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogTrigger asChild>
           <button id='modal' className='hidden'></button>

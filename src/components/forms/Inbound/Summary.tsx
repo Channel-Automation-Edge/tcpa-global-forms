@@ -1,21 +1,6 @@
 "use client";
 import React, { useContext, useState, useEffect } from 'react';
 import { AppContext } from '@/context/AppContext';
-import Bathtub from '@/components/icons/Bathtub';
-import Trowel from '@/components/icons/Trowel';
-import Closet from '@/components/icons/Closet';
-import Plumbing from '@/components/icons/Plumbing';
-import Deck from '@/components/icons/Deck';
-import Garage from '@/components/icons/Garage';
-import Gutter from '@/components/icons/Gutter';
-import Foundation from '@/components/icons/Foundation';
-import Flooring from '@/components/icons/Floor';
-import Kitchen from '@/components/icons/Kitchen';
-import Roofing from '@/components/icons/Roofing';
-import Siding from '@/components/icons/Siding';
-import Shower from '@/components/icons/Shower';
-import Windows from '@/components/icons/Windows';
-import Fence from '@/components/icons/Fence';
 import { central } from '@/lib/supabaseClient';
 import {
   Dialog, DialogContent, DialogDescription, DialogFooter,
@@ -23,31 +8,8 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import ConfirmCheck from '@/components/icons/ConfirmCheck';
-import Doors from '@/components/icons/Doors';
 import { useNavigate } from 'react-router-dom';
-import Solar from '@/components/icons/Solar';
-
-// Icon mapping
-const iconMapping: Record<string, JSX.Element> = {
-  'Bath': <Bathtub />,
-  'Basement Waterproofing': <Trowel />,
-  'Closet': <Closet />,
-  'Plumbing': <Plumbing />,
-  'Deck': <Deck />,
-  'Doors': <Doors />,
-  'Fence': <Fence />,
-  'Flooring': <Flooring />,
-  'Garage': <Garage />,
-  'Gutters': <Gutter />,
-  'Foundation': <Foundation />,
-  'Kitchen': <Kitchen />,
-  'Roofing': <Roofing />,
-  'Siding': <Siding />,
-  'Shower': <Shower />,
-  'Windows': <Windows />,
-  'Solar': <Solar />,
-  // Add more mappings as needed
-};
+import IconComponent from '@/hooks/IconComponent';
 
 // Define props interface
 interface SummaryProps {
@@ -314,16 +276,14 @@ const Summary: React.FC<SummaryProps> = ({ onNext, onSchedule }) => {
                   </div>
                     <hr className='mb-4'></hr>
                     <div className="flex items-center mb-4 ml-4 md:ml-8 min-w-52">
-                      <div className="w-14 h-14">{iconMapping[selectedService.name]}</div>
+                    <div className="flex items-center">
+                      <IconComponent name={selectedService.name} className="w-14 h-14" />
                       <div className="flex flex-wrap justify-between flex-grow">
-                      <h3 className="text-lg font-medium text-gray-800 dark:text-white pl-6 pr-4">
-                        {selectedService.name} {form.serviceSpecification ? form.serviceSpecification : 'Service'}
-                      </h3>
-
-                        {/* <span className="mt-2 ml-6 sm:mt-0 sm:ml-0  max-w-full sm:max-w-none whitespace-nowrap sm:whitespace-normal py-1.5 px-3 rounded-lg text-xs font-medium bg-accentLight border border-accentColor text-accentColor">
-                          
-                        </span> */}
+                        <h3 className="text-lg font-medium text-gray-800 dark:text-white pl-6 pr-4">
+                          {selectedService.name} {form.serviceSpecification || "Service"}
+                        </h3>
                       </div>
+                    </div>
                     </div>
                     {/* Schedule */}
                     <hr className='mb-4'></hr>
